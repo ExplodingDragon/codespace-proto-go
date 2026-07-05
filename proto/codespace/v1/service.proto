@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package codespace.v1;
+
+import "codespace/v1/types.proto";
+
+option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
+
+// CodespaceService is the control-plane API implemented by Gitea and called by
+// codespace managers.
+//
+// RegisterManager is the only RPC that does not use manager authentication.
+// Every other manager RPC must include:
+//
+//   x-codespace-manager-uuid: <manager uuid>
+//   x-codespace-manager-token: <manager token>
+//
+// The manager UUID is intentionally not carried in request messages for
+// authenticated RPCs, so callers cannot self-declare their identity.
+service CodespaceService {
+  // RegisterManager exchanges a scope-bound registration token for a manager
+  // identity and manager token.
+  rpc RegisterManager(RegisterManagerRequest) returns (RegisterManagerResponse);
+
+  // DeclareManager updates the authenticated manager's metadata and runtime
+  // capabilities after registration.
+  rpc DeclareManager(DeclareManagerRequest) returns (DeclareManagerResponse);
+
+  // Ping records the authenticated manager heartbeat and load snapshot.
+  rpc Ping(PingRequest) returns (PingResponse);
+
+  // FetchTask leases queued tasks assigned to the authenticated manager.
+  rpc FetchTask(FetchTaskRequest) returns (FetchTaskResponse);
+
+  // AppendLog appends output to the authenticated manager's active operation.
+  rpc AppendLog(AppendLogRequest) returns (AppendLogResponse);
+
+  // FinishTask records the authenticated manager's result for a leased task.
+  rpc FinishTask(FinishTaskRequest) returns (FinishTaskResponse);
+
+  // ReportCodespaceStatus records runtime status for a codespace owned by the
+  // authenticated manager.
+  rpc ReportCodespaceStatus(ReportCodespaceStatusRequest) returns (ReportCodespaceStatusResponse);
+
+  // ReportCodespacePorts replaces the visible port set for a codespace owned
+  // by the authenticated manager.
+  rpc ReportCodespacePorts(ReportCodespacePortsRequest) returns (ReportCodespacePortsResponse);
+
+  // RequestGitToken issues a short-lived repository token for a codespace
+  // owned by the authenticated manager.
+  rpc RequestGitToken(RequestGitTokenRequest) returns (RequestGitTokenResponse);
+
+  // RevokeGitToken revokes active repository tokens for a codespace owned by
+  // the authenticated manager.
+  rpc RevokeGitToken(RevokeGitTokenRequest) returns (RevokeGitTokenResponse);
+
+  // ValidateAccessTicket validates a short-lived user access ticket presented
+  // to the gateway.
+  rpc ValidateAccessTicket(ValidateAccessTicketRequest) returns (ValidateAccessTicketResponse);
+}

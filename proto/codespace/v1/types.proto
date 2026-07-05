@@ -1,0 +1,407 @@
+syntax = "proto3";
+
+package codespace.v1;
+
+option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
+
+// ManagerStatus describes the liveness state reported by a codespace manager.
+enum ManagerStatus {
+  // MANAGER_STATUS_UNSPECIFIED should not be emitted by managers.
+  MANAGER_STATUS_UNSPECIFIED = 0;
+  // MANAGER_STATUS_ONLINE means the manager is healthy and can accept work.
+  MANAGER_STATUS_ONLINE = 1;
+  // MANAGER_STATUS_OFFLINE means the manager is not currently reachable.
+  MANAGER_STATUS_OFFLINE = 2;
+  // MANAGER_STATUS_DISABLED means the manager is administratively disabled.
+  MANAGER_STATUS_DISABLED = 3;
+}
+
+// CodespaceStatus describes the lifecycle state of one codespace instance.
+enum CodespaceStatus {
+  // CODESPACE_STATUS_UNSPECIFIED should be treated as unknown by receivers.
+  CODESPACE_STATUS_UNSPECIFIED = 0;
+  // CODESPACE_STATUS_INITIALIZING means create or resume is in progress.
+  CODESPACE_STATUS_INITIALIZING = 1;
+  // CODESPACE_STATUS_RUNNING means the runtime is ready for user access.
+  CODESPACE_STATUS_RUNNING = 2;
+  // CODESPACE_STATUS_STOPPED means the runtime is stopped but can be resumed.
+  CODESPACE_STATUS_STOPPED = 3;
+  // CODESPACE_STATUS_STOPPING means the runtime is being stopped.
+  CODESPACE_STATUS_STOPPING = 4;
+  // CODESPACE_STATUS_DELETING means the runtime is being removed.
+  CODESPACE_STATUS_DELETING = 5;
+  // CODESPACE_STATUS_ERROR means the latest lifecycle operation failed.
+  CODESPACE_STATUS_ERROR = 6;
+}
+
+// OperationType describes the operation a manager should perform.
+enum OperationType {
+  // OPERATION_TYPE_UNSPECIFIED should not be used for queued operations.
+  OPERATION_TYPE_UNSPECIFIED = 0;
+  // OPERATION_TYPE_CREATE creates and bootstraps a new runtime.
+  OPERATION_TYPE_CREATE = 1;
+  // OPERATION_TYPE_RESUME starts an existing stopped runtime.
+  OPERATION_TYPE_RESUME = 2;
+  // OPERATION_TYPE_STOP stops a runtime without deleting persistent state.
+  OPERATION_TYPE_STOP = 3;
+  // OPERATION_TYPE_DELETE permanently removes a runtime.
+  OPERATION_TYPE_DELETE = 4;
+}
+
+// OperationStatus describes operation lease and execution state.
+enum OperationStatus {
+  // OPERATION_STATUS_UNSPECIFIED should not be persisted for operations.
+  OPERATION_STATUS_UNSPECIFIED = 0;
+  // OPERATION_STATUS_QUEUED means the operation is available for leasing.
+  OPERATION_STATUS_QUEUED = 1;
+  // OPERATION_STATUS_LEASED means a manager has reserved the operation.
+  OPERATION_STATUS_LEASED = 2;
+  // OPERATION_STATUS_RUNNING means the manager is actively executing the operation.
+  OPERATION_STATUS_RUNNING = 3;
+  // OPERATION_STATUS_SUCCEEDED means the operation finished successfully.
+  OPERATION_STATUS_SUCCEEDED = 4;
+  // OPERATION_STATUS_FAILED means the operation finished with an error.
+  OPERATION_STATUS_FAILED = 5;
+  // OPERATION_STATUS_CANCELLED means the operation was intentionally abandoned.
+  OPERATION_STATUS_CANCELLED = 6;
+}
+
+// PortVisibility controls who can access a forwarded codespace port.
+enum PortVisibility {
+  // PORT_VISIBILITY_UNSPECIFIED defaults to private.
+  PORT_VISIBILITY_UNSPECIFIED = 0;
+  // PORT_VISIBILITY_PRIVATE restricts access to the codespace owner.
+  PORT_VISIBILITY_PRIVATE = 1;
+  // PORT_VISIBILITY_ORG restricts access to organization members.
+  PORT_VISIBILITY_ORG = 2;
+  // PORT_VISIBILITY_PUBLIC allows unauthenticated public access when enabled.
+  PORT_VISIBILITY_PUBLIC = 3;
+}
+
+// PortStatus describes the manager-reported state of a forwarded port.
+enum PortStatus {
+  // PORT_STATUS_UNSPECIFIED should be treated as inactive.
+  PORT_STATUS_UNSPECIFIED = 0;
+  // PORT_STATUS_ACTIVE means the port is currently reachable.
+  PORT_STATUS_ACTIVE = 1;
+  // PORT_STATUS_INACTIVE means the port is declared but not reachable.
+  PORT_STATUS_INACTIVE = 2;
+  // PORT_STATUS_ERROR means the manager failed to expose the port.
+  PORT_STATUS_ERROR = 3;
+  // PORT_STATUS_DELETED means the declaration should no longer be shown.
+  PORT_STATUS_DELETED = 4;
+}
+
+// ManagerFeatures lists optional gateway capabilities supported by a manager.
+message ManagerFeatures {
+  // web indicates browser access to codespace runtimes is supported.
+  bool web = 1;
+  // ssh indicates SSH access is supported.
+  bool ssh = 2;
+  // port_preview indicates forwarded port previews are supported.
+  bool port_preview = 3;
+  // public_port indicates the manager can expose unauthenticated public ports.
+  bool public_port = 4;
+}
+
+// ResourcePreset describes one named compute shape offered by a manager.
+message ResourcePreset {
+  // name is the stable preset identifier selected by users.
+  string name = 1;
+  // cpu is a manager-defined CPU quantity such as "2".
+  string cpu = 2;
+  // memory is a manager-defined memory quantity such as "4GiB".
+  string memory = 3;
+  // disk is a manager-defined disk quantity such as "40GiB".
+  string disk = 4;
+}
+
+// ManagerCapabilities is the manager-declared runtime catalog consumed by
+// Gitea UI and task creation.
+message ManagerCapabilities {
+  // gateway_url is the externally reachable base URL for user access.
+  string gateway_url = 1;
+  // version is the manager software version.
+  string version = 2;
+  // labels are manager-defined selectors and descriptive tags.
+  repeated string labels = 3;
+  // max_concurrency is the maximum number of concurrent codespace workloads.
+  int32 max_concurrency = 4;
+  // current_concurrency is the current number of active workloads.
+  int32 current_concurrency = 5;
+  // supported_instance_types contains values such as "container" or "vm".
+  repeated string supported_instance_types = 6;
+  // images contains manager-supported image identifiers.
+  repeated string images = 7;
+  // resource_presets contains named compute shapes.
+  repeated ResourcePreset resource_presets = 8;
+  // features lists optional gateway capabilities.
+  ManagerFeatures features = 9;
+  // default_init_script is used when a codespace is created without override.
+  string default_init_script = 10;
+}
+
+// RegisterManagerRequest registers a manager with a scope-bound registration
+// token. This request is not authenticated with manager headers.
+message RegisterManagerRequest {
+  // registration_token is the active token copied from the Gitea UI.
+  string registration_token = 1;
+  // name is the human-readable manager name.
+  string name = 2;
+  // gateway_url is the externally reachable manager gateway URL.
+  string gateway_url = 3;
+  // version is the manager software version.
+  string version = 4;
+  // capabilities is the initial runtime catalog for this manager.
+  ManagerCapabilities capabilities = 5;
+}
+
+// RegisterManagerResponse contains the manager identity and one-time clear
+// manager token. The token must be stored by the manager; Gitea stores only a
+// salted hash.
+message RegisterManagerResponse {
+  // manager_id is the Gitea database ID.
+  int64 manager_id = 1;
+  // manager_uuid is the stable public manager identifier.
+  string manager_uuid = 2;
+  // manager_token is the one-time clear token used in manager auth headers.
+  string manager_token = 3;
+}
+
+// DeclareManagerRequest refreshes metadata and capabilities for the
+// authenticated manager. The manager identity comes from request headers.
+message DeclareManagerRequest {
+  // name is the human-readable manager name.
+  string name = 1;
+  // gateway_url is the externally reachable manager gateway URL.
+  string gateway_url = 2;
+  // version is the manager software version.
+  string version = 3;
+  // capabilities is the latest runtime catalog for this manager.
+  ManagerCapabilities capabilities = 4;
+}
+
+// DeclareManagerResponse acknowledges a manager declaration.
+message DeclareManagerResponse {
+  // accepted is true when the declaration was stored.
+  bool accepted = 1;
+}
+
+// PingRequest reports liveness and load for the authenticated manager.
+message PingRequest {
+  // status is the manager-reported liveness state.
+  ManagerStatus status = 1;
+  // current_concurrency is the current number of active workloads.
+  int32 current_concurrency = 2;
+  // load is a manager-defined normalized load value.
+  double load = 3;
+}
+
+// PingResponse returns server timing information.
+message PingResponse {
+  // server_time is the Gitea server Unix timestamp in seconds.
+  int64 server_time = 1;
+}
+
+// CodespaceOperationPayload contains the runtime inputs needed by a manager.
+message CodespaceOperationPayload {
+  // instance_name is the manager-side runtime instance name.
+  string instance_name = 1;
+  // instance_type is the selected runtime type.
+  string instance_type = 2;
+  // image is the selected runtime image.
+  string image = 3;
+  // resource_preset is the selected compute preset.
+  string resource_preset = 4;
+  // repo_url is the clone URL used by the runtime.
+  string repo_url = 5;
+  // repo_full_name is the repository full name in owner/name form.
+  string repo_full_name = 6;
+  // start_ref is the resolved Git ref to fetch, such as refs/heads/main or refs/pull/1/head.
+  string start_ref = 7;
+  // start_sha is the exact commit to check out after fetching start_ref.
+  string start_sha = 8;
+  // init_script is executed by the manager during bootstrap.
+  string init_script = 9;
+}
+
+// CodespaceOperation is one leased unit of work returned to a manager.
+message CodespaceOperation {
+  // task_id is the stable task UUID used for lease tracking.
+  string task_id = 1;
+  // codespace_id is the stable codespace UUID.
+  string codespace_id = 2;
+  // type is the operation to execute.
+  OperationType type = 3;
+  // payload contains runtime inputs for the operation.
+  CodespaceOperationPayload payload = 4;
+  // lease_deadline is the Unix timestamp in seconds when the lease expires.
+  int64 lease_deadline = 5;
+  // operation_id is the active operation UUID. All follow-up reports must echo it.
+  string operation_id = 6;
+}
+
+// FetchTaskRequest asks for work for the authenticated manager.
+message FetchTaskRequest {
+  // capacity is the maximum number of tasks to lease. Values <= 0 mean one.
+  int32 capacity = 1;
+}
+
+// FetchTaskResponse contains tasks leased to the authenticated manager.
+message FetchTaskResponse {
+  // tasks is the ordered list of leased operations.
+  repeated CodespaceOperation tasks = 1;
+}
+
+// TaskResult contains manager-produced runtime outputs.
+message TaskResult {
+  // instance_name is the final manager-side runtime instance name.
+  string instance_name = 1;
+  // workdir is the codespace directory inside the runtime.
+  string workdir = 2;
+}
+
+// FinishTaskRequest records the authenticated manager's result for a task.
+message FinishTaskRequest {
+  // task_id is the stable task UUID.
+  string task_id = 1;
+  // status is the final task state.
+  OperationStatus status = 2;
+  // result contains runtime outputs when the task succeeds or partially ran.
+  TaskResult result = 3;
+  // error is a human-readable failure message.
+  string error = 4;
+  // operation_id is the active operation UUID.
+  string operation_id = 5;
+}
+
+// FinishTaskResponse is empty on success.
+message FinishTaskResponse {}
+
+// ReportCodespaceStatusRequest updates a codespace state snapshot.
+message ReportCodespaceStatusRequest {
+  // codespace_id is the stable codespace UUID.
+  string codespace_id = 1;
+  // status is the current runtime lifecycle state.
+  CodespaceStatus status = 2;
+  // last_active_unix is a Unix timestamp in seconds, or zero if unchanged.
+  int64 last_active_unix = 3;
+  // error is a human-readable runtime error message.
+  string error = 4;
+  // operation_id is the active operation UUID.
+  string operation_id = 5;
+}
+
+// ReportCodespaceStatusResponse is empty on success.
+message ReportCodespaceStatusResponse {}
+
+// CodespacePort describes one runtime port declaration.
+message CodespacePort {
+  // name is a stable display name unique within the codespace.
+  string name = 1;
+  // port is the runtime TCP/UDP port number.
+  int32 port = 2;
+  // protocol is the application protocol, such as http or tcp.
+  string protocol = 3;
+  // visibility controls who can access the port.
+  PortVisibility visibility = 4;
+  // description is optional user-facing text.
+  string description = 5;
+  // public_url is the manager-generated URL when externally exposed.
+  string public_url = 6;
+  // status is the current port state.
+  PortStatus status = 7;
+}
+
+// ReportCodespacePortsRequest replaces the full visible port set for a
+// codespace.
+message ReportCodespacePortsRequest {
+  // codespace_id is the stable codespace UUID.
+  string codespace_id = 1;
+  // ports is the complete desired visible port set.
+  repeated CodespacePort ports = 2;
+  // operation_id is the active operation UUID.
+  string operation_id = 3;
+}
+
+// ReportCodespacePortsResponse is empty on success.
+message ReportCodespacePortsResponse {}
+
+// RequestGitTokenRequest asks Gitea to issue a short-lived repository token for
+// a codespace owned by the authenticated manager.
+message RequestGitTokenRequest {
+  // codespace_id is the stable codespace UUID.
+  string codespace_id = 1;
+  // operation_id is the active operation UUID.
+  string operation_id = 2;
+}
+
+// RequestGitTokenResponse returns a one-time clear git token for runtime
+// bootstrap.
+message RequestGitTokenResponse {
+  // username is the credential username to configure in git.
+  string username = 1;
+  // token is the clear repository token.
+  string token = 2;
+  // expires_at is the Unix timestamp in seconds when the token expires.
+  int64 expires_at = 3;
+}
+
+// RevokeGitTokenRequest revokes active repository tokens for a codespace.
+message RevokeGitTokenRequest {
+  // codespace_id is the stable codespace UUID.
+  string codespace_id = 1;
+  // reason is an optional audit/debug reason.
+  string reason = 2;
+  // operation_id is the active operation UUID.
+  string operation_id = 3;
+}
+
+// RevokeGitTokenResponse is empty on success.
+message RevokeGitTokenResponse {}
+
+// ValidateAccessTicketRequest validates a user access ticket presented to a
+// gateway.
+message ValidateAccessTicketRequest {
+  // ticket is the short-lived opaque token generated by Gitea.
+  string ticket = 1;
+  // action is the requested gateway action, such as open.
+  string action = 2;
+}
+
+// ValidateAccessTicketResponse contains the ticket validation result and bound
+// identity.
+message ValidateAccessTicketResponse {
+  // valid is false when the ticket is missing, expired, consumed, or mismatched.
+  bool valid = 1;
+  // user_id is the Gitea user ID bound to the ticket.
+  int64 user_id = 2;
+  // codespace_id is the stable codespace UUID bound to the ticket.
+  string codespace_id = 3;
+  // repo_id is the Gitea repository ID bound to the ticket.
+  int64 repo_id = 4;
+  // action is the validated gateway action.
+  string action = 5;
+  // expires_at is the Unix timestamp in seconds when the ticket expires.
+  int64 expires_at = 6;
+}
+
+// AppendLogRequest appends manager output to the active operation log.
+message AppendLogRequest {
+  // codespace_id is the stable codespace UUID.
+  string codespace_id = 1;
+  // operation_id is the active operation UUID.
+  string operation_id = 2;
+  // task_id is the leased task UUID.
+  string task_id = 3;
+  // level is a textual log level such as info, warn, or error.
+  string level = 4;
+  // message is one log line or chunk.
+  string message = 5;
+}
+
+// AppendLogResponse returns the stored sequence for ordering.
+message AppendLogResponse {
+  // sequence is the monotonically increasing operation-local log sequence.
+  int64 sequence = 1;
+}
