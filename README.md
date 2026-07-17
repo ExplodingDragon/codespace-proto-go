@@ -1,13 +1,13 @@
 # codespace-proto-go
 
-Shared protocol definitions and generated Go bindings for the Gitea codespace system.
+Gitea Codespace 的共享协议定义和生成的 Go binding。
 
 ## Scope
 
-This module is intended to hold:
+该模块包含：
 
-- `.proto` source files for Gitea and codespace manager communication.
-- Generated Go code from those proto files.
-- Thin shared enums and request / response types that must stay protocol-aligned.
+- Gitea 与 Codespace Manager 通信使用的 `.proto` 源文件。
+- 从协议生成的 Go 代码。
+- RPC 两端共用的枚举和请求、响应类型。
 
-Business logic should stay in the `gitea` and `gitea-codespace` modules.
+Gitea 服务逻辑位于 `gitea` 模块，Manager 与 Gateway 逻辑位于 `codespace` 模块；本模块只提供双方从同一协议生成的类型。
