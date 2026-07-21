@@ -4,404 +4,414 @@ package codespace.v1;
 
 option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
 
-// ManagerStatus describes the liveness state reported by a codespace manager.
-enum ManagerStatus {
-  // MANAGER_STATUS_UNSPECIFIED should not be emitted by managers.
-  MANAGER_STATUS_UNSPECIFIED = 0;
-  // MANAGER_STATUS_ONLINE means the manager is healthy and can accept work.
-  MANAGER_STATUS_ONLINE = 1;
-  // MANAGER_STATUS_OFFLINE means the manager is not currently reachable.
-  MANAGER_STATUS_OFFLINE = 2;
-  // MANAGER_STATUS_DISABLED means the manager is administratively disabled.
-  MANAGER_STATUS_DISABLED = 3;
+enum ManagerRuntimeState {
+  MANAGER_RUNTIME_STATE_UNSPECIFIED = 0;
+  MANAGER_RUNTIME_STATE_ONLINE = 1;
+  MANAGER_RUNTIME_STATE_RECOVERING = 2;
 }
 
-// CodespaceStatus describes the lifecycle state of one codespace instance.
-enum CodespaceStatus {
-  // CODESPACE_STATUS_UNSPECIFIED should be treated as unknown by receivers.
-  CODESPACE_STATUS_UNSPECIFIED = 0;
-  // CODESPACE_STATUS_INITIALIZING means create or resume is in progress.
-  CODESPACE_STATUS_INITIALIZING = 1;
-  // CODESPACE_STATUS_RUNNING means the runtime is ready for user access.
-  CODESPACE_STATUS_RUNNING = 2;
-  // CODESPACE_STATUS_STOPPED means the runtime is stopped but can be resumed.
-  CODESPACE_STATUS_STOPPED = 3;
-  // CODESPACE_STATUS_STOPPING means the runtime is being stopped.
-  CODESPACE_STATUS_STOPPING = 4;
-  // CODESPACE_STATUS_DELETING means the runtime is being removed.
-  CODESPACE_STATUS_DELETING = 5;
-  // CODESPACE_STATUS_ERROR means the latest lifecycle operation failed.
-  CODESPACE_STATUS_ERROR = 6;
+enum AcceptedOperationType {
+  ACCEPTED_OPERATION_TYPE_UNSPECIFIED = 0;
+  ACCEPTED_OPERATION_TYPE_CREATE = 1;
+  ACCEPTED_OPERATION_TYPE_RESUME = 2;
 }
 
-// OperationType describes the operation a manager should perform.
+enum FinalStatus {
+  FINAL_STATUS_UNSPECIFIED = 0;
+  FINAL_STATUS_DONE = 1;
+  FINAL_STATUS_FAILED = 2;
+}
+
 enum OperationType {
-  // OPERATION_TYPE_UNSPECIFIED should not be used for queued operations.
   OPERATION_TYPE_UNSPECIFIED = 0;
-  // OPERATION_TYPE_CREATE creates and bootstraps a new runtime.
   OPERATION_TYPE_CREATE = 1;
-  // OPERATION_TYPE_RESUME starts an existing stopped runtime.
   OPERATION_TYPE_RESUME = 2;
-  // OPERATION_TYPE_STOP stops a runtime without deleting persistent state.
   OPERATION_TYPE_STOP = 3;
-  // OPERATION_TYPE_DELETE permanently removes a runtime.
   OPERATION_TYPE_DELETE = 4;
 }
 
-// OperationStatus describes operation lease and execution state.
-enum OperationStatus {
-  // OPERATION_STATUS_UNSPECIFIED should not be persisted for operations.
-  OPERATION_STATUS_UNSPECIFIED = 0;
-  // OPERATION_STATUS_QUEUED means the operation is available for leasing.
-  OPERATION_STATUS_QUEUED = 1;
-  // OPERATION_STATUS_LEASED means a manager has reserved the operation.
-  OPERATION_STATUS_LEASED = 2;
-  // OPERATION_STATUS_RUNNING means the manager is actively executing the operation.
-  OPERATION_STATUS_RUNNING = 3;
-  // OPERATION_STATUS_SUCCEEDED means the operation finished successfully.
-  OPERATION_STATUS_SUCCEEDED = 4;
-  // OPERATION_STATUS_FAILED means the operation finished with an error.
-  OPERATION_STATUS_FAILED = 5;
-  // OPERATION_STATUS_CANCELLED means the operation was intentionally abandoned.
-  OPERATION_STATUS_CANCELLED = 6;
+enum GitProtocol {
+  GIT_PROTOCOL_UNSPECIFIED = 0;
+  GIT_PROTOCOL_HTTP = 1;
+  GIT_PROTOCOL_SSH = 2;
 }
 
-// PortVisibility controls who can access a forwarded codespace port.
-enum PortVisibility {
-  // PORT_VISIBILITY_UNSPECIFIED defaults to private.
-  PORT_VISIBILITY_UNSPECIFIED = 0;
-  // PORT_VISIBILITY_PRIVATE restricts access to the codespace owner.
-  PORT_VISIBILITY_PRIVATE = 1;
-  // PORT_VISIBILITY_ORG restricts access to organization members.
-  PORT_VISIBILITY_ORG = 2;
-  // PORT_VISIBILITY_PUBLIC allows unauthenticated public access when enabled.
-  PORT_VISIBILITY_PUBLIC = 3;
+enum RuntimeState {
+  RUNTIME_STATE_UNSPECIFIED = 0;
+  RUNTIME_STATE_CREATING = 1;
+  RUNTIME_STATE_RUNNING = 2;
+  RUNTIME_STATE_STOPPED = 3;
+  RUNTIME_STATE_FAILED = 4;
 }
 
-// PortStatus describes the manager-reported state of a forwarded port.
-enum PortStatus {
-  // PORT_STATUS_UNSPECIFIED should be treated as inactive.
-  PORT_STATUS_UNSPECIFIED = 0;
-  // PORT_STATUS_ACTIVE means the port is currently reachable.
-  PORT_STATUS_ACTIVE = 1;
-  // PORT_STATUS_INACTIVE means the port is declared but not reachable.
-  PORT_STATUS_INACTIVE = 2;
-  // PORT_STATUS_ERROR means the manager failed to expose the port.
-  PORT_STATUS_ERROR = 3;
-  // PORT_STATUS_DELETED means the declaration should no longer be shown.
-  PORT_STATUS_DELETED = 4;
+enum IdleStopNotApplicableReason {
+  IDLE_STOP_NOT_APPLICABLE_REASON_UNSPECIFIED = 0;
+  IDLE_STOP_NOT_APPLICABLE_REASON_OPERATION_CONFLICT = 1;
+  IDLE_STOP_NOT_APPLICABLE_REASON_ALREADY_STOPPED = 2;
+  IDLE_STOP_NOT_APPLICABLE_REASON_STATE_UNAVAILABLE = 3;
 }
 
-// ManagerFeatures lists optional gateway capabilities supported by a manager.
-message ManagerFeatures {
-  // web indicates browser access to codespace runtimes is supported.
-  bool web = 1;
-  // ssh indicates SSH access is supported.
-  bool ssh = 2;
-  // port_preview indicates forwarded port previews are supported.
-  bool port_preview = 3;
-  // public_port indicates the manager can expose unauthenticated public ports.
-  bool public_port = 4;
-}
-
-// ResourcePreset describes one named compute shape offered by a manager.
-message ResourcePreset {
-  // name is the stable preset identifier selected by users.
-  string name = 1;
-  // cpu is a manager-defined CPU quantity such as "2".
-  string cpu = 2;
-  // memory is a manager-defined memory quantity such as "4GiB".
-  string memory = 3;
-  // disk is a manager-defined disk quantity such as "40GiB".
-  string disk = 4;
-}
-
-// ManagerCapabilities is the manager-declared runtime catalog consumed by
-// Gitea UI and task creation.
-message ManagerCapabilities {
-  // gateway_url is the externally reachable base URL for user access.
-  string gateway_url = 1;
-  // version is the manager software version.
-  string version = 2;
-  // labels are manager-defined selectors and descriptive tags.
-  repeated string labels = 3;
-  // max_concurrency is the maximum number of concurrent codespace workloads.
-  int32 max_concurrency = 4;
-  // current_concurrency is the current number of active workloads.
-  int32 current_concurrency = 5;
-  // supported_instance_types contains values such as "container" or "vm".
-  repeated string supported_instance_types = 6;
-  // images contains manager-supported image identifiers.
-  repeated string images = 7;
-  // resource_presets contains named compute shapes.
-  repeated ResourcePreset resource_presets = 8;
-  // features lists optional gateway capabilities.
-  ManagerFeatures features = 9;
-  // default_init_script is used when a codespace is created without override.
-  string default_init_script = 10;
-}
-
-// RegisterManagerRequest registers a manager with a scope-bound registration
-// token. This request is not authenticated with manager headers.
 message RegisterManagerRequest {
-  // registration_token is the active token copied from the Gitea UI.
-  string registration_token = 1;
-  // name is the human-readable manager name.
-  string name = 2;
-  // gateway_url is the externally reachable manager gateway URL.
-  string gateway_url = 3;
-  // version is the manager software version.
-  string version = 4;
-  // capabilities is the initial runtime catalog for this manager.
-  ManagerCapabilities capabilities = 5;
+  int32 protocol_version = 1;
+  string registration_token = 2;
 }
 
-// RegisterManagerResponse contains the manager identity and one-time clear
-// manager token. The token must be stored by the manager; Gitea stores only a
-// salted hash.
 message RegisterManagerResponse {
-  // manager_id is the Gitea database ID.
   int64 manager_id = 1;
-  // manager_uuid is the stable public manager identifier.
-  string manager_uuid = 2;
-  // manager_token is the one-time clear token used in manager auth headers.
-  string manager_token = 3;
+  string manager_secret = 2;
 }
 
-// DeclareManagerRequest refreshes metadata and capabilities for the
-// authenticated manager. The manager identity comes from request headers.
 message DeclareManagerRequest {
-  // name is the human-readable manager name.
-  string name = 1;
-  // gateway_url is the externally reachable manager gateway URL.
+  int32 protocol_version = 1;
   string gateway_url = 2;
-  // version is the manager software version.
-  string version = 3;
-  // capabilities is the latest runtime catalog for this manager.
-  ManagerCapabilities capabilities = 4;
+  string gateway_ssh_addr = 3;
+  repeated string tags = 4;
+  string version = 5;
+  string name = 6;
+  ManagerRuntimeState manager_runtime_state = 7;
+  string gateway_ssh_host_key_algorithm = 8;
+  string gateway_ssh_host_key_fingerprint_sha256 = 9;
+  int64 gateway_ssh_host_key_updated_unix = 10;
+  int32 capacity_total = 11;
+  int32 capacity_available = 12;
 }
 
-// DeclareManagerResponse acknowledges a manager declaration.
 message DeclareManagerResponse {
-  // accepted is true when the declaration was stored.
-  bool accepted = 1;
+  int64 heartbeat_interval_milliseconds = 1;
+  int64 runtime_metadata_refresh_interval_milliseconds = 2;
+  int64 control_plane_max_message_size_bytes = 3;
+  string gitea_web_url = 4;
 }
 
-// PingRequest reports liveness and load for the authenticated manager.
-message PingRequest {
-  // status is the manager-reported liveness state.
-  ManagerStatus status = 1;
-  // current_concurrency is the current number of active workloads.
-  int32 current_concurrency = 2;
-  // load is a manager-defined normalized load value.
-  double load = 3;
+message FetchOperationsRequest {
+  int32 protocol_version = 1;
+  int32 capacity_available = 2;
+  repeated AcceptedOperationType accepted_operation_types = 3;
+  int32 max_operations = 4;
+  repeated ObservedOperation observed_operations = 5;
+  int32 cleanup_capacity_available = 6;
 }
 
-// PingResponse returns server timing information.
-message PingResponse {
-  // server_time is the Gitea server Unix timestamp in seconds.
-  int64 server_time = 1;
+message ObservedOperation {
+  string codespace_uuid = 1;
+  int64 operation_rversion = 2;
 }
 
-// CodespaceOperationPayload contains the runtime inputs needed by a manager.
-message CodespaceOperationPayload {
-  // instance_name is the manager-side runtime instance name.
-  string instance_name = 1;
-  // instance_type is the selected runtime type.
-  string instance_type = 2;
-  // image is the selected runtime image.
-  string image = 3;
-  // resource_preset is the selected compute preset.
-  string resource_preset = 4;
-  // repo_url is the clone URL used by the runtime.
-  string repo_url = 5;
-  // repo_full_name is the repository full name in owner/name form.
-  string repo_full_name = 6;
-  // start_ref is the resolved Git ref to fetch, such as refs/heads/main or refs/pull/1/head.
-  string start_ref = 7;
-  // start_sha is the exact commit to check out after fetching start_ref.
-  string start_sha = 8;
-  // init_script is executed by the manager during bootstrap.
-  string init_script = 9;
+message FetchOperationsResponse {
+  repeated OperationPayload operations = 1;
+  repeated RenewedOperationLease renewed_leases = 2;
 }
 
-// CodespaceOperation is one leased unit of work returned to a manager.
-message CodespaceOperation {
-  // task_id is the stable task UUID used for lease tracking.
-  string task_id = 1;
-  // codespace_id is the stable codespace UUID.
-  string codespace_id = 2;
-  // type is the operation to execute.
-  OperationType type = 3;
-  // payload contains runtime inputs for the operation.
-  CodespaceOperationPayload payload = 4;
-  // lease_deadline is the Unix timestamp in seconds when the lease expires.
-  int64 lease_deadline = 5;
-  // operation_id is the active operation UUID. All follow-up reports must echo it.
-  string operation_id = 6;
+message RenewedOperationLease {
+  string codespace_uuid = 1;
+  int64 operation_rversion = 2;
+  int64 lease_valid_for_milliseconds = 3;
 }
 
-// FetchTaskRequest asks for work for the authenticated manager.
-message FetchTaskRequest {
-  // capacity is the maximum number of tasks to lease. Values <= 0 mean one.
-  int32 capacity = 1;
+message OperationPayload {
+  int64 operation_rversion = 1;
+  string codespace_uuid = 2;
+  int64 log_offset = 3;
+  int64 lease_valid_for_milliseconds = 4;
+
+  oneof command {
+    CreateOperationPayload create = 10;
+    ResumeOperationPayload resume = 11;
+    StopOperationPayload stop = 12;
+    DeleteOperationPayload delete = 13;
+    AbortCreateOperationPayload abort_create = 14;
+    AbortResumeOperationPayload abort_resume = 15;
+  }
 }
 
-// FetchTaskResponse contains tasks leased to the authenticated manager.
-message FetchTaskResponse {
-  // tasks is the ordered list of leased operations.
-  repeated CodespaceOperation tasks = 1;
+message ResumeOperationPayload {
+  EffectiveCodespaceRuntimeSettings runtime_settings = 1;
+  GitProtocol git_protocol = 2;
 }
 
-// TaskResult contains manager-produced runtime outputs.
-message TaskResult {
-  // instance_name is the final manager-side runtime instance name.
-  string instance_name = 1;
-  // workdir is the codespace directory inside the runtime.
-  string workdir = 2;
+message StopOperationPayload {}
+
+message DeleteOperationPayload {}
+
+message AbortCreateOperationPayload {}
+
+message AbortResumeOperationPayload {}
+
+message CreateOperationPayload {
+  int64 repo_id = 1;
+  string repo_full_name = 2;
+  string repo_name = 3;
+  string repo_clone_http_url = 4;
+  string repo_web_url = 5;
+  int64 owner_id = 6;
+  string owner_name = 7;
+  string owner_type = 8;
+  string owner_display_name = 9;
+  string codespace_owner_name = 10;
+  string start_ref = 11;
+  string ref_type = 12;
+  string ref_name = 13;
+  string commit_sha = 14;
+  string repo_tag = 15;
+  EffectiveCodespaceRuntimeSettings runtime_settings = 16;
+  GitProtocol git_protocol = 17;
+  string repo_clone_ssh_url = 18;
 }
 
-// FinishTaskRequest records the authenticated manager's result for a task.
-message FinishTaskRequest {
-  // task_id is the stable task UUID.
-  string task_id = 1;
-  // status is the final task state.
-  OperationStatus status = 2;
-  // result contains runtime outputs when the task succeeds or partially ran.
-  TaskResult result = 3;
-  // error is a human-readable failure message.
-  string error = 4;
-  // operation_id is the active operation UUID.
-  string operation_id = 5;
+message FinalizeOperationRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  int64 operation_rversion = 3;
+  FinalResult final = 4;
 }
 
-// FinishTaskResponse is empty on success.
-message FinishTaskResponse {}
-
-// ReportCodespaceStatusRequest updates a codespace state snapshot.
-message ReportCodespaceStatusRequest {
-  // codespace_id is the stable codespace UUID.
-  string codespace_id = 1;
-  // status is the current runtime lifecycle state.
-  CodespaceStatus status = 2;
-  // last_active_unix is a Unix timestamp in seconds, or zero if unchanged.
-  int64 last_active_unix = 3;
-  // error is a human-readable runtime error message.
-  string error = 4;
-  // operation_id is the active operation UUID.
-  string operation_id = 5;
+message FinalResult {
+  FinalStatus status = 1;
+  OperationType operation_type = 2;
 }
 
-// ReportCodespaceStatusResponse is empty on success.
-message ReportCodespaceStatusResponse {}
-
-// CodespacePort describes one runtime port declaration.
-message CodespacePort {
-  // name is a stable display name unique within the codespace.
-  string name = 1;
-  // port is the runtime TCP/UDP port number.
-  int32 port = 2;
-  // protocol is the application protocol, such as http or tcp.
-  string protocol = 3;
-  // visibility controls who can access the port.
-  PortVisibility visibility = 4;
-  // description is optional user-facing text.
-  string description = 5;
-  // public_url is the manager-generated URL when externally exposed.
-  string public_url = 6;
-  // status is the current port state.
-  PortStatus status = 7;
+message FinalizeOperationResponse {
+  oneof outcome {
+    FinalAccepted final_accepted = 1;
+    IdempotentDone idempotent_done = 2;
+    StaleOperation stale_operation = 3;
+    ResourceAbsent resource_absent = 4;
+  }
 }
 
-// ReportCodespacePortsRequest replaces the full visible port set for a
-// codespace.
-message ReportCodespacePortsRequest {
-  // codespace_id is the stable codespace UUID.
-  string codespace_id = 1;
-  // ports is the complete desired visible port set.
-  repeated CodespacePort ports = 2;
-  // operation_id is the active operation UUID.
-  string operation_id = 3;
+message FinalAccepted {}
+
+message IdempotentDone {}
+
+message StaleOperation {}
+
+message ResourceAbsent {}
+
+message UpdateLogRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  int64 operation_rversion = 3;
+  int64 offset = 4;
+  repeated LogLine lines = 5;
 }
 
-// ReportCodespacePortsResponse is empty on success.
-message ReportCodespacePortsResponse {}
-
-// RequestGitTokenRequest asks Gitea to issue a short-lived repository token for
-// a codespace owned by the authenticated manager.
-message RequestGitTokenRequest {
-  // codespace_id is the stable codespace UUID.
-  string codespace_id = 1;
-  // operation_id is the active operation UUID.
-  string operation_id = 2;
+message LogLine {
+  int64 timestamp_unix_nano = 1;
+  string message = 2;
 }
 
-// RequestGitTokenResponse returns a one-time clear git token for runtime
-// bootstrap.
-message RequestGitTokenResponse {
-  // username is the credential username to configure in git.
-  string username = 1;
-  // token is the clear repository token.
-  string token = 2;
-  // expires_at is the Unix timestamp in seconds when the token expires.
-  int64 expires_at = 3;
+message UpdateLogResponse {
+  int64 next_offset = 1;
 }
 
-// RevokeGitTokenRequest revokes active repository tokens for a codespace.
-message RevokeGitTokenRequest {
-  // codespace_id is the stable codespace UUID.
-  string codespace_id = 1;
-  // reason is an optional audit/debug reason.
-  string reason = 2;
-  // operation_id is the active operation UUID.
-  string operation_id = 3;
+message ReportRuntimeMetadataRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  string metadata_json = 3;
+  int64 metadata_generation = 4;
 }
 
-// RevokeGitTokenResponse is empty on success.
-message RevokeGitTokenResponse {}
+message ReportRuntimeMetadataResponse {}
 
-// ValidateAccessTicketRequest validates a user access ticket presented to a
-// gateway.
-message ValidateAccessTicketRequest {
-  // ticket is the short-lived opaque token generated by Gitea.
-  string ticket = 1;
-  // action is the requested gateway action, such as open.
-  string action = 2;
+message RequestGiteaTokenRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
 }
 
-// ValidateAccessTicketResponse contains the ticket validation result and bound
-// identity.
-message ValidateAccessTicketResponse {
-  // valid is false when the ticket is missing, expired, consumed, or mismatched.
-  bool valid = 1;
-  // user_id is the Gitea user ID bound to the ticket.
-  int64 user_id = 2;
-  // codespace_id is the stable codespace UUID bound to the ticket.
-  string codespace_id = 3;
-  // repo_id is the Gitea repository ID bound to the ticket.
-  int64 repo_id = 4;
-  // action is the validated gateway action.
-  string action = 5;
-  // expires_at is the Unix timestamp in seconds when the ticket expires.
-  int64 expires_at = 6;
+message RequestGiteaTokenResponse {
+  string token = 1;
+  string server_url = 2;
 }
 
-// AppendLogRequest appends manager output to the active operation log.
-message AppendLogRequest {
-  // codespace_id is the stable codespace UUID.
-  string codespace_id = 1;
-  // operation_id is the active operation UUID.
-  string operation_id = 2;
-  // task_id is the leased task UUID.
-  string task_id = 3;
-  // level is a textual log level such as info, warn, or error.
-  string level = 4;
-  // message is one log line or chunk.
-  string message = 5;
+message EnsureCodespaceGitSSHKeyRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  bytes public_key = 3;
 }
 
-// AppendLogResponse returns the stored sequence for ordering.
-message AppendLogResponse {
-  // sequence is the monotonically increasing operation-local log sequence.
-  int64 sequence = 1;
+message EnsureCodespaceGitSSHKeyResponse {
+  repeated string known_hosts_lines = 1;
+}
+
+message EffectiveCodespaceRuntimeSettings {
+  bool auto_stop_enabled = 1;
+  int64 idle_timeout_seconds = 2;
+  int64 interaction_generation = 3;
+}
+
+message RequestIdleStopRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  bool observed_auto_stop_enabled = 3;
+  int64 observed_idle_timeout_seconds = 4;
+  int64 observed_interaction_generation = 5;
+}
+
+message RequestIdleStopResponse {
+  oneof outcome {
+    IdleStopPending pending = 1;
+    IdleStopObservationChanged observation_changed = 2;
+    IdleStopNotApplicable not_applicable = 3;
+  }
+}
+
+message IdleStopPending {
+  int64 operation_rversion = 1;
+}
+
+message IdleStopObservationChanged {
+  EffectiveCodespaceRuntimeSettings runtime_settings = 1;
+}
+
+message IdleStopNotApplicable {
+  IdleStopNotApplicableReason reason = 1;
+}
+
+message ValidateOpenTokenRequest {
+  int32 protocol_version = 1;
+  string code = 2;
+}
+
+message ValidateOpenTokenResponse {
+  oneof outcome {
+    OpenTokenBinding allowed = 1;
+    FailureDetail denied = 2;
+  }
+}
+
+message OpenTokenBinding {
+  int64 user_id = 1;
+  string codespace_uuid = 2;
+  string endpoint_id = 3;
+  int64 interaction_generation = 4;
+}
+
+message ValidatePublicEndpointRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  string endpoint_id = 3;
+}
+
+message ValidatePublicEndpointResponse {
+  oneof outcome {
+    PublicEndpointAllowed allowed = 1;
+    FailureDetail denied = 2;
+  }
+}
+
+message PublicEndpointAllowed {}
+
+message VerifySSHPublicKeyRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  bytes public_key = 3;
+}
+
+message VerifySSHPublicKeyResponse {
+  oneof outcome {
+    SSHAuthBinding allowed = 1;
+    FailureDetail denied = 2;
+  }
+}
+
+message SSHAuthBinding {
+  int64 user_id = 1;
+  int64 interaction_generation = 2;
+}
+
+message ReportInstancesRequest {
+  int32 protocol_version = 1;
+  int64 inventory_generation = 2;
+  repeated RuntimeInstanceRef instances = 3;
+}
+
+message RuntimeInstanceRef {
+  string codespace_uuid = 1;
+  RuntimeState runtime_state = 2;
+  int64 observed_operation_rversion = 3;
+}
+
+message ReportInstancesResponse {
+  repeated RuntimeInstanceResult results = 1;
+}
+
+message RuntimeInstanceResult {
+  string codespace_uuid = 1;
+  EffectiveCodespaceRuntimeSettings runtime_settings = 2;
+
+  oneof action {
+    CleanupLocalRuntime cleanup_local_runtime = 10;
+    ReportRuntimeTransitionAction report_runtime_transition = 11;
+    RefetchOperation refetch_operation = 12;
+    StopLocalRuntime stop_local_runtime = 13;
+    ClearOperationContext clear_operation_context = 14;
+  }
+}
+
+message CleanupLocalRuntime {}
+
+message ReportRuntimeTransitionAction {
+  int64 current_operation_rversion = 1;
+}
+
+message StopLocalRuntime {
+  int64 current_operation_rversion = 1;
+}
+
+message RefetchOperation {
+  int64 current_operation_rversion = 1;
+}
+
+message ClearOperationContext {
+  int64 current_operation_rversion = 1;
+}
+
+message ReportRuntimeTransitionRequest {
+  int32 protocol_version = 1;
+  string codespace_uuid = 2;
+  int64 runtime_generation = 3;
+  int64 observed_operation_rversion = 4;
+  RuntimeState runtime_state = 5;
+}
+
+message ReportRuntimeTransitionResponse {}
+
+message RevalidateGatewaySessionRequest {
+  int32 protocol_version = 1;
+  oneof session {
+    EndpointSessionBinding endpoint = 2;
+    SSHSessionBinding ssh = 3;
+  }
+}
+
+message EndpointSessionBinding {
+  int64 user_id = 1;
+  string codespace_uuid = 2;
+  string endpoint_id = 3;
+}
+
+message SSHSessionBinding {
+  int64 user_id = 1;
+  string codespace_uuid = 2;
+}
+
+message RevalidateGatewaySessionResponse {
+  oneof outcome {
+    SessionAllowed allowed = 1;
+    FailureDetail denied = 2;
+  }
+}
+
+message SessionAllowed {}
+
+message FailureDetail {
+  string category = 1;
+}
+
+message StaleGenerationDetail {
+  int64 current_generation = 1;
+}
+
+message LogOffsetDetail {
+  int64 current_offset = 1;
 }

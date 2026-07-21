@@ -6,55 +6,50 @@ import "codespace/v1/types.proto";
 
 option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
 
-// CodespaceService is the control-plane API implemented by Gitea and called by
-// codespace managers.
-//
-// RegisterManager is the only RPC that does not use manager authentication.
-// Every other manager RPC must include:
-//
-//   x-codespace-manager-uuid: <manager uuid>
-//   x-codespace-manager-token: <manager token>
-//
-// The manager UUID is intentionally not carried in request messages for
-// authenticated RPCs, so callers cannot self-declare their identity.
-service CodespaceService {
-  // RegisterManager exchanges a scope-bound registration token for a manager
-  // identity and manager token.
+// ManagerService is implemented by Gitea and called by Codespace Manager.
+service ManagerService {
+  // RegisterManager exchanges the owner scope's current registration token for a Manager identity.
   rpc RegisterManager(RegisterManagerRequest) returns (RegisterManagerResponse);
 
-  // DeclareManager updates the authenticated manager's metadata and runtime
-  // capabilities after registration.
+  // DeclareManager updates Manager metadata, tags, and serves as heartbeat.
   rpc DeclareManager(DeclareManagerRequest) returns (DeclareManagerResponse);
 
-  // Ping records the authenticated manager heartbeat and load snapshot.
-  rpc Ping(PingRequest) returns (PingResponse);
+  // FetchOperations returns operations for the Manager to execute.
+  rpc FetchOperations(FetchOperationsRequest) returns (FetchOperationsResponse);
 
-  // FetchTask leases queued tasks assigned to the authenticated manager.
-  rpc FetchTask(FetchTaskRequest) returns (FetchTaskResponse);
+  // FinalizeOperation reports the final result of an active operation.
+  rpc FinalizeOperation(FinalizeOperationRequest) returns (FinalizeOperationResponse);
 
-  // AppendLog appends output to the authenticated manager's active operation.
-  rpc AppendLog(AppendLogRequest) returns (AppendLogResponse);
+  // UpdateLog appends sanitized log lines at a given offset for an active operation.
+  rpc UpdateLog(UpdateLogRequest) returns (UpdateLogResponse);
 
-  // FinishTask records the authenticated manager's result for a leased task.
-  rpc FinishTask(FinishTaskRequest) returns (FinishTaskResponse);
+  // ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
+  rpc ReportRuntimeMetadata(ReportRuntimeMetadataRequest) returns (ReportRuntimeMetadataResponse);
 
-  // ReportCodespaceStatus records runtime status for a codespace owned by the
-  // authenticated manager.
-  rpc ReportCodespaceStatus(ReportCodespaceStatusRequest) returns (ReportCodespaceStatusResponse);
+  // RequestGiteaToken returns or issues the current token for create, resume, or running recovery.
+  rpc RequestGiteaToken(RequestGiteaTokenRequest) returns (RequestGiteaTokenResponse);
 
-  // ReportCodespacePorts replaces the visible port set for a codespace owned
-  // by the authenticated manager.
-  rpc ReportCodespacePorts(ReportCodespacePortsRequest) returns (ReportCodespacePortsResponse);
+  // EnsureCodespaceGitSSHKey creates or confirms the Codespace-lifetime Git SSH public key.
+  rpc EnsureCodespaceGitSSHKey(EnsureCodespaceGitSSHKeyRequest) returns (EnsureCodespaceGitSSHKeyResponse);
 
-  // RequestGitToken issues a short-lived repository token for a codespace
-  // owned by the authenticated manager.
-  rpc RequestGitToken(RequestGitTokenRequest) returns (RequestGitTokenResponse);
+  // RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
+  rpc RequestIdleStop(RequestIdleStopRequest) returns (RequestIdleStopResponse);
 
-  // RevokeGitToken revokes active repository tokens for a codespace owned by
-  // the authenticated manager.
-  rpc RevokeGitToken(RevokeGitTokenRequest) returns (RevokeGitTokenResponse);
+  // ValidateOpenToken validates and consumes a one-time Gateway Open Token.
+  rpc ValidateOpenToken(ValidateOpenTokenRequest) returns (ValidateOpenTokenResponse);
 
-  // ValidateAccessTicket validates a short-lived user access ticket presented
-  // to the gateway.
-  rpc ValidateAccessTicket(ValidateAccessTicketRequest) returns (ValidateAccessTicketResponse);
+  // ValidatePublicEndpoint authorizes an unauthenticated request to a public Endpoint.
+  rpc ValidatePublicEndpoint(ValidatePublicEndpointRequest) returns (ValidatePublicEndpointResponse);
+
+  // VerifySSHPublicKey authenticates an SSH session via public key.
+  rpc VerifySSHPublicKey(VerifySSHPublicKeyRequest) returns (VerifySSHPublicKeyResponse);
+
+  // ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
+  rpc ReportInstances(ReportInstancesRequest) returns (ReportInstancesResponse);
+
+  // ReportRuntimeTransition reports a Manager-initiated stopped or failed fact.
+  rpc ReportRuntimeTransition(ReportRuntimeTransitionRequest) returns (ReportRuntimeTransitionResponse);
+
+  // RevalidateGatewaySession checks an existing Endpoint or SSH session.
+  rpc RevalidateGatewaySession(RevalidateGatewaySessionRequest) returns (RevalidateGatewaySessionResponse);
 }

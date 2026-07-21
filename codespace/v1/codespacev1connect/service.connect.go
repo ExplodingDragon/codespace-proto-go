@@ -21,8 +21,8 @@ import (
 const _ = connect.IsAtLeastVersion1_13_0
 
 const (
-	// CodespaceServiceName is the fully-qualified name of the CodespaceService service.
-	CodespaceServiceName = "codespace.v1.CodespaceService"
+	// ManagerServiceName is the fully-qualified name of the ManagerService service.
+	ManagerServiceName = "codespace.v1.ManagerService"
 )
 
 // These constants are the fully-qualified names of the RPCs defined in this package. They're
@@ -33,402 +33,513 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// CodespaceServiceRegisterManagerProcedure is the fully-qualified name of the CodespaceService's
+	// ManagerServiceRegisterManagerProcedure is the fully-qualified name of the ManagerService's
 	// RegisterManager RPC.
-	CodespaceServiceRegisterManagerProcedure = "/codespace.v1.CodespaceService/RegisterManager"
-	// CodespaceServiceDeclareManagerProcedure is the fully-qualified name of the CodespaceService's
+	ManagerServiceRegisterManagerProcedure = "/codespace.v1.ManagerService/RegisterManager"
+	// ManagerServiceDeclareManagerProcedure is the fully-qualified name of the ManagerService's
 	// DeclareManager RPC.
-	CodespaceServiceDeclareManagerProcedure = "/codespace.v1.CodespaceService/DeclareManager"
-	// CodespaceServicePingProcedure is the fully-qualified name of the CodespaceService's Ping RPC.
-	CodespaceServicePingProcedure = "/codespace.v1.CodespaceService/Ping"
-	// CodespaceServiceFetchTaskProcedure is the fully-qualified name of the CodespaceService's
-	// FetchTask RPC.
-	CodespaceServiceFetchTaskProcedure = "/codespace.v1.CodespaceService/FetchTask"
-	// CodespaceServiceAppendLogProcedure is the fully-qualified name of the CodespaceService's
-	// AppendLog RPC.
-	CodespaceServiceAppendLogProcedure = "/codespace.v1.CodespaceService/AppendLog"
-	// CodespaceServiceFinishTaskProcedure is the fully-qualified name of the CodespaceService's
-	// FinishTask RPC.
-	CodespaceServiceFinishTaskProcedure = "/codespace.v1.CodespaceService/FinishTask"
-	// CodespaceServiceReportCodespaceStatusProcedure is the fully-qualified name of the
-	// CodespaceService's ReportCodespaceStatus RPC.
-	CodespaceServiceReportCodespaceStatusProcedure = "/codespace.v1.CodespaceService/ReportCodespaceStatus"
-	// CodespaceServiceReportCodespacePortsProcedure is the fully-qualified name of the
-	// CodespaceService's ReportCodespacePorts RPC.
-	CodespaceServiceReportCodespacePortsProcedure = "/codespace.v1.CodespaceService/ReportCodespacePorts"
-	// CodespaceServiceRequestGitTokenProcedure is the fully-qualified name of the CodespaceService's
-	// RequestGitToken RPC.
-	CodespaceServiceRequestGitTokenProcedure = "/codespace.v1.CodespaceService/RequestGitToken"
-	// CodespaceServiceRevokeGitTokenProcedure is the fully-qualified name of the CodespaceService's
-	// RevokeGitToken RPC.
-	CodespaceServiceRevokeGitTokenProcedure = "/codespace.v1.CodespaceService/RevokeGitToken"
-	// CodespaceServiceValidateAccessTicketProcedure is the fully-qualified name of the
-	// CodespaceService's ValidateAccessTicket RPC.
-	CodespaceServiceValidateAccessTicketProcedure = "/codespace.v1.CodespaceService/ValidateAccessTicket"
+	ManagerServiceDeclareManagerProcedure = "/codespace.v1.ManagerService/DeclareManager"
+	// ManagerServiceFetchOperationsProcedure is the fully-qualified name of the ManagerService's
+	// FetchOperations RPC.
+	ManagerServiceFetchOperationsProcedure = "/codespace.v1.ManagerService/FetchOperations"
+	// ManagerServiceFinalizeOperationProcedure is the fully-qualified name of the ManagerService's
+	// FinalizeOperation RPC.
+	ManagerServiceFinalizeOperationProcedure = "/codespace.v1.ManagerService/FinalizeOperation"
+	// ManagerServiceUpdateLogProcedure is the fully-qualified name of the ManagerService's UpdateLog
+	// RPC.
+	ManagerServiceUpdateLogProcedure = "/codespace.v1.ManagerService/UpdateLog"
+	// ManagerServiceReportRuntimeMetadataProcedure is the fully-qualified name of the ManagerService's
+	// ReportRuntimeMetadata RPC.
+	ManagerServiceReportRuntimeMetadataProcedure = "/codespace.v1.ManagerService/ReportRuntimeMetadata"
+	// ManagerServiceRequestGiteaTokenProcedure is the fully-qualified name of the ManagerService's
+	// RequestGiteaToken RPC.
+	ManagerServiceRequestGiteaTokenProcedure = "/codespace.v1.ManagerService/RequestGiteaToken"
+	// ManagerServiceEnsureCodespaceGitSSHKeyProcedure is the fully-qualified name of the
+	// ManagerService's EnsureCodespaceGitSSHKey RPC.
+	ManagerServiceEnsureCodespaceGitSSHKeyProcedure = "/codespace.v1.ManagerService/EnsureCodespaceGitSSHKey"
+	// ManagerServiceRequestIdleStopProcedure is the fully-qualified name of the ManagerService's
+	// RequestIdleStop RPC.
+	ManagerServiceRequestIdleStopProcedure = "/codespace.v1.ManagerService/RequestIdleStop"
+	// ManagerServiceValidateOpenTokenProcedure is the fully-qualified name of the ManagerService's
+	// ValidateOpenToken RPC.
+	ManagerServiceValidateOpenTokenProcedure = "/codespace.v1.ManagerService/ValidateOpenToken"
+	// ManagerServiceValidatePublicEndpointProcedure is the fully-qualified name of the ManagerService's
+	// ValidatePublicEndpoint RPC.
+	ManagerServiceValidatePublicEndpointProcedure = "/codespace.v1.ManagerService/ValidatePublicEndpoint"
+	// ManagerServiceVerifySSHPublicKeyProcedure is the fully-qualified name of the ManagerService's
+	// VerifySSHPublicKey RPC.
+	ManagerServiceVerifySSHPublicKeyProcedure = "/codespace.v1.ManagerService/VerifySSHPublicKey"
+	// ManagerServiceReportInstancesProcedure is the fully-qualified name of the ManagerService's
+	// ReportInstances RPC.
+	ManagerServiceReportInstancesProcedure = "/codespace.v1.ManagerService/ReportInstances"
+	// ManagerServiceReportRuntimeTransitionProcedure is the fully-qualified name of the
+	// ManagerService's ReportRuntimeTransition RPC.
+	ManagerServiceReportRuntimeTransitionProcedure = "/codespace.v1.ManagerService/ReportRuntimeTransition"
+	// ManagerServiceRevalidateGatewaySessionProcedure is the fully-qualified name of the
+	// ManagerService's RevalidateGatewaySession RPC.
+	ManagerServiceRevalidateGatewaySessionProcedure = "/codespace.v1.ManagerService/RevalidateGatewaySession"
 )
 
-// CodespaceServiceClient is a client for the codespace.v1.CodespaceService service.
-type CodespaceServiceClient interface {
-	// RegisterManager exchanges a scope-bound registration token for a manager
-	// identity and manager token.
+// ManagerServiceClient is a client for the codespace.v1.ManagerService service.
+type ManagerServiceClient interface {
+	// RegisterManager exchanges the owner scope's current registration token for a Manager identity.
 	RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error)
-	// DeclareManager updates the authenticated manager's metadata and runtime
-	// capabilities after registration.
+	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
-	// Ping records the authenticated manager heartbeat and load snapshot.
-	Ping(context.Context, *connect.Request[v1.PingRequest]) (*connect.Response[v1.PingResponse], error)
-	// FetchTask leases queued tasks assigned to the authenticated manager.
-	FetchTask(context.Context, *connect.Request[v1.FetchTaskRequest]) (*connect.Response[v1.FetchTaskResponse], error)
-	// AppendLog appends output to the authenticated manager's active operation.
-	AppendLog(context.Context, *connect.Request[v1.AppendLogRequest]) (*connect.Response[v1.AppendLogResponse], error)
-	// FinishTask records the authenticated manager's result for a leased task.
-	FinishTask(context.Context, *connect.Request[v1.FinishTaskRequest]) (*connect.Response[v1.FinishTaskResponse], error)
-	// ReportCodespaceStatus records runtime status for a codespace owned by the
-	// authenticated manager.
-	ReportCodespaceStatus(context.Context, *connect.Request[v1.ReportCodespaceStatusRequest]) (*connect.Response[v1.ReportCodespaceStatusResponse], error)
-	// ReportCodespacePorts replaces the visible port set for a codespace owned
-	// by the authenticated manager.
-	ReportCodespacePorts(context.Context, *connect.Request[v1.ReportCodespacePortsRequest]) (*connect.Response[v1.ReportCodespacePortsResponse], error)
-	// RequestGitToken issues a short-lived repository token for a codespace
-	// owned by the authenticated manager.
-	RequestGitToken(context.Context, *connect.Request[v1.RequestGitTokenRequest]) (*connect.Response[v1.RequestGitTokenResponse], error)
-	// RevokeGitToken revokes active repository tokens for a codespace owned by
-	// the authenticated manager.
-	RevokeGitToken(context.Context, *connect.Request[v1.RevokeGitTokenRequest]) (*connect.Response[v1.RevokeGitTokenResponse], error)
-	// ValidateAccessTicket validates a short-lived user access ticket presented
-	// to the gateway.
-	ValidateAccessTicket(context.Context, *connect.Request[v1.ValidateAccessTicketRequest]) (*connect.Response[v1.ValidateAccessTicketResponse], error)
+	// FetchOperations returns operations for the Manager to execute.
+	FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error)
+	// FinalizeOperation reports the final result of an active operation.
+	FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error)
+	// UpdateLog appends sanitized log lines at a given offset for an active operation.
+	UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error)
+	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
+	ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error)
+	// RequestGiteaToken returns or issues the current token for create, resume, or running recovery.
+	RequestGiteaToken(context.Context, *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error)
+	// EnsureCodespaceGitSSHKey creates or confirms the Codespace-lifetime Git SSH public key.
+	EnsureCodespaceGitSSHKey(context.Context, *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error)
+	// RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
+	RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error)
+	// ValidateOpenToken validates and consumes a one-time Gateway Open Token.
+	ValidateOpenToken(context.Context, *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error)
+	// ValidatePublicEndpoint authorizes an unauthenticated request to a public Endpoint.
+	ValidatePublicEndpoint(context.Context, *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error)
+	// VerifySSHPublicKey authenticates an SSH session via public key.
+	VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error)
+	// ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
+	ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error)
+	// ReportRuntimeTransition reports a Manager-initiated stopped or failed fact.
+	ReportRuntimeTransition(context.Context, *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error)
+	// RevalidateGatewaySession checks an existing Endpoint or SSH session.
+	RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error)
 }
 
-// NewCodespaceServiceClient constructs a client for the codespace.v1.CodespaceService service. By
+// NewManagerServiceClient constructs a client for the codespace.v1.ManagerService service. By
 // default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses,
 // and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
 // connect.WithGRPC() or connect.WithGRPCWeb() options.
 //
 // The URL supplied here should be the base URL for the Connect or gRPC server (for example,
 // http://api.acme.com or https://acme.com/grpc).
-func NewCodespaceServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) CodespaceServiceClient {
+func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) ManagerServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	codespaceServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("CodespaceService").Methods()
-	return &codespaceServiceClient{
+	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
+	return &managerServiceClient{
 		registerManager: connect.NewClient[v1.RegisterManagerRequest, v1.RegisterManagerResponse](
 			httpClient,
-			baseURL+CodespaceServiceRegisterManagerProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("RegisterManager")),
+			baseURL+ManagerServiceRegisterManagerProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("RegisterManager")),
 			connect.WithClientOptions(opts...),
 		),
 		declareManager: connect.NewClient[v1.DeclareManagerRequest, v1.DeclareManagerResponse](
 			httpClient,
-			baseURL+CodespaceServiceDeclareManagerProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("DeclareManager")),
+			baseURL+ManagerServiceDeclareManagerProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("DeclareManager")),
 			connect.WithClientOptions(opts...),
 		),
-		ping: connect.NewClient[v1.PingRequest, v1.PingResponse](
+		fetchOperations: connect.NewClient[v1.FetchOperationsRequest, v1.FetchOperationsResponse](
 			httpClient,
-			baseURL+CodespaceServicePingProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("Ping")),
+			baseURL+ManagerServiceFetchOperationsProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("FetchOperations")),
 			connect.WithClientOptions(opts...),
 		),
-		fetchTask: connect.NewClient[v1.FetchTaskRequest, v1.FetchTaskResponse](
+		finalizeOperation: connect.NewClient[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse](
 			httpClient,
-			baseURL+CodespaceServiceFetchTaskProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("FetchTask")),
+			baseURL+ManagerServiceFinalizeOperationProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("FinalizeOperation")),
 			connect.WithClientOptions(opts...),
 		),
-		appendLog: connect.NewClient[v1.AppendLogRequest, v1.AppendLogResponse](
+		updateLog: connect.NewClient[v1.UpdateLogRequest, v1.UpdateLogResponse](
 			httpClient,
-			baseURL+CodespaceServiceAppendLogProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("AppendLog")),
+			baseURL+ManagerServiceUpdateLogProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("UpdateLog")),
 			connect.WithClientOptions(opts...),
 		),
-		finishTask: connect.NewClient[v1.FinishTaskRequest, v1.FinishTaskResponse](
+		reportRuntimeMetadata: connect.NewClient[v1.ReportRuntimeMetadataRequest, v1.ReportRuntimeMetadataResponse](
 			httpClient,
-			baseURL+CodespaceServiceFinishTaskProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("FinishTask")),
+			baseURL+ManagerServiceReportRuntimeMetadataProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeMetadata")),
 			connect.WithClientOptions(opts...),
 		),
-		reportCodespaceStatus: connect.NewClient[v1.ReportCodespaceStatusRequest, v1.ReportCodespaceStatusResponse](
+		requestGiteaToken: connect.NewClient[v1.RequestGiteaTokenRequest, v1.RequestGiteaTokenResponse](
 			httpClient,
-			baseURL+CodespaceServiceReportCodespaceStatusProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("ReportCodespaceStatus")),
+			baseURL+ManagerServiceRequestGiteaTokenProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("RequestGiteaToken")),
 			connect.WithClientOptions(opts...),
 		),
-		reportCodespacePorts: connect.NewClient[v1.ReportCodespacePortsRequest, v1.ReportCodespacePortsResponse](
+		ensureCodespaceGitSSHKey: connect.NewClient[v1.EnsureCodespaceGitSSHKeyRequest, v1.EnsureCodespaceGitSSHKeyResponse](
 			httpClient,
-			baseURL+CodespaceServiceReportCodespacePortsProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("ReportCodespacePorts")),
+			baseURL+ManagerServiceEnsureCodespaceGitSSHKeyProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("EnsureCodespaceGitSSHKey")),
 			connect.WithClientOptions(opts...),
 		),
-		requestGitToken: connect.NewClient[v1.RequestGitTokenRequest, v1.RequestGitTokenResponse](
+		requestIdleStop: connect.NewClient[v1.RequestIdleStopRequest, v1.RequestIdleStopResponse](
 			httpClient,
-			baseURL+CodespaceServiceRequestGitTokenProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("RequestGitToken")),
+			baseURL+ManagerServiceRequestIdleStopProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("RequestIdleStop")),
 			connect.WithClientOptions(opts...),
 		),
-		revokeGitToken: connect.NewClient[v1.RevokeGitTokenRequest, v1.RevokeGitTokenResponse](
+		validateOpenToken: connect.NewClient[v1.ValidateOpenTokenRequest, v1.ValidateOpenTokenResponse](
 			httpClient,
-			baseURL+CodespaceServiceRevokeGitTokenProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("RevokeGitToken")),
+			baseURL+ManagerServiceValidateOpenTokenProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("ValidateOpenToken")),
 			connect.WithClientOptions(opts...),
 		),
-		validateAccessTicket: connect.NewClient[v1.ValidateAccessTicketRequest, v1.ValidateAccessTicketResponse](
+		validatePublicEndpoint: connect.NewClient[v1.ValidatePublicEndpointRequest, v1.ValidatePublicEndpointResponse](
 			httpClient,
-			baseURL+CodespaceServiceValidateAccessTicketProcedure,
-			connect.WithSchema(codespaceServiceMethods.ByName("ValidateAccessTicket")),
+			baseURL+ManagerServiceValidatePublicEndpointProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("ValidatePublicEndpoint")),
+			connect.WithClientOptions(opts...),
+		),
+		verifySSHPublicKey: connect.NewClient[v1.VerifySSHPublicKeyRequest, v1.VerifySSHPublicKeyResponse](
+			httpClient,
+			baseURL+ManagerServiceVerifySSHPublicKeyProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("VerifySSHPublicKey")),
+			connect.WithClientOptions(opts...),
+		),
+		reportInstances: connect.NewClient[v1.ReportInstancesRequest, v1.ReportInstancesResponse](
+			httpClient,
+			baseURL+ManagerServiceReportInstancesProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("ReportInstances")),
+			connect.WithClientOptions(opts...),
+		),
+		reportRuntimeTransition: connect.NewClient[v1.ReportRuntimeTransitionRequest, v1.ReportRuntimeTransitionResponse](
+			httpClient,
+			baseURL+ManagerServiceReportRuntimeTransitionProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeTransition")),
+			connect.WithClientOptions(opts...),
+		),
+		revalidateGatewaySession: connect.NewClient[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse](
+			httpClient,
+			baseURL+ManagerServiceRevalidateGatewaySessionProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("RevalidateGatewaySession")),
 			connect.WithClientOptions(opts...),
 		),
 	}
 }
 
-// codespaceServiceClient implements CodespaceServiceClient.
-type codespaceServiceClient struct {
-	registerManager       *connect.Client[v1.RegisterManagerRequest, v1.RegisterManagerResponse]
-	declareManager        *connect.Client[v1.DeclareManagerRequest, v1.DeclareManagerResponse]
-	ping                  *connect.Client[v1.PingRequest, v1.PingResponse]
-	fetchTask             *connect.Client[v1.FetchTaskRequest, v1.FetchTaskResponse]
-	appendLog             *connect.Client[v1.AppendLogRequest, v1.AppendLogResponse]
-	finishTask            *connect.Client[v1.FinishTaskRequest, v1.FinishTaskResponse]
-	reportCodespaceStatus *connect.Client[v1.ReportCodespaceStatusRequest, v1.ReportCodespaceStatusResponse]
-	reportCodespacePorts  *connect.Client[v1.ReportCodespacePortsRequest, v1.ReportCodespacePortsResponse]
-	requestGitToken       *connect.Client[v1.RequestGitTokenRequest, v1.RequestGitTokenResponse]
-	revokeGitToken        *connect.Client[v1.RevokeGitTokenRequest, v1.RevokeGitTokenResponse]
-	validateAccessTicket  *connect.Client[v1.ValidateAccessTicketRequest, v1.ValidateAccessTicketResponse]
+// managerServiceClient implements ManagerServiceClient.
+type managerServiceClient struct {
+	registerManager          *connect.Client[v1.RegisterManagerRequest, v1.RegisterManagerResponse]
+	declareManager           *connect.Client[v1.DeclareManagerRequest, v1.DeclareManagerResponse]
+	fetchOperations          *connect.Client[v1.FetchOperationsRequest, v1.FetchOperationsResponse]
+	finalizeOperation        *connect.Client[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse]
+	updateLog                *connect.Client[v1.UpdateLogRequest, v1.UpdateLogResponse]
+	reportRuntimeMetadata    *connect.Client[v1.ReportRuntimeMetadataRequest, v1.ReportRuntimeMetadataResponse]
+	requestGiteaToken        *connect.Client[v1.RequestGiteaTokenRequest, v1.RequestGiteaTokenResponse]
+	ensureCodespaceGitSSHKey *connect.Client[v1.EnsureCodespaceGitSSHKeyRequest, v1.EnsureCodespaceGitSSHKeyResponse]
+	requestIdleStop          *connect.Client[v1.RequestIdleStopRequest, v1.RequestIdleStopResponse]
+	validateOpenToken        *connect.Client[v1.ValidateOpenTokenRequest, v1.ValidateOpenTokenResponse]
+	validatePublicEndpoint   *connect.Client[v1.ValidatePublicEndpointRequest, v1.ValidatePublicEndpointResponse]
+	verifySSHPublicKey       *connect.Client[v1.VerifySSHPublicKeyRequest, v1.VerifySSHPublicKeyResponse]
+	reportInstances          *connect.Client[v1.ReportInstancesRequest, v1.ReportInstancesResponse]
+	reportRuntimeTransition  *connect.Client[v1.ReportRuntimeTransitionRequest, v1.ReportRuntimeTransitionResponse]
+	revalidateGatewaySession *connect.Client[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse]
 }
 
-// RegisterManager calls codespace.v1.CodespaceService.RegisterManager.
-func (c *codespaceServiceClient) RegisterManager(ctx context.Context, req *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error) {
+// RegisterManager calls codespace.v1.ManagerService.RegisterManager.
+func (c *managerServiceClient) RegisterManager(ctx context.Context, req *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error) {
 	return c.registerManager.CallUnary(ctx, req)
 }
 
-// DeclareManager calls codespace.v1.CodespaceService.DeclareManager.
-func (c *codespaceServiceClient) DeclareManager(ctx context.Context, req *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
+// DeclareManager calls codespace.v1.ManagerService.DeclareManager.
+func (c *managerServiceClient) DeclareManager(ctx context.Context, req *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
 	return c.declareManager.CallUnary(ctx, req)
 }
 
-// Ping calls codespace.v1.CodespaceService.Ping.
-func (c *codespaceServiceClient) Ping(ctx context.Context, req *connect.Request[v1.PingRequest]) (*connect.Response[v1.PingResponse], error) {
-	return c.ping.CallUnary(ctx, req)
+// FetchOperations calls codespace.v1.ManagerService.FetchOperations.
+func (c *managerServiceClient) FetchOperations(ctx context.Context, req *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error) {
+	return c.fetchOperations.CallUnary(ctx, req)
 }
 
-// FetchTask calls codespace.v1.CodespaceService.FetchTask.
-func (c *codespaceServiceClient) FetchTask(ctx context.Context, req *connect.Request[v1.FetchTaskRequest]) (*connect.Response[v1.FetchTaskResponse], error) {
-	return c.fetchTask.CallUnary(ctx, req)
+// FinalizeOperation calls codespace.v1.ManagerService.FinalizeOperation.
+func (c *managerServiceClient) FinalizeOperation(ctx context.Context, req *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error) {
+	return c.finalizeOperation.CallUnary(ctx, req)
 }
 
-// AppendLog calls codespace.v1.CodespaceService.AppendLog.
-func (c *codespaceServiceClient) AppendLog(ctx context.Context, req *connect.Request[v1.AppendLogRequest]) (*connect.Response[v1.AppendLogResponse], error) {
-	return c.appendLog.CallUnary(ctx, req)
+// UpdateLog calls codespace.v1.ManagerService.UpdateLog.
+func (c *managerServiceClient) UpdateLog(ctx context.Context, req *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error) {
+	return c.updateLog.CallUnary(ctx, req)
 }
 
-// FinishTask calls codespace.v1.CodespaceService.FinishTask.
-func (c *codespaceServiceClient) FinishTask(ctx context.Context, req *connect.Request[v1.FinishTaskRequest]) (*connect.Response[v1.FinishTaskResponse], error) {
-	return c.finishTask.CallUnary(ctx, req)
+// ReportRuntimeMetadata calls codespace.v1.ManagerService.ReportRuntimeMetadata.
+func (c *managerServiceClient) ReportRuntimeMetadata(ctx context.Context, req *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error) {
+	return c.reportRuntimeMetadata.CallUnary(ctx, req)
 }
 
-// ReportCodespaceStatus calls codespace.v1.CodespaceService.ReportCodespaceStatus.
-func (c *codespaceServiceClient) ReportCodespaceStatus(ctx context.Context, req *connect.Request[v1.ReportCodespaceStatusRequest]) (*connect.Response[v1.ReportCodespaceStatusResponse], error) {
-	return c.reportCodespaceStatus.CallUnary(ctx, req)
+// RequestGiteaToken calls codespace.v1.ManagerService.RequestGiteaToken.
+func (c *managerServiceClient) RequestGiteaToken(ctx context.Context, req *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error) {
+	return c.requestGiteaToken.CallUnary(ctx, req)
 }
 
-// ReportCodespacePorts calls codespace.v1.CodespaceService.ReportCodespacePorts.
-func (c *codespaceServiceClient) ReportCodespacePorts(ctx context.Context, req *connect.Request[v1.ReportCodespacePortsRequest]) (*connect.Response[v1.ReportCodespacePortsResponse], error) {
-	return c.reportCodespacePorts.CallUnary(ctx, req)
+// EnsureCodespaceGitSSHKey calls codespace.v1.ManagerService.EnsureCodespaceGitSSHKey.
+func (c *managerServiceClient) EnsureCodespaceGitSSHKey(ctx context.Context, req *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error) {
+	return c.ensureCodespaceGitSSHKey.CallUnary(ctx, req)
 }
 
-// RequestGitToken calls codespace.v1.CodespaceService.RequestGitToken.
-func (c *codespaceServiceClient) RequestGitToken(ctx context.Context, req *connect.Request[v1.RequestGitTokenRequest]) (*connect.Response[v1.RequestGitTokenResponse], error) {
-	return c.requestGitToken.CallUnary(ctx, req)
+// RequestIdleStop calls codespace.v1.ManagerService.RequestIdleStop.
+func (c *managerServiceClient) RequestIdleStop(ctx context.Context, req *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error) {
+	return c.requestIdleStop.CallUnary(ctx, req)
 }
 
-// RevokeGitToken calls codespace.v1.CodespaceService.RevokeGitToken.
-func (c *codespaceServiceClient) RevokeGitToken(ctx context.Context, req *connect.Request[v1.RevokeGitTokenRequest]) (*connect.Response[v1.RevokeGitTokenResponse], error) {
-	return c.revokeGitToken.CallUnary(ctx, req)
+// ValidateOpenToken calls codespace.v1.ManagerService.ValidateOpenToken.
+func (c *managerServiceClient) ValidateOpenToken(ctx context.Context, req *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error) {
+	return c.validateOpenToken.CallUnary(ctx, req)
 }
 
-// ValidateAccessTicket calls codespace.v1.CodespaceService.ValidateAccessTicket.
-func (c *codespaceServiceClient) ValidateAccessTicket(ctx context.Context, req *connect.Request[v1.ValidateAccessTicketRequest]) (*connect.Response[v1.ValidateAccessTicketResponse], error) {
-	return c.validateAccessTicket.CallUnary(ctx, req)
+// ValidatePublicEndpoint calls codespace.v1.ManagerService.ValidatePublicEndpoint.
+func (c *managerServiceClient) ValidatePublicEndpoint(ctx context.Context, req *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error) {
+	return c.validatePublicEndpoint.CallUnary(ctx, req)
 }
 
-// CodespaceServiceHandler is an implementation of the codespace.v1.CodespaceService service.
-type CodespaceServiceHandler interface {
-	// RegisterManager exchanges a scope-bound registration token for a manager
-	// identity and manager token.
+// VerifySSHPublicKey calls codespace.v1.ManagerService.VerifySSHPublicKey.
+func (c *managerServiceClient) VerifySSHPublicKey(ctx context.Context, req *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error) {
+	return c.verifySSHPublicKey.CallUnary(ctx, req)
+}
+
+// ReportInstances calls codespace.v1.ManagerService.ReportInstances.
+func (c *managerServiceClient) ReportInstances(ctx context.Context, req *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error) {
+	return c.reportInstances.CallUnary(ctx, req)
+}
+
+// ReportRuntimeTransition calls codespace.v1.ManagerService.ReportRuntimeTransition.
+func (c *managerServiceClient) ReportRuntimeTransition(ctx context.Context, req *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error) {
+	return c.reportRuntimeTransition.CallUnary(ctx, req)
+}
+
+// RevalidateGatewaySession calls codespace.v1.ManagerService.RevalidateGatewaySession.
+func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error) {
+	return c.revalidateGatewaySession.CallUnary(ctx, req)
+}
+
+// ManagerServiceHandler is an implementation of the codespace.v1.ManagerService service.
+type ManagerServiceHandler interface {
+	// RegisterManager exchanges the owner scope's current registration token for a Manager identity.
 	RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error)
-	// DeclareManager updates the authenticated manager's metadata and runtime
-	// capabilities after registration.
+	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
-	// Ping records the authenticated manager heartbeat and load snapshot.
-	Ping(context.Context, *connect.Request[v1.PingRequest]) (*connect.Response[v1.PingResponse], error)
-	// FetchTask leases queued tasks assigned to the authenticated manager.
-	FetchTask(context.Context, *connect.Request[v1.FetchTaskRequest]) (*connect.Response[v1.FetchTaskResponse], error)
-	// AppendLog appends output to the authenticated manager's active operation.
-	AppendLog(context.Context, *connect.Request[v1.AppendLogRequest]) (*connect.Response[v1.AppendLogResponse], error)
-	// FinishTask records the authenticated manager's result for a leased task.
-	FinishTask(context.Context, *connect.Request[v1.FinishTaskRequest]) (*connect.Response[v1.FinishTaskResponse], error)
-	// ReportCodespaceStatus records runtime status for a codespace owned by the
-	// authenticated manager.
-	ReportCodespaceStatus(context.Context, *connect.Request[v1.ReportCodespaceStatusRequest]) (*connect.Response[v1.ReportCodespaceStatusResponse], error)
-	// ReportCodespacePorts replaces the visible port set for a codespace owned
-	// by the authenticated manager.
-	ReportCodespacePorts(context.Context, *connect.Request[v1.ReportCodespacePortsRequest]) (*connect.Response[v1.ReportCodespacePortsResponse], error)
-	// RequestGitToken issues a short-lived repository token for a codespace
-	// owned by the authenticated manager.
-	RequestGitToken(context.Context, *connect.Request[v1.RequestGitTokenRequest]) (*connect.Response[v1.RequestGitTokenResponse], error)
-	// RevokeGitToken revokes active repository tokens for a codespace owned by
-	// the authenticated manager.
-	RevokeGitToken(context.Context, *connect.Request[v1.RevokeGitTokenRequest]) (*connect.Response[v1.RevokeGitTokenResponse], error)
-	// ValidateAccessTicket validates a short-lived user access ticket presented
-	// to the gateway.
-	ValidateAccessTicket(context.Context, *connect.Request[v1.ValidateAccessTicketRequest]) (*connect.Response[v1.ValidateAccessTicketResponse], error)
+	// FetchOperations returns operations for the Manager to execute.
+	FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error)
+	// FinalizeOperation reports the final result of an active operation.
+	FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error)
+	// UpdateLog appends sanitized log lines at a given offset for an active operation.
+	UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error)
+	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
+	ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error)
+	// RequestGiteaToken returns or issues the current token for create, resume, or running recovery.
+	RequestGiteaToken(context.Context, *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error)
+	// EnsureCodespaceGitSSHKey creates or confirms the Codespace-lifetime Git SSH public key.
+	EnsureCodespaceGitSSHKey(context.Context, *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error)
+	// RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
+	RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error)
+	// ValidateOpenToken validates and consumes a one-time Gateway Open Token.
+	ValidateOpenToken(context.Context, *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error)
+	// ValidatePublicEndpoint authorizes an unauthenticated request to a public Endpoint.
+	ValidatePublicEndpoint(context.Context, *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error)
+	// VerifySSHPublicKey authenticates an SSH session via public key.
+	VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error)
+	// ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
+	ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error)
+	// ReportRuntimeTransition reports a Manager-initiated stopped or failed fact.
+	ReportRuntimeTransition(context.Context, *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error)
+	// RevalidateGatewaySession checks an existing Endpoint or SSH session.
+	RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error)
 }
 
-// NewCodespaceServiceHandler builds an HTTP handler from the service implementation. It returns the
+// NewManagerServiceHandler builds an HTTP handler from the service implementation. It returns the
 // path on which to mount the handler and the handler itself.
 //
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
-func NewCodespaceServiceHandler(svc CodespaceServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	codespaceServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("CodespaceService").Methods()
-	codespaceServiceRegisterManagerHandler := connect.NewUnaryHandler(
-		CodespaceServiceRegisterManagerProcedure,
+func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
+	managerServiceRegisterManagerHandler := connect.NewUnaryHandler(
+		ManagerServiceRegisterManagerProcedure,
 		svc.RegisterManager,
-		connect.WithSchema(codespaceServiceMethods.ByName("RegisterManager")),
+		connect.WithSchema(managerServiceMethods.ByName("RegisterManager")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceDeclareManagerHandler := connect.NewUnaryHandler(
-		CodespaceServiceDeclareManagerProcedure,
+	managerServiceDeclareManagerHandler := connect.NewUnaryHandler(
+		ManagerServiceDeclareManagerProcedure,
 		svc.DeclareManager,
-		connect.WithSchema(codespaceServiceMethods.ByName("DeclareManager")),
+		connect.WithSchema(managerServiceMethods.ByName("DeclareManager")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServicePingHandler := connect.NewUnaryHandler(
-		CodespaceServicePingProcedure,
-		svc.Ping,
-		connect.WithSchema(codespaceServiceMethods.ByName("Ping")),
+	managerServiceFetchOperationsHandler := connect.NewUnaryHandler(
+		ManagerServiceFetchOperationsProcedure,
+		svc.FetchOperations,
+		connect.WithSchema(managerServiceMethods.ByName("FetchOperations")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceFetchTaskHandler := connect.NewUnaryHandler(
-		CodespaceServiceFetchTaskProcedure,
-		svc.FetchTask,
-		connect.WithSchema(codespaceServiceMethods.ByName("FetchTask")),
+	managerServiceFinalizeOperationHandler := connect.NewUnaryHandler(
+		ManagerServiceFinalizeOperationProcedure,
+		svc.FinalizeOperation,
+		connect.WithSchema(managerServiceMethods.ByName("FinalizeOperation")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceAppendLogHandler := connect.NewUnaryHandler(
-		CodespaceServiceAppendLogProcedure,
-		svc.AppendLog,
-		connect.WithSchema(codespaceServiceMethods.ByName("AppendLog")),
+	managerServiceUpdateLogHandler := connect.NewUnaryHandler(
+		ManagerServiceUpdateLogProcedure,
+		svc.UpdateLog,
+		connect.WithSchema(managerServiceMethods.ByName("UpdateLog")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceFinishTaskHandler := connect.NewUnaryHandler(
-		CodespaceServiceFinishTaskProcedure,
-		svc.FinishTask,
-		connect.WithSchema(codespaceServiceMethods.ByName("FinishTask")),
+	managerServiceReportRuntimeMetadataHandler := connect.NewUnaryHandler(
+		ManagerServiceReportRuntimeMetadataProcedure,
+		svc.ReportRuntimeMetadata,
+		connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeMetadata")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceReportCodespaceStatusHandler := connect.NewUnaryHandler(
-		CodespaceServiceReportCodespaceStatusProcedure,
-		svc.ReportCodespaceStatus,
-		connect.WithSchema(codespaceServiceMethods.ByName("ReportCodespaceStatus")),
+	managerServiceRequestGiteaTokenHandler := connect.NewUnaryHandler(
+		ManagerServiceRequestGiteaTokenProcedure,
+		svc.RequestGiteaToken,
+		connect.WithSchema(managerServiceMethods.ByName("RequestGiteaToken")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceReportCodespacePortsHandler := connect.NewUnaryHandler(
-		CodespaceServiceReportCodespacePortsProcedure,
-		svc.ReportCodespacePorts,
-		connect.WithSchema(codespaceServiceMethods.ByName("ReportCodespacePorts")),
+	managerServiceEnsureCodespaceGitSSHKeyHandler := connect.NewUnaryHandler(
+		ManagerServiceEnsureCodespaceGitSSHKeyProcedure,
+		svc.EnsureCodespaceGitSSHKey,
+		connect.WithSchema(managerServiceMethods.ByName("EnsureCodespaceGitSSHKey")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceRequestGitTokenHandler := connect.NewUnaryHandler(
-		CodespaceServiceRequestGitTokenProcedure,
-		svc.RequestGitToken,
-		connect.WithSchema(codespaceServiceMethods.ByName("RequestGitToken")),
+	managerServiceRequestIdleStopHandler := connect.NewUnaryHandler(
+		ManagerServiceRequestIdleStopProcedure,
+		svc.RequestIdleStop,
+		connect.WithSchema(managerServiceMethods.ByName("RequestIdleStop")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceRevokeGitTokenHandler := connect.NewUnaryHandler(
-		CodespaceServiceRevokeGitTokenProcedure,
-		svc.RevokeGitToken,
-		connect.WithSchema(codespaceServiceMethods.ByName("RevokeGitToken")),
+	managerServiceValidateOpenTokenHandler := connect.NewUnaryHandler(
+		ManagerServiceValidateOpenTokenProcedure,
+		svc.ValidateOpenToken,
+		connect.WithSchema(managerServiceMethods.ByName("ValidateOpenToken")),
 		connect.WithHandlerOptions(opts...),
 	)
-	codespaceServiceValidateAccessTicketHandler := connect.NewUnaryHandler(
-		CodespaceServiceValidateAccessTicketProcedure,
-		svc.ValidateAccessTicket,
-		connect.WithSchema(codespaceServiceMethods.ByName("ValidateAccessTicket")),
+	managerServiceValidatePublicEndpointHandler := connect.NewUnaryHandler(
+		ManagerServiceValidatePublicEndpointProcedure,
+		svc.ValidatePublicEndpoint,
+		connect.WithSchema(managerServiceMethods.ByName("ValidatePublicEndpoint")),
 		connect.WithHandlerOptions(opts...),
 	)
-	return "/codespace.v1.CodespaceService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	managerServiceVerifySSHPublicKeyHandler := connect.NewUnaryHandler(
+		ManagerServiceVerifySSHPublicKeyProcedure,
+		svc.VerifySSHPublicKey,
+		connect.WithSchema(managerServiceMethods.ByName("VerifySSHPublicKey")),
+		connect.WithHandlerOptions(opts...),
+	)
+	managerServiceReportInstancesHandler := connect.NewUnaryHandler(
+		ManagerServiceReportInstancesProcedure,
+		svc.ReportInstances,
+		connect.WithSchema(managerServiceMethods.ByName("ReportInstances")),
+		connect.WithHandlerOptions(opts...),
+	)
+	managerServiceReportRuntimeTransitionHandler := connect.NewUnaryHandler(
+		ManagerServiceReportRuntimeTransitionProcedure,
+		svc.ReportRuntimeTransition,
+		connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeTransition")),
+		connect.WithHandlerOptions(opts...),
+	)
+	managerServiceRevalidateGatewaySessionHandler := connect.NewUnaryHandler(
+		ManagerServiceRevalidateGatewaySessionProcedure,
+		svc.RevalidateGatewaySession,
+		connect.WithSchema(managerServiceMethods.ByName("RevalidateGatewaySession")),
+		connect.WithHandlerOptions(opts...),
+	)
+	return "/codespace.v1.ManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case CodespaceServiceRegisterManagerProcedure:
-			codespaceServiceRegisterManagerHandler.ServeHTTP(w, r)
-		case CodespaceServiceDeclareManagerProcedure:
-			codespaceServiceDeclareManagerHandler.ServeHTTP(w, r)
-		case CodespaceServicePingProcedure:
-			codespaceServicePingHandler.ServeHTTP(w, r)
-		case CodespaceServiceFetchTaskProcedure:
-			codespaceServiceFetchTaskHandler.ServeHTTP(w, r)
-		case CodespaceServiceAppendLogProcedure:
-			codespaceServiceAppendLogHandler.ServeHTTP(w, r)
-		case CodespaceServiceFinishTaskProcedure:
-			codespaceServiceFinishTaskHandler.ServeHTTP(w, r)
-		case CodespaceServiceReportCodespaceStatusProcedure:
-			codespaceServiceReportCodespaceStatusHandler.ServeHTTP(w, r)
-		case CodespaceServiceReportCodespacePortsProcedure:
-			codespaceServiceReportCodespacePortsHandler.ServeHTTP(w, r)
-		case CodespaceServiceRequestGitTokenProcedure:
-			codespaceServiceRequestGitTokenHandler.ServeHTTP(w, r)
-		case CodespaceServiceRevokeGitTokenProcedure:
-			codespaceServiceRevokeGitTokenHandler.ServeHTTP(w, r)
-		case CodespaceServiceValidateAccessTicketProcedure:
-			codespaceServiceValidateAccessTicketHandler.ServeHTTP(w, r)
+		case ManagerServiceRegisterManagerProcedure:
+			managerServiceRegisterManagerHandler.ServeHTTP(w, r)
+		case ManagerServiceDeclareManagerProcedure:
+			managerServiceDeclareManagerHandler.ServeHTTP(w, r)
+		case ManagerServiceFetchOperationsProcedure:
+			managerServiceFetchOperationsHandler.ServeHTTP(w, r)
+		case ManagerServiceFinalizeOperationProcedure:
+			managerServiceFinalizeOperationHandler.ServeHTTP(w, r)
+		case ManagerServiceUpdateLogProcedure:
+			managerServiceUpdateLogHandler.ServeHTTP(w, r)
+		case ManagerServiceReportRuntimeMetadataProcedure:
+			managerServiceReportRuntimeMetadataHandler.ServeHTTP(w, r)
+		case ManagerServiceRequestGiteaTokenProcedure:
+			managerServiceRequestGiteaTokenHandler.ServeHTTP(w, r)
+		case ManagerServiceEnsureCodespaceGitSSHKeyProcedure:
+			managerServiceEnsureCodespaceGitSSHKeyHandler.ServeHTTP(w, r)
+		case ManagerServiceRequestIdleStopProcedure:
+			managerServiceRequestIdleStopHandler.ServeHTTP(w, r)
+		case ManagerServiceValidateOpenTokenProcedure:
+			managerServiceValidateOpenTokenHandler.ServeHTTP(w, r)
+		case ManagerServiceValidatePublicEndpointProcedure:
+			managerServiceValidatePublicEndpointHandler.ServeHTTP(w, r)
+		case ManagerServiceVerifySSHPublicKeyProcedure:
+			managerServiceVerifySSHPublicKeyHandler.ServeHTTP(w, r)
+		case ManagerServiceReportInstancesProcedure:
+			managerServiceReportInstancesHandler.ServeHTTP(w, r)
+		case ManagerServiceReportRuntimeTransitionProcedure:
+			managerServiceReportRuntimeTransitionHandler.ServeHTTP(w, r)
+		case ManagerServiceRevalidateGatewaySessionProcedure:
+			managerServiceRevalidateGatewaySessionHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
 	})
 }
 
-// UnimplementedCodespaceServiceHandler returns CodeUnimplemented from all methods.
-type UnimplementedCodespaceServiceHandler struct{}
+// UnimplementedManagerServiceHandler returns CodeUnimplemented from all methods.
+type UnimplementedManagerServiceHandler struct{}
 
-func (UnimplementedCodespaceServiceHandler) RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.RegisterManager is not implemented"))
+func (UnimplementedManagerServiceHandler) RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RegisterManager is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.DeclareManager is not implemented"))
+func (UnimplementedManagerServiceHandler) DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.DeclareManager is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) Ping(context.Context, *connect.Request[v1.PingRequest]) (*connect.Response[v1.PingResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.Ping is not implemented"))
+func (UnimplementedManagerServiceHandler) FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.FetchOperations is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) FetchTask(context.Context, *connect.Request[v1.FetchTaskRequest]) (*connect.Response[v1.FetchTaskResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.FetchTask is not implemented"))
+func (UnimplementedManagerServiceHandler) FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.FinalizeOperation is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) AppendLog(context.Context, *connect.Request[v1.AppendLogRequest]) (*connect.Response[v1.AppendLogResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.AppendLog is not implemented"))
+func (UnimplementedManagerServiceHandler) UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.UpdateLog is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) FinishTask(context.Context, *connect.Request[v1.FinishTaskRequest]) (*connect.Response[v1.FinishTaskResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.FinishTask is not implemented"))
+func (UnimplementedManagerServiceHandler) ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportRuntimeMetadata is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) ReportCodespaceStatus(context.Context, *connect.Request[v1.ReportCodespaceStatusRequest]) (*connect.Response[v1.ReportCodespaceStatusResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.ReportCodespaceStatus is not implemented"))
+func (UnimplementedManagerServiceHandler) RequestGiteaToken(context.Context, *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RequestGiteaToken is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) ReportCodespacePorts(context.Context, *connect.Request[v1.ReportCodespacePortsRequest]) (*connect.Response[v1.ReportCodespacePortsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.ReportCodespacePorts is not implemented"))
+func (UnimplementedManagerServiceHandler) EnsureCodespaceGitSSHKey(context.Context, *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.EnsureCodespaceGitSSHKey is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) RequestGitToken(context.Context, *connect.Request[v1.RequestGitTokenRequest]) (*connect.Response[v1.RequestGitTokenResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.RequestGitToken is not implemented"))
+func (UnimplementedManagerServiceHandler) RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RequestIdleStop is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) RevokeGitToken(context.Context, *connect.Request[v1.RevokeGitTokenRequest]) (*connect.Response[v1.RevokeGitTokenResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.RevokeGitToken is not implemented"))
+func (UnimplementedManagerServiceHandler) ValidateOpenToken(context.Context, *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ValidateOpenToken is not implemented"))
 }
 
-func (UnimplementedCodespaceServiceHandler) ValidateAccessTicket(context.Context, *connect.Request[v1.ValidateAccessTicketRequest]) (*connect.Response[v1.ValidateAccessTicketResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.CodespaceService.ValidateAccessTicket is not implemented"))
+func (UnimplementedManagerServiceHandler) ValidatePublicEndpoint(context.Context, *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ValidatePublicEndpoint is not implemented"))
+}
+
+func (UnimplementedManagerServiceHandler) VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.VerifySSHPublicKey is not implemented"))
+}
+
+func (UnimplementedManagerServiceHandler) ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportInstances is not implemented"))
+}
+
+func (UnimplementedManagerServiceHandler) ReportRuntimeTransition(context.Context, *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportRuntimeTransition is not implemented"))
+}
+
+func (UnimplementedManagerServiceHandler) RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RevalidateGatewaySession is not implemented"))
 }
