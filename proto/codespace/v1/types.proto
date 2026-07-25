@@ -4,24 +4,28 @@ package codespace.v1;
 
 option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
 
+// ManagerRuntimeState reports whether a manager can currently serve requests.
 enum ManagerRuntimeState {
   MANAGER_RUNTIME_STATE_UNSPECIFIED = 0;
   MANAGER_RUNTIME_STATE_ONLINE = 1;
   MANAGER_RUNTIME_STATE_RECOVERING = 2;
 }
 
+// AcceptedOperationType limits the startup operations a manager can fetch now.
 enum AcceptedOperationType {
   ACCEPTED_OPERATION_TYPE_UNSPECIFIED = 0;
   ACCEPTED_OPERATION_TYPE_CREATE = 1;
   ACCEPTED_OPERATION_TYPE_RESUME = 2;
 }
 
+// FinalStatus is the terminal result reported for an active operation.
 enum FinalStatus {
   FINAL_STATUS_UNSPECIFIED = 0;
   FINAL_STATUS_DONE = 1;
   FINAL_STATUS_FAILED = 2;
 }
 
+// OperationType identifies the lifecycle operation owned by Gitea.
 enum OperationType {
   OPERATION_TYPE_UNSPECIFIED = 0;
   OPERATION_TYPE_CREATE = 1;
@@ -30,12 +34,14 @@ enum OperationType {
   OPERATION_TYPE_DELETE = 4;
 }
 
+// GitProtocol is the preferred clone protocol for a create payload.
 enum GitProtocol {
   GIT_PROTOCOL_UNSPECIFIED = 0;
   GIT_PROTOCOL_HTTP = 1;
   GIT_PROTOCOL_SSH = 2;
 }
 
+// RuntimeState is the manager-observed state of a local runtime instance.
 enum RuntimeState {
   RUNTIME_STATE_UNSPECIFIED = 0;
   RUNTIME_STATE_CREATING = 1;
@@ -44,16 +50,18 @@ enum RuntimeState {
   RUNTIME_STATE_FAILED = 4;
 }
 
+// RuntimeBootStage is the highest startup stage reached by the runtime.
 enum RuntimeBootStage {
   RUNTIME_BOOT_STAGE_UNSPECIFIED = 0;
   RUNTIME_BOOT_STAGE_PREPARE_RUNTIME = 1;
   RUNTIME_BOOT_STAGE_INITIALIZE_SYSTEM = 2;
   RUNTIME_BOOT_STAGE_PREPARE_WORKSPACE = 3;
   RUNTIME_BOOT_STAGE_START_ENVIRONMENT = 4;
-  RUNTIME_BOOT_STAGE_PUBLISH_RUNTIME = 5;
+  RUNTIME_BOOT_STAGE_PUBLISH_READY = 5;
   RUNTIME_BOOT_STAGE_READY = 6;
 }
 
+// IdleStopNotApplicableReason explains why Gitea did not create an idle stop.
 enum IdleStopNotApplicableReason {
   IDLE_STOP_NOT_APPLICABLE_REASON_UNSPECIFIED = 0;
   IDLE_STOP_NOT_APPLICABLE_REASON_OPERATION_CONFLICT = 1;
@@ -61,17 +69,37 @@ enum IdleStopNotApplicableReason {
   IDLE_STOP_NOT_APPLICABLE_REASON_STATE_UNAVAILABLE = 3;
 }
 
+// RepositoryOwnerType identifies the repository owner's account kind.
+enum RepositoryOwnerType {
+  REPOSITORY_OWNER_TYPE_UNSPECIFIED = 0;
+  REPOSITORY_OWNER_TYPE_USER = 1;
+  REPOSITORY_OWNER_TYPE_ORGANIZATION = 2;
+}
+
+// GitRefType identifies the kind of source ref used for create.
+enum GitRefType {
+  GIT_REF_TYPE_UNSPECIFIED = 0;
+  GIT_REF_TYPE_BRANCH = 1;
+  GIT_REF_TYPE_TAG = 2;
+  GIT_REF_TYPE_COMMIT = 3;
+}
+
+// RegisterManagerRequest exchanges a registration token for manager identity.
 message RegisterManagerRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string registration_token = 2;
 }
 
+// RegisterManagerResponse returns the new manager credentials.
 message RegisterManagerResponse {
   int64 manager_id = 1;
   string manager_secret = 2;
 }
 
+// DeclareManagerRequest publishes the manager's current routing and capacity.
 message DeclareManagerRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string gateway_url = 2;
   string gateway_ssh_addr = 3;
@@ -82,10 +110,11 @@ message DeclareManagerRequest {
   string gateway_ssh_host_key_algorithm = 8;
   string gateway_ssh_host_key_fingerprint_sha256 = 9;
   int64 gateway_ssh_host_key_updated_unix = 10;
-  int32 capacity_total = 11;
-  int32 capacity_available = 12;
+  int32 startup_capacity_total = 11;
+  int32 startup_capacity_available = 12;
 }
 
+// DeclareManagerResponse returns server-side control-plane limits.
 message DeclareManagerResponse {
   int64 heartbeat_interval_milliseconds = 1;
   int64 runtime_metadata_refresh_interval_milliseconds = 2;
@@ -93,31 +122,37 @@ message DeclareManagerResponse {
   string gitea_web_url = 4;
 }
 
+// FetchOperationsRequest asks Gitea for work and renews observed leases.
 message FetchOperationsRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  int32 capacity_available = 2;
+  int32 startup_capacity_available = 2;
   repeated AcceptedOperationType accepted_operation_types = 3;
-  int32 max_operations = 4;
+  int32 max_new_operations = 4;
   repeated ObservedOperation observed_operations = 5;
   int32 cleanup_capacity_available = 6;
 }
 
+// ObservedOperation reports an active operation context kept by the manager.
 message ObservedOperation {
   string codespace_uuid = 1;
   int64 operation_rversion = 2;
 }
 
+// FetchOperationsResponse returns new operation payloads and renewed leases.
 message FetchOperationsResponse {
   repeated OperationPayload operations = 1;
   repeated RenewedOperationLease renewed_leases = 2;
 }
 
+// RenewedOperationLease extends a manager-held operation without resending payload.
 message RenewedOperationLease {
   string codespace_uuid = 1;
   int64 operation_rversion = 2;
   int64 lease_valid_for_milliseconds = 3;
 }
 
+// OperationPayload is one Gitea-issued lifecycle command.
 message OperationPayload {
   int64 operation_rversion = 1;
   string codespace_uuid = 2;
@@ -134,19 +169,24 @@ message OperationPayload {
   }
 }
 
+// ResumeOperationPayload contains only settings needed to restart an existing runtime.
 message ResumeOperationPayload {
   EffectiveCodespaceRuntimeSettings runtime_settings = 1;
-  GitProtocol git_protocol = 2;
 }
 
+// StopOperationPayload asks the manager to stop the local runtime.
 message StopOperationPayload {}
 
+// DeleteOperationPayload asks the manager to delete the local runtime.
 message DeleteOperationPayload {}
 
+// AbortCreateOperationPayload asks the manager to abort an active create.
 message AbortCreateOperationPayload {}
 
+// AbortResumeOperationPayload asks the manager to abort an active resume.
 message AbortResumeOperationPayload {}
 
+// CreateOperationPayload contains the repository and runtime inputs for create.
 message CreateOperationPayload {
   int64 repo_id = 1;
   string repo_full_name = 2;
@@ -155,31 +195,59 @@ message CreateOperationPayload {
   string repo_web_url = 5;
   int64 owner_id = 6;
   string owner_name = 7;
-  string owner_type = 8;
+  RepositoryOwnerType owner_type = 8;
   string owner_display_name = 9;
   string codespace_owner_name = 10;
   string start_ref = 11;
-  string ref_type = 12;
+  GitRefType ref_type = 12;
   string ref_name = 13;
+  // commit_sha is the immutable commit that the runtime must check out.
   string commit_sha = 14;
-  string repo_tag = 15;
+  // environment_tag selects the manager-local runtime environment for this create.
+  string environment_tag = 15;
   EffectiveCodespaceRuntimeSettings runtime_settings = 16;
+  // git_protocol is computed from current Gitea Git transport settings for this create.
   GitProtocol git_protocol = 17;
   string repo_clone_ssh_url = 18;
+  CodespaceUserIdentity user_identity = 19;
+  RepositoryCodespaceConfig repository_config = 20;
 }
 
+// CodespaceUserIdentity carries the create-time user identity for runtime init.
+message CodespaceUserIdentity {
+  int64 user_id = 1;
+  string username = 2;
+  string display_name = 3;
+  string git_user_name = 4;
+  string git_user_email = 5;
+}
+
+// RepositoryCodespaceConfig carries the raw repository config content for create.
+message RepositoryCodespaceConfig {
+  // present is false when the repository config file was not found.
+  bool present = 1;
+  string path = 2;
+  bytes content = 3;
+  string source_ref = 4;
+  string content_sha256 = 5;
+}
+
+// FinalizeOperationRequest reports the terminal result of an active operation.
 message FinalizeOperationRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   int64 operation_rversion = 3;
   FinalResult final = 4;
 }
 
+// FinalResult identifies the completed operation and result status.
 message FinalResult {
   FinalStatus status = 1;
   OperationType operation_type = 2;
 }
 
+// FinalizeOperationResponse returns the accepted or already-known final state.
 message FinalizeOperationResponse {
   oneof outcome {
     FinalAccepted final_accepted = 1;
@@ -189,15 +257,21 @@ message FinalizeOperationResponse {
   }
 }
 
+// FinalAccepted means Gitea accepted the final result.
 message FinalAccepted {}
 
+// IdempotentDone means the same final result was already applied.
 message IdempotentDone {}
 
+// StaleOperation means the request no longer matches the active operation.
 message StaleOperation {}
 
+// ResourceAbsent means Gitea no longer has the target codespace.
 message ResourceAbsent {}
 
+// UpdateLogRequest appends lifecycle log lines at the expected offset.
 message UpdateLogRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   int64 operation_rversion = 3;
@@ -205,36 +279,44 @@ message UpdateLogRequest {
   repeated LogLine lines = 5;
 }
 
+// LogLine is one normalized lifecycle log line.
 message LogLine {
   int64 timestamp_unix_nano = 1;
   string message = 2;
 }
 
+// UpdateLogResponse returns the next append offset after accepted lines.
 message UpdateLogResponse {
   int64 next_offset = 1;
 }
 
+// ReportRuntimeMetadataRequest publishes the current runtime metadata snapshot.
 message ReportRuntimeMetadataRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   int64 metadata_generation = 3;
   RuntimeMetadata metadata = 4;
 }
 
+// ReportRuntimeMetadataResponse is empty when metadata is accepted.
 message ReportRuntimeMetadataResponse {}
 
+// RuntimeMetadata describes the user-visible runtime entry points and usage.
 message RuntimeMetadata {
   repeated RuntimeEndpoint endpoints = 1;
   RuntimeBoot boot = 2;
   RuntimeResourceUsage resource_usage = 3;
 }
 
+// RuntimeEndpoint describes one HTTP/WebSocket endpoint exposed by the manager.
 message RuntimeEndpoint {
   string endpoint_id = 1;
   string label = 2;
   bool public = 3;
 }
 
+// RuntimeBoot reports startup progress for the active operation.
 message RuntimeBoot {
   int64 operation_rversion = 1;
   RuntimeBootStage stage = 2;
@@ -242,6 +324,7 @@ message RuntimeBoot {
   int64 last_update_unix = 4;
 }
 
+// RuntimeResourceUsage reports common runtime resource usage.
 message RuntimeResourceUsage {
   RuntimeCPUUsage cpu = 1;
   RuntimeMemoryUsage memory = 2;
@@ -249,48 +332,60 @@ message RuntimeResourceUsage {
   int64 observed_unix = 4;
 }
 
+// RuntimeCPUUsage reports CPU usage and limit in millicores.
 message RuntimeCPUUsage {
   int64 used_millicores = 1;
   int64 limit_millicores = 2;
 }
 
+// RuntimeMemoryUsage reports memory usage and limit in bytes.
 message RuntimeMemoryUsage {
   int64 used_bytes = 1;
   int64 limit_bytes = 2;
 }
 
+// RuntimeDiskUsage reports disk usage and limit in bytes.
 message RuntimeDiskUsage {
   int64 used_bytes = 1;
   int64 limit_bytes = 2;
 }
 
+// RequestGiteaTokenRequest asks Gitea to issue or return a runtime token.
 message RequestGiteaTokenRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
 }
 
+// RequestGiteaTokenResponse returns the token and canonical Gitea base URL.
 message RequestGiteaTokenResponse {
   string token = 1;
   string server_url = 2;
 }
 
+// EnsureCodespaceGitSSHKeyRequest registers the runtime public key for Git SSH.
 message EnsureCodespaceGitSSHKeyRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   bytes public_key = 3;
 }
 
+// EnsureCodespaceGitSSHKeyResponse returns trusted Gitea SSH host key lines.
 message EnsureCodespaceGitSSHKeyResponse {
   repeated string known_hosts_lines = 1;
 }
 
+// EffectiveCodespaceRuntimeSettings contains the current auto-stop policy.
 message EffectiveCodespaceRuntimeSettings {
   bool auto_stop_enabled = 1;
   int64 idle_timeout_seconds = 2;
   int64 interaction_generation = 3;
 }
 
+// RequestIdleStopRequest asks Gitea to create an idle stop if observations match.
 message RequestIdleStopRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   bool observed_auto_stop_enabled = 3;
@@ -298,6 +393,7 @@ message RequestIdleStopRequest {
   int64 observed_interaction_generation = 5;
 }
 
+// RequestIdleStopResponse returns the idle-stop decision.
 message RequestIdleStopResponse {
   oneof outcome {
     IdleStopPending pending = 1;
@@ -306,23 +402,29 @@ message RequestIdleStopResponse {
   }
 }
 
+// IdleStopPending means Gitea created or found a pending idle stop operation.
 message IdleStopPending {
   int64 operation_rversion = 1;
 }
 
+// IdleStopObservationChanged returns the current settings when observations are stale.
 message IdleStopObservationChanged {
   EffectiveCodespaceRuntimeSettings runtime_settings = 1;
 }
 
+// IdleStopNotApplicable explains why idle stop cannot apply now.
 message IdleStopNotApplicable {
   IdleStopNotApplicableReason reason = 1;
 }
 
+// ValidateOpenTokenRequest validates a one-time browser open code.
 message ValidateOpenTokenRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string code = 2;
 }
 
+// ValidateOpenTokenResponse returns an allowed binding or denial reason.
 message ValidateOpenTokenResponse {
   oneof outcome {
     OpenTokenBinding allowed = 1;
@@ -330,6 +432,7 @@ message ValidateOpenTokenResponse {
   }
 }
 
+// OpenTokenBinding binds an allowed browser session to one endpoint.
 message OpenTokenBinding {
   int64 user_id = 1;
   string codespace_uuid = 2;
@@ -337,12 +440,15 @@ message OpenTokenBinding {
   int64 interaction_generation = 4;
 }
 
+// ValidatePublicEndpointRequest validates unauthenticated access to a public endpoint.
 message ValidatePublicEndpointRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   string endpoint_id = 3;
 }
 
+// ValidatePublicEndpointResponse returns the public endpoint decision.
 message ValidatePublicEndpointResponse {
   oneof outcome {
     PublicEndpointAllowed allowed = 1;
@@ -350,14 +456,18 @@ message ValidatePublicEndpointResponse {
   }
 }
 
+// PublicEndpointAllowed means the public endpoint may be proxied.
 message PublicEndpointAllowed {}
 
+// VerifySSHPublicKeyRequest validates a gateway SSH public key login.
 message VerifySSHPublicKeyRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   bytes public_key = 3;
 }
 
+// VerifySSHPublicKeyResponse returns an SSH binding or denial reason.
 message VerifySSHPublicKeyResponse {
   oneof outcome {
     SSHAuthBinding allowed = 1;
@@ -365,27 +475,33 @@ message VerifySSHPublicKeyResponse {
   }
 }
 
+// SSHAuthBinding binds an allowed SSH session to a Gitea user.
 message SSHAuthBinding {
   int64 user_id = 1;
   int64 interaction_generation = 2;
 }
 
+// ReportInstancesRequest publishes the manager's complete runtime inventory.
 message ReportInstancesRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   int64 inventory_generation = 2;
   repeated RuntimeInstanceRef instances = 3;
 }
 
+// RuntimeInstanceRef is one manager-owned runtime instance in inventory.
 message RuntimeInstanceRef {
   string codespace_uuid = 1;
   RuntimeState runtime_state = 2;
   int64 observed_operation_rversion = 3;
 }
 
+// ReportInstancesResponse returns per-instance reconciliation actions.
 message ReportInstancesResponse {
   repeated RuntimeInstanceResult results = 1;
 }
 
+// RuntimeInstanceResult contains settings and at most one reconciliation action.
 message RuntimeInstanceResult {
   string codespace_uuid = 1;
   EffectiveCodespaceRuntimeSettings runtime_settings = 2;
@@ -399,25 +515,32 @@ message RuntimeInstanceResult {
   }
 }
 
+// CleanupLocalRuntime authorizes the manager to delete a local runtime.
 message CleanupLocalRuntime {}
 
+// ReportRuntimeTransitionAction asks the manager to report a runtime transition.
 message ReportRuntimeTransitionAction {
   int64 current_operation_rversion = 1;
 }
 
+// StopLocalRuntime asks the manager to stop a local runtime.
 message StopLocalRuntime {
   int64 current_operation_rversion = 1;
 }
 
+// RefetchOperation asks the manager to fetch the current operation payload again.
 message RefetchOperation {
   int64 current_operation_rversion = 1;
 }
 
+// ClearOperationContext asks the manager to drop stale local operation context.
 message ClearOperationContext {
   int64 current_operation_rversion = 1;
 }
 
+// ReportRuntimeTransitionRequest reports a manager-observed runtime state.
 message ReportRuntimeTransitionRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   int64 runtime_generation = 3;
@@ -425,9 +548,12 @@ message ReportRuntimeTransitionRequest {
   RuntimeState runtime_state = 5;
 }
 
+// ReportRuntimeTransitionResponse is empty when the transition is accepted.
 message ReportRuntimeTransitionResponse {}
 
+// RevalidateGatewaySessionRequest rechecks a live gateway session.
 message RevalidateGatewaySessionRequest {
+  // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   oneof session {
     EndpointSessionBinding endpoint = 2;
@@ -435,17 +561,20 @@ message RevalidateGatewaySessionRequest {
   }
 }
 
+// EndpointSessionBinding identifies a live endpoint session.
 message EndpointSessionBinding {
   int64 user_id = 1;
   string codespace_uuid = 2;
   string endpoint_id = 3;
 }
 
+// SSHSessionBinding identifies a live SSH session.
 message SSHSessionBinding {
   int64 user_id = 1;
   string codespace_uuid = 2;
 }
 
+// RevalidateGatewaySessionResponse returns the live session decision.
 message RevalidateGatewaySessionResponse {
   oneof outcome {
     SessionAllowed allowed = 1;
@@ -453,16 +582,21 @@ message RevalidateGatewaySessionResponse {
   }
 }
 
+// SessionAllowed means the live gateway session may continue.
 message SessionAllowed {}
 
+// FailureDetail carries a stable denial category for gateway and control-plane decisions.
 message FailureDetail {
+  // category is a lower_snake_case reason used by callers for branching.
   string category = 1;
 }
 
+// StaleGenerationDetail reports Gitea's current accepted generation.
 message StaleGenerationDetail {
   int64 current_generation = 1;
 }
 
+// LogOffsetDetail reports the current server-side log offset.
 message LogOffsetDetail {
   int64 current_offset = 1;
 }
