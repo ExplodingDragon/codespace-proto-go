@@ -44,6 +44,16 @@ enum RuntimeState {
   RUNTIME_STATE_FAILED = 4;
 }
 
+enum RuntimeBootStage {
+  RUNTIME_BOOT_STAGE_UNSPECIFIED = 0;
+  RUNTIME_BOOT_STAGE_PREPARE_RUNTIME = 1;
+  RUNTIME_BOOT_STAGE_INITIALIZE_SYSTEM = 2;
+  RUNTIME_BOOT_STAGE_PREPARE_WORKSPACE = 3;
+  RUNTIME_BOOT_STAGE_START_ENVIRONMENT = 4;
+  RUNTIME_BOOT_STAGE_PUBLISH_RUNTIME = 5;
+  RUNTIME_BOOT_STAGE_READY = 6;
+}
+
 enum IdleStopNotApplicableReason {
   IDLE_STOP_NOT_APPLICABLE_REASON_UNSPECIFIED = 0;
   IDLE_STOP_NOT_APPLICABLE_REASON_OPERATION_CONFLICT = 1;
@@ -207,11 +217,52 @@ message UpdateLogResponse {
 message ReportRuntimeMetadataRequest {
   int32 protocol_version = 1;
   string codespace_uuid = 2;
-  string metadata_json = 3;
-  int64 metadata_generation = 4;
+  int64 metadata_generation = 3;
+  RuntimeMetadata metadata = 4;
 }
 
 message ReportRuntimeMetadataResponse {}
+
+message RuntimeMetadata {
+  repeated RuntimeEndpoint endpoints = 1;
+  RuntimeBoot boot = 2;
+  RuntimeResourceUsage resource_usage = 3;
+}
+
+message RuntimeEndpoint {
+  string endpoint_id = 1;
+  string label = 2;
+  bool public = 3;
+}
+
+message RuntimeBoot {
+  int64 operation_rversion = 1;
+  RuntimeBootStage stage = 2;
+  int64 started_unix = 3;
+  int64 last_update_unix = 4;
+}
+
+message RuntimeResourceUsage {
+  RuntimeCPUUsage cpu = 1;
+  RuntimeMemoryUsage memory = 2;
+  RuntimeDiskUsage disk = 3;
+  int64 observed_unix = 4;
+}
+
+message RuntimeCPUUsage {
+  int64 used_millicores = 1;
+  int64 limit_millicores = 2;
+}
+
+message RuntimeMemoryUsage {
+  int64 used_bytes = 1;
+  int64 limit_bytes = 2;
+}
+
+message RuntimeDiskUsage {
+  int64 used_bytes = 1;
+  int64 limit_bytes = 2;
+}
 
 message RequestGiteaTokenRequest {
   int32 protocol_version = 1;
