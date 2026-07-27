@@ -8,7 +8,7 @@ option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
 
 // ManagerService is implemented by Gitea and called by Codespace Manager.
 service ManagerService {
-  // RegisterManager exchanges the owner scope's current registration token for a Manager identity.
+  // RegisterManager exchanges the current site-wide or personal registration token for a Manager identity.
   rpc RegisterManager(RegisterManagerRequest) returns (RegisterManagerResponse);
 
   // DeclareManager updates Manager metadata, tags, and serves as heartbeat.

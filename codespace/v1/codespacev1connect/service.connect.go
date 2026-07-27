@@ -82,7 +82,7 @@ const (
 
 // ManagerServiceClient is a client for the codespace.v1.ManagerService service.
 type ManagerServiceClient interface {
-	// RegisterManager exchanges the owner scope's current registration token for a Manager identity.
+	// RegisterManager exchanges the current site-wide or personal registration token for a Manager identity.
 	RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
@@ -314,7 +314,7 @@ func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req
 
 // ManagerServiceHandler is an implementation of the codespace.v1.ManagerService service.
 type ManagerServiceHandler interface {
-	// RegisterManager exchanges the owner scope's current registration token for a Manager identity.
+	// RegisterManager exchanges the current site-wide or personal registration token for a Manager identity.
 	RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
