@@ -41,6 +41,16 @@ enum GitProtocol {
   GIT_PROTOCOL_SSH = 2;
 }
 
+// DevContainerConfigurationSource identifies the selected configuration origin.
+enum DevContainerConfigurationSource {
+  // No configuration source was supplied.
+  DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED = 0;
+  // Gitea selected its site-wide default image.
+  DEV_CONTAINER_CONFIGURATION_SOURCE_PLATFORM_DEFAULT = 1;
+  // The user selected one devcontainer.json from the repository.
+  DEV_CONTAINER_CONFIGURATION_SOURCE_REPOSITORY = 2;
+}
+
 // RuntimeState is the manager-observed state of a local runtime instance.
 enum RuntimeState {
   RUNTIME_STATE_UNSPECIFIED = 0;
@@ -210,7 +220,8 @@ message CreateOperationPayload {
   GitProtocol git_protocol = 17;
   string repo_clone_ssh_url = 18;
   CodespaceUserIdentity user_identity = 19;
-  RepositoryCodespaceConfig repository_config = 20;
+  // dev_container is the immutable configuration selected for this create.
+  DevContainerConfiguration dev_container = 20;
 }
 
 // CodespaceUserIdentity carries the create-time user identity for runtime init.
@@ -222,14 +233,17 @@ message CodespaceUserIdentity {
   string git_user_email = 5;
 }
 
-// RepositoryCodespaceConfig carries the raw repository config content for create.
-message RepositoryCodespaceConfig {
-  // present is false when the repository config file was not found.
-  bool present = 1;
+// DevContainerConfiguration fixes the configuration selected when the Codespace is created.
+message DevContainerConfiguration {
+  DevContainerConfigurationSource source = 1;
+  // path is repository-relative and is set only for repository Dev Container configurations.
   string path = 2;
-  bytes content = 3;
-  string source_ref = 4;
-  string content_sha256 = 5;
+  // commit_sha is the immutable repository commit containing path.
+  string commit_sha = 3;
+  // content_sha256 verifies the repository Dev Container configuration before it is executed.
+  string content_sha256 = 4;
+  // default_image is set only for the platform default configuration.
+  string default_image = 5;
 }
 
 // FinalizeOperationRequest reports the terminal result of an active operation.

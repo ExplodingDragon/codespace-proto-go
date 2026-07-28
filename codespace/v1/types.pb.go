@@ -277,6 +277,59 @@ func (GitProtocol) EnumDescriptor() ([]byte, []int) {
 	return file_codespace_v1_types_proto_rawDescGZIP(), []int{4}
 }
 
+// DevContainerConfigurationSource identifies the selected configuration origin.
+type DevContainerConfigurationSource int32
+
+const (
+	// No configuration source was supplied.
+	DevContainerConfigurationSource_DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED DevContainerConfigurationSource = 0
+	// Gitea selected its site-wide default image.
+	DevContainerConfigurationSource_DEV_CONTAINER_CONFIGURATION_SOURCE_PLATFORM_DEFAULT DevContainerConfigurationSource = 1
+	// The user selected one devcontainer.json from the repository.
+	DevContainerConfigurationSource_DEV_CONTAINER_CONFIGURATION_SOURCE_REPOSITORY DevContainerConfigurationSource = 2
+)
+
+// Enum value maps for DevContainerConfigurationSource.
+var (
+	DevContainerConfigurationSource_name = map[int32]string{
+		0: "DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED",
+		1: "DEV_CONTAINER_CONFIGURATION_SOURCE_PLATFORM_DEFAULT",
+		2: "DEV_CONTAINER_CONFIGURATION_SOURCE_REPOSITORY",
+	}
+	DevContainerConfigurationSource_value = map[string]int32{
+		"DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED":      0,
+		"DEV_CONTAINER_CONFIGURATION_SOURCE_PLATFORM_DEFAULT": 1,
+		"DEV_CONTAINER_CONFIGURATION_SOURCE_REPOSITORY":       2,
+	}
+)
+
+func (x DevContainerConfigurationSource) Enum() *DevContainerConfigurationSource {
+	p := new(DevContainerConfigurationSource)
+	*p = x
+	return p
+}
+
+func (x DevContainerConfigurationSource) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DevContainerConfigurationSource) Descriptor() protoreflect.EnumDescriptor {
+	return file_codespace_v1_types_proto_enumTypes[5].Descriptor()
+}
+
+func (DevContainerConfigurationSource) Type() protoreflect.EnumType {
+	return &file_codespace_v1_types_proto_enumTypes[5]
+}
+
+func (x DevContainerConfigurationSource) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DevContainerConfigurationSource.Descriptor instead.
+func (DevContainerConfigurationSource) EnumDescriptor() ([]byte, []int) {
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{5}
+}
+
 // RuntimeState is the manager-observed state of a local runtime instance.
 type RuntimeState int32
 
@@ -317,11 +370,11 @@ func (x RuntimeState) String() string {
 }
 
 func (RuntimeState) Descriptor() protoreflect.EnumDescriptor {
-	return file_codespace_v1_types_proto_enumTypes[5].Descriptor()
+	return file_codespace_v1_types_proto_enumTypes[6].Descriptor()
 }
 
 func (RuntimeState) Type() protoreflect.EnumType {
-	return &file_codespace_v1_types_proto_enumTypes[5]
+	return &file_codespace_v1_types_proto_enumTypes[6]
 }
 
 func (x RuntimeState) Number() protoreflect.EnumNumber {
@@ -330,7 +383,7 @@ func (x RuntimeState) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RuntimeState.Descriptor instead.
 func (RuntimeState) EnumDescriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{5}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{6}
 }
 
 // RuntimeBootStage is the highest startup stage reached by the runtime.
@@ -379,11 +432,11 @@ func (x RuntimeBootStage) String() string {
 }
 
 func (RuntimeBootStage) Descriptor() protoreflect.EnumDescriptor {
-	return file_codespace_v1_types_proto_enumTypes[6].Descriptor()
+	return file_codespace_v1_types_proto_enumTypes[7].Descriptor()
 }
 
 func (RuntimeBootStage) Type() protoreflect.EnumType {
-	return &file_codespace_v1_types_proto_enumTypes[6]
+	return &file_codespace_v1_types_proto_enumTypes[7]
 }
 
 func (x RuntimeBootStage) Number() protoreflect.EnumNumber {
@@ -392,7 +445,7 @@ func (x RuntimeBootStage) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RuntimeBootStage.Descriptor instead.
 func (RuntimeBootStage) EnumDescriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{6}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{7}
 }
 
 // IdleStopNotApplicableReason explains why Gitea did not create an idle stop.
@@ -432,11 +485,11 @@ func (x IdleStopNotApplicableReason) String() string {
 }
 
 func (IdleStopNotApplicableReason) Descriptor() protoreflect.EnumDescriptor {
-	return file_codespace_v1_types_proto_enumTypes[7].Descriptor()
+	return file_codespace_v1_types_proto_enumTypes[8].Descriptor()
 }
 
 func (IdleStopNotApplicableReason) Type() protoreflect.EnumType {
-	return &file_codespace_v1_types_proto_enumTypes[7]
+	return &file_codespace_v1_types_proto_enumTypes[8]
 }
 
 func (x IdleStopNotApplicableReason) Number() protoreflect.EnumNumber {
@@ -445,7 +498,7 @@ func (x IdleStopNotApplicableReason) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use IdleStopNotApplicableReason.Descriptor instead.
 func (IdleStopNotApplicableReason) EnumDescriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{7}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
 }
 
 // RepositoryOwnerType identifies the repository owner's account kind.
@@ -482,11 +535,11 @@ func (x RepositoryOwnerType) String() string {
 }
 
 func (RepositoryOwnerType) Descriptor() protoreflect.EnumDescriptor {
-	return file_codespace_v1_types_proto_enumTypes[8].Descriptor()
+	return file_codespace_v1_types_proto_enumTypes[9].Descriptor()
 }
 
 func (RepositoryOwnerType) Type() protoreflect.EnumType {
-	return &file_codespace_v1_types_proto_enumTypes[8]
+	return &file_codespace_v1_types_proto_enumTypes[9]
 }
 
 func (x RepositoryOwnerType) Number() protoreflect.EnumNumber {
@@ -495,7 +548,7 @@ func (x RepositoryOwnerType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use RepositoryOwnerType.Descriptor instead.
 func (RepositoryOwnerType) EnumDescriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{9}
 }
 
 // GitRefType identifies the kind of source ref used for create.
@@ -535,11 +588,11 @@ func (x GitRefType) String() string {
 }
 
 func (GitRefType) Descriptor() protoreflect.EnumDescriptor {
-	return file_codespace_v1_types_proto_enumTypes[9].Descriptor()
+	return file_codespace_v1_types_proto_enumTypes[10].Descriptor()
 }
 
 func (GitRefType) Type() protoreflect.EnumType {
-	return &file_codespace_v1_types_proto_enumTypes[9]
+	return &file_codespace_v1_types_proto_enumTypes[10]
 }
 
 func (x GitRefType) Number() protoreflect.EnumNumber {
@@ -548,7 +601,7 @@ func (x GitRefType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use GitRefType.Descriptor instead.
 func (GitRefType) EnumDescriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{9}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{10}
 }
 
 // RegisterManagerRequest exchanges a registration token for manager identity.
@@ -1508,12 +1561,13 @@ type CreateOperationPayload struct {
 	EnvironmentTag  string                             `protobuf:"bytes,15,opt,name=environment_tag,json=environmentTag,proto3" json:"environment_tag,omitempty"`
 	RuntimeSettings *EffectiveCodespaceRuntimeSettings `protobuf:"bytes,16,opt,name=runtime_settings,json=runtimeSettings,proto3" json:"runtime_settings,omitempty"`
 	// git_protocol is computed from current Gitea Git transport settings for this create.
-	GitProtocol      GitProtocol                `protobuf:"varint,17,opt,name=git_protocol,json=gitProtocol,proto3,enum=codespace.v1.GitProtocol" json:"git_protocol,omitempty"`
-	RepoCloneSshUrl  string                     `protobuf:"bytes,18,opt,name=repo_clone_ssh_url,json=repoCloneSshUrl,proto3" json:"repo_clone_ssh_url,omitempty"`
-	UserIdentity     *CodespaceUserIdentity     `protobuf:"bytes,19,opt,name=user_identity,json=userIdentity,proto3" json:"user_identity,omitempty"`
-	RepositoryConfig *RepositoryCodespaceConfig `protobuf:"bytes,20,opt,name=repository_config,json=repositoryConfig,proto3" json:"repository_config,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
+	GitProtocol     GitProtocol            `protobuf:"varint,17,opt,name=git_protocol,json=gitProtocol,proto3,enum=codespace.v1.GitProtocol" json:"git_protocol,omitempty"`
+	RepoCloneSshUrl string                 `protobuf:"bytes,18,opt,name=repo_clone_ssh_url,json=repoCloneSshUrl,proto3" json:"repo_clone_ssh_url,omitempty"`
+	UserIdentity    *CodespaceUserIdentity `protobuf:"bytes,19,opt,name=user_identity,json=userIdentity,proto3" json:"user_identity,omitempty"`
+	// dev_container is the immutable configuration selected for this create.
+	DevContainer  *DevContainerConfiguration `protobuf:"bytes,20,opt,name=dev_container,json=devContainer,proto3" json:"dev_container,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CreateOperationPayload) Reset() {
@@ -1679,9 +1733,9 @@ func (x *CreateOperationPayload) GetUserIdentity() *CodespaceUserIdentity {
 	return nil
 }
 
-func (x *CreateOperationPayload) GetRepositoryConfig() *RepositoryCodespaceConfig {
+func (x *CreateOperationPayload) GetDevContainer() *DevContainerConfiguration {
 	if x != nil {
-		return x.RepositoryConfig
+		return x.DevContainer
 	}
 	return nil
 }
@@ -1763,33 +1817,36 @@ func (x *CodespaceUserIdentity) GetGitUserEmail() string {
 	return ""
 }
 
-// RepositoryCodespaceConfig carries the raw repository config content for create.
-type RepositoryCodespaceConfig struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// present is false when the repository config file was not found.
-	Present       bool   `protobuf:"varint,1,opt,name=present,proto3" json:"present,omitempty"`
-	Path          string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
-	Content       []byte `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	SourceRef     string `protobuf:"bytes,4,opt,name=source_ref,json=sourceRef,proto3" json:"source_ref,omitempty"`
-	ContentSha256 string `protobuf:"bytes,5,opt,name=content_sha256,json=contentSha256,proto3" json:"content_sha256,omitempty"`
+// DevContainerConfiguration fixes the configuration selected when the Codespace is created.
+type DevContainerConfiguration struct {
+	state  protoimpl.MessageState          `protogen:"open.v1"`
+	Source DevContainerConfigurationSource `protobuf:"varint,1,opt,name=source,proto3,enum=codespace.v1.DevContainerConfigurationSource" json:"source,omitempty"`
+	// path is repository-relative and is set only for repository Dev Container configurations.
+	Path string `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
+	// commit_sha is the immutable repository commit containing path.
+	CommitSha string `protobuf:"bytes,3,opt,name=commit_sha,json=commitSha,proto3" json:"commit_sha,omitempty"`
+	// content_sha256 verifies the repository Dev Container configuration before it is executed.
+	ContentSha256 string `protobuf:"bytes,4,opt,name=content_sha256,json=contentSha256,proto3" json:"content_sha256,omitempty"`
+	// default_image is set only for the platform default configuration.
+	DefaultImage  string `protobuf:"bytes,5,opt,name=default_image,json=defaultImage,proto3" json:"default_image,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RepositoryCodespaceConfig) Reset() {
-	*x = RepositoryCodespaceConfig{}
+func (x *DevContainerConfiguration) Reset() {
+	*x = DevContainerConfiguration{}
 	mi := &file_codespace_v1_types_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RepositoryCodespaceConfig) String() string {
+func (x *DevContainerConfiguration) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RepositoryCodespaceConfig) ProtoMessage() {}
+func (*DevContainerConfiguration) ProtoMessage() {}
 
-func (x *RepositoryCodespaceConfig) ProtoReflect() protoreflect.Message {
+func (x *DevContainerConfiguration) ProtoReflect() protoreflect.Message {
 	mi := &file_codespace_v1_types_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1801,42 +1858,42 @@ func (x *RepositoryCodespaceConfig) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RepositoryCodespaceConfig.ProtoReflect.Descriptor instead.
-func (*RepositoryCodespaceConfig) Descriptor() ([]byte, []int) {
+// Deprecated: Use DevContainerConfiguration.ProtoReflect.Descriptor instead.
+func (*DevContainerConfiguration) Descriptor() ([]byte, []int) {
 	return file_codespace_v1_types_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *RepositoryCodespaceConfig) GetPresent() bool {
+func (x *DevContainerConfiguration) GetSource() DevContainerConfigurationSource {
 	if x != nil {
-		return x.Present
+		return x.Source
 	}
-	return false
+	return DevContainerConfigurationSource_DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED
 }
 
-func (x *RepositoryCodespaceConfig) GetPath() string {
+func (x *DevContainerConfiguration) GetPath() string {
 	if x != nil {
 		return x.Path
 	}
 	return ""
 }
 
-func (x *RepositoryCodespaceConfig) GetContent() []byte {
+func (x *DevContainerConfiguration) GetCommitSha() string {
 	if x != nil {
-		return x.Content
-	}
-	return nil
-}
-
-func (x *RepositoryCodespaceConfig) GetSourceRef() string {
-	if x != nil {
-		return x.SourceRef
+		return x.CommitSha
 	}
 	return ""
 }
 
-func (x *RepositoryCodespaceConfig) GetContentSha256() string {
+func (x *DevContainerConfiguration) GetContentSha256() string {
 	if x != nil {
 		return x.ContentSha256
+	}
+	return ""
+}
+
+func (x *DevContainerConfiguration) GetDefaultImage() string {
+	if x != nil {
+		return x.DefaultImage
 	}
 	return ""
 }
@@ -5281,7 +5338,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x14StopOperationPayload\"\x18\n" +
 	"\x16DeleteOperationPayload\"\x1d\n" +
 	"\x1bAbortCreateOperationPayload\"\x1d\n" +
-	"\x1bAbortResumeOperationPayload\"\xbd\a\n" +
+	"\x1bAbortResumeOperationPayload\"\xb5\a\n" +
 	"\x16CreateOperationPayload\x12\x17\n" +
 	"\arepo_id\x18\x01 \x01(\x03R\x06repoId\x12$\n" +
 	"\x0erepo_full_name\x18\x02 \x01(\tR\frepoFullName\x12\x1b\n" +
@@ -5306,21 +5363,21 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x10runtime_settings\x18\x10 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\x12<\n" +
 	"\fgit_protocol\x18\x11 \x01(\x0e2\x19.codespace.v1.GitProtocolR\vgitProtocol\x12+\n" +
 	"\x12repo_clone_ssh_url\x18\x12 \x01(\tR\x0frepoCloneSshUrl\x12H\n" +
-	"\ruser_identity\x18\x13 \x01(\v2#.codespace.v1.CodespaceUserIdentityR\fuserIdentity\x12T\n" +
-	"\x11repository_config\x18\x14 \x01(\v2'.codespace.v1.RepositoryCodespaceConfigR\x10repositoryConfig\"\xb9\x01\n" +
+	"\ruser_identity\x18\x13 \x01(\v2#.codespace.v1.CodespaceUserIdentityR\fuserIdentity\x12L\n" +
+	"\rdev_container\x18\x14 \x01(\v2'.codespace.v1.DevContainerConfigurationR\fdevContainer\"\xb9\x01\n" +
 	"\x15CodespaceUserIdentity\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12!\n" +
 	"\fdisplay_name\x18\x03 \x01(\tR\vdisplayName\x12\"\n" +
 	"\rgit_user_name\x18\x04 \x01(\tR\vgitUserName\x12$\n" +
-	"\x0egit_user_email\x18\x05 \x01(\tR\fgitUserEmail\"\xa9\x01\n" +
-	"\x19RepositoryCodespaceConfig\x12\x18\n" +
-	"\apresent\x18\x01 \x01(\bR\apresent\x12\x12\n" +
-	"\x04path\x18\x02 \x01(\tR\x04path\x12\x18\n" +
-	"\acontent\x18\x03 \x01(\fR\acontent\x12\x1d\n" +
+	"\x0egit_user_email\x18\x05 \x01(\tR\fgitUserEmail\"\xe1\x01\n" +
+	"\x19DevContainerConfiguration\x12E\n" +
+	"\x06source\x18\x01 \x01(\x0e2-.codespace.v1.DevContainerConfigurationSourceR\x06source\x12\x12\n" +
+	"\x04path\x18\x02 \x01(\tR\x04path\x12\x1d\n" +
 	"\n" +
-	"source_ref\x18\x04 \x01(\tR\tsourceRef\x12%\n" +
-	"\x0econtent_sha256\x18\x05 \x01(\tR\rcontentSha256\"\xcc\x01\n" +
+	"commit_sha\x18\x03 \x01(\tR\tcommitSha\x12%\n" +
+	"\x0econtent_sha256\x18\x04 \x01(\tR\rcontentSha256\x12#\n" +
+	"\rdefault_image\x18\x05 \x01(\tR\fdefaultImage\"\xcc\x01\n" +
 	"\x18FinalizeOperationRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
 	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12-\n" +
@@ -5540,7 +5597,11 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\vGitProtocol\x12\x1c\n" +
 	"\x18GIT_PROTOCOL_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11GIT_PROTOCOL_HTTP\x10\x01\x12\x14\n" +
-	"\x10GIT_PROTOCOL_SSH\x10\x02*\x99\x01\n" +
+	"\x10GIT_PROTOCOL_SSH\x10\x02*\xc1\x01\n" +
+	"\x1fDevContainerConfigurationSource\x122\n" +
+	".DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED\x10\x00\x127\n" +
+	"3DEV_CONTAINER_CONFIGURATION_SOURCE_PLATFORM_DEFAULT\x10\x01\x121\n" +
+	"-DEV_CONTAINER_CONFIGURATION_SOURCE_REPOSITORY\x10\x02*\x99\x01\n" +
 	"\fRuntimeState\x12\x1d\n" +
 	"\x19RUNTIME_STATE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16RUNTIME_STATE_CREATING\x10\x01\x12\x19\n" +
@@ -5583,7 +5644,7 @@ func file_codespace_v1_types_proto_rawDescGZIP() []byte {
 	return file_codespace_v1_types_proto_rawDescData
 }
 
-var file_codespace_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 10)
+var file_codespace_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 74)
 var file_codespace_v1_types_proto_goTypes = []any{
 	(ManagerRuntimeState)(0),                  // 0: codespace.v1.ManagerRuntimeState
@@ -5591,151 +5652,153 @@ var file_codespace_v1_types_proto_goTypes = []any{
 	(FinalStatus)(0),                          // 2: codespace.v1.FinalStatus
 	(OperationType)(0),                        // 3: codespace.v1.OperationType
 	(GitProtocol)(0),                          // 4: codespace.v1.GitProtocol
-	(RuntimeState)(0),                         // 5: codespace.v1.RuntimeState
-	(RuntimeBootStage)(0),                     // 6: codespace.v1.RuntimeBootStage
-	(IdleStopNotApplicableReason)(0),          // 7: codespace.v1.IdleStopNotApplicableReason
-	(RepositoryOwnerType)(0),                  // 8: codespace.v1.RepositoryOwnerType
-	(GitRefType)(0),                           // 9: codespace.v1.GitRefType
-	(*RegisterManagerRequest)(nil),            // 10: codespace.v1.RegisterManagerRequest
-	(*RegisterManagerResponse)(nil),           // 11: codespace.v1.RegisterManagerResponse
-	(*DeclareManagerRequest)(nil),             // 12: codespace.v1.DeclareManagerRequest
-	(*DeclareManagerResponse)(nil),            // 13: codespace.v1.DeclareManagerResponse
-	(*FetchOperationsRequest)(nil),            // 14: codespace.v1.FetchOperationsRequest
-	(*ObservedOperation)(nil),                 // 15: codespace.v1.ObservedOperation
-	(*FetchOperationsResponse)(nil),           // 16: codespace.v1.FetchOperationsResponse
-	(*RenewedOperationLease)(nil),             // 17: codespace.v1.RenewedOperationLease
-	(*OperationPayload)(nil),                  // 18: codespace.v1.OperationPayload
-	(*ResumeOperationPayload)(nil),            // 19: codespace.v1.ResumeOperationPayload
-	(*StopOperationPayload)(nil),              // 20: codespace.v1.StopOperationPayload
-	(*DeleteOperationPayload)(nil),            // 21: codespace.v1.DeleteOperationPayload
-	(*AbortCreateOperationPayload)(nil),       // 22: codespace.v1.AbortCreateOperationPayload
-	(*AbortResumeOperationPayload)(nil),       // 23: codespace.v1.AbortResumeOperationPayload
-	(*CreateOperationPayload)(nil),            // 24: codespace.v1.CreateOperationPayload
-	(*CodespaceUserIdentity)(nil),             // 25: codespace.v1.CodespaceUserIdentity
-	(*RepositoryCodespaceConfig)(nil),         // 26: codespace.v1.RepositoryCodespaceConfig
-	(*FinalizeOperationRequest)(nil),          // 27: codespace.v1.FinalizeOperationRequest
-	(*FinalResult)(nil),                       // 28: codespace.v1.FinalResult
-	(*FinalizeOperationResponse)(nil),         // 29: codespace.v1.FinalizeOperationResponse
-	(*FinalAccepted)(nil),                     // 30: codespace.v1.FinalAccepted
-	(*IdempotentDone)(nil),                    // 31: codespace.v1.IdempotentDone
-	(*StaleOperation)(nil),                    // 32: codespace.v1.StaleOperation
-	(*ResourceAbsent)(nil),                    // 33: codespace.v1.ResourceAbsent
-	(*UpdateLogRequest)(nil),                  // 34: codespace.v1.UpdateLogRequest
-	(*LogLine)(nil),                           // 35: codespace.v1.LogLine
-	(*UpdateLogResponse)(nil),                 // 36: codespace.v1.UpdateLogResponse
-	(*ReportRuntimeMetadataRequest)(nil),      // 37: codespace.v1.ReportRuntimeMetadataRequest
-	(*ReportRuntimeMetadataResponse)(nil),     // 38: codespace.v1.ReportRuntimeMetadataResponse
-	(*RuntimeMetadata)(nil),                   // 39: codespace.v1.RuntimeMetadata
-	(*RuntimeEndpoint)(nil),                   // 40: codespace.v1.RuntimeEndpoint
-	(*RuntimeBoot)(nil),                       // 41: codespace.v1.RuntimeBoot
-	(*RuntimeResourceUsage)(nil),              // 42: codespace.v1.RuntimeResourceUsage
-	(*RuntimeCPUUsage)(nil),                   // 43: codespace.v1.RuntimeCPUUsage
-	(*RuntimeMemoryUsage)(nil),                // 44: codespace.v1.RuntimeMemoryUsage
-	(*RuntimeDiskUsage)(nil),                  // 45: codespace.v1.RuntimeDiskUsage
-	(*RequestGiteaTokenRequest)(nil),          // 46: codespace.v1.RequestGiteaTokenRequest
-	(*RequestGiteaTokenResponse)(nil),         // 47: codespace.v1.RequestGiteaTokenResponse
-	(*EnsureCodespaceGitSSHKeyRequest)(nil),   // 48: codespace.v1.EnsureCodespaceGitSSHKeyRequest
-	(*EnsureCodespaceGitSSHKeyResponse)(nil),  // 49: codespace.v1.EnsureCodespaceGitSSHKeyResponse
-	(*EffectiveCodespaceRuntimeSettings)(nil), // 50: codespace.v1.EffectiveCodespaceRuntimeSettings
-	(*RequestIdleStopRequest)(nil),            // 51: codespace.v1.RequestIdleStopRequest
-	(*RequestIdleStopResponse)(nil),           // 52: codespace.v1.RequestIdleStopResponse
-	(*IdleStopPending)(nil),                   // 53: codespace.v1.IdleStopPending
-	(*IdleStopObservationChanged)(nil),        // 54: codespace.v1.IdleStopObservationChanged
-	(*IdleStopNotApplicable)(nil),             // 55: codespace.v1.IdleStopNotApplicable
-	(*ValidateOpenTokenRequest)(nil),          // 56: codespace.v1.ValidateOpenTokenRequest
-	(*ValidateOpenTokenResponse)(nil),         // 57: codespace.v1.ValidateOpenTokenResponse
-	(*OpenTokenBinding)(nil),                  // 58: codespace.v1.OpenTokenBinding
-	(*ValidatePublicEndpointRequest)(nil),     // 59: codespace.v1.ValidatePublicEndpointRequest
-	(*ValidatePublicEndpointResponse)(nil),    // 60: codespace.v1.ValidatePublicEndpointResponse
-	(*PublicEndpointAllowed)(nil),             // 61: codespace.v1.PublicEndpointAllowed
-	(*VerifySSHPublicKeyRequest)(nil),         // 62: codespace.v1.VerifySSHPublicKeyRequest
-	(*VerifySSHPublicKeyResponse)(nil),        // 63: codespace.v1.VerifySSHPublicKeyResponse
-	(*SSHAuthBinding)(nil),                    // 64: codespace.v1.SSHAuthBinding
-	(*ReportInstancesRequest)(nil),            // 65: codespace.v1.ReportInstancesRequest
-	(*RuntimeInstanceRef)(nil),                // 66: codespace.v1.RuntimeInstanceRef
-	(*ReportInstancesResponse)(nil),           // 67: codespace.v1.ReportInstancesResponse
-	(*RuntimeInstanceResult)(nil),             // 68: codespace.v1.RuntimeInstanceResult
-	(*CleanupLocalRuntime)(nil),               // 69: codespace.v1.CleanupLocalRuntime
-	(*ReportRuntimeTransitionAction)(nil),     // 70: codespace.v1.ReportRuntimeTransitionAction
-	(*StopLocalRuntime)(nil),                  // 71: codespace.v1.StopLocalRuntime
-	(*RefetchOperation)(nil),                  // 72: codespace.v1.RefetchOperation
-	(*ClearOperationContext)(nil),             // 73: codespace.v1.ClearOperationContext
-	(*ReportRuntimeTransitionRequest)(nil),    // 74: codespace.v1.ReportRuntimeTransitionRequest
-	(*ReportRuntimeTransitionResponse)(nil),   // 75: codespace.v1.ReportRuntimeTransitionResponse
-	(*RevalidateGatewaySessionRequest)(nil),   // 76: codespace.v1.RevalidateGatewaySessionRequest
-	(*EndpointSessionBinding)(nil),            // 77: codespace.v1.EndpointSessionBinding
-	(*SSHSessionBinding)(nil),                 // 78: codespace.v1.SSHSessionBinding
-	(*RevalidateGatewaySessionResponse)(nil),  // 79: codespace.v1.RevalidateGatewaySessionResponse
-	(*SessionAllowed)(nil),                    // 80: codespace.v1.SessionAllowed
-	(*FailureDetail)(nil),                     // 81: codespace.v1.FailureDetail
-	(*StaleGenerationDetail)(nil),             // 82: codespace.v1.StaleGenerationDetail
-	(*LogOffsetDetail)(nil),                   // 83: codespace.v1.LogOffsetDetail
+	(DevContainerConfigurationSource)(0),      // 5: codespace.v1.DevContainerConfigurationSource
+	(RuntimeState)(0),                         // 6: codespace.v1.RuntimeState
+	(RuntimeBootStage)(0),                     // 7: codespace.v1.RuntimeBootStage
+	(IdleStopNotApplicableReason)(0),          // 8: codespace.v1.IdleStopNotApplicableReason
+	(RepositoryOwnerType)(0),                  // 9: codespace.v1.RepositoryOwnerType
+	(GitRefType)(0),                           // 10: codespace.v1.GitRefType
+	(*RegisterManagerRequest)(nil),            // 11: codespace.v1.RegisterManagerRequest
+	(*RegisterManagerResponse)(nil),           // 12: codespace.v1.RegisterManagerResponse
+	(*DeclareManagerRequest)(nil),             // 13: codespace.v1.DeclareManagerRequest
+	(*DeclareManagerResponse)(nil),            // 14: codespace.v1.DeclareManagerResponse
+	(*FetchOperationsRequest)(nil),            // 15: codespace.v1.FetchOperationsRequest
+	(*ObservedOperation)(nil),                 // 16: codespace.v1.ObservedOperation
+	(*FetchOperationsResponse)(nil),           // 17: codespace.v1.FetchOperationsResponse
+	(*RenewedOperationLease)(nil),             // 18: codespace.v1.RenewedOperationLease
+	(*OperationPayload)(nil),                  // 19: codespace.v1.OperationPayload
+	(*ResumeOperationPayload)(nil),            // 20: codespace.v1.ResumeOperationPayload
+	(*StopOperationPayload)(nil),              // 21: codespace.v1.StopOperationPayload
+	(*DeleteOperationPayload)(nil),            // 22: codespace.v1.DeleteOperationPayload
+	(*AbortCreateOperationPayload)(nil),       // 23: codespace.v1.AbortCreateOperationPayload
+	(*AbortResumeOperationPayload)(nil),       // 24: codespace.v1.AbortResumeOperationPayload
+	(*CreateOperationPayload)(nil),            // 25: codespace.v1.CreateOperationPayload
+	(*CodespaceUserIdentity)(nil),             // 26: codespace.v1.CodespaceUserIdentity
+	(*DevContainerConfiguration)(nil),         // 27: codespace.v1.DevContainerConfiguration
+	(*FinalizeOperationRequest)(nil),          // 28: codespace.v1.FinalizeOperationRequest
+	(*FinalResult)(nil),                       // 29: codespace.v1.FinalResult
+	(*FinalizeOperationResponse)(nil),         // 30: codespace.v1.FinalizeOperationResponse
+	(*FinalAccepted)(nil),                     // 31: codespace.v1.FinalAccepted
+	(*IdempotentDone)(nil),                    // 32: codespace.v1.IdempotentDone
+	(*StaleOperation)(nil),                    // 33: codespace.v1.StaleOperation
+	(*ResourceAbsent)(nil),                    // 34: codespace.v1.ResourceAbsent
+	(*UpdateLogRequest)(nil),                  // 35: codespace.v1.UpdateLogRequest
+	(*LogLine)(nil),                           // 36: codespace.v1.LogLine
+	(*UpdateLogResponse)(nil),                 // 37: codespace.v1.UpdateLogResponse
+	(*ReportRuntimeMetadataRequest)(nil),      // 38: codespace.v1.ReportRuntimeMetadataRequest
+	(*ReportRuntimeMetadataResponse)(nil),     // 39: codespace.v1.ReportRuntimeMetadataResponse
+	(*RuntimeMetadata)(nil),                   // 40: codespace.v1.RuntimeMetadata
+	(*RuntimeEndpoint)(nil),                   // 41: codespace.v1.RuntimeEndpoint
+	(*RuntimeBoot)(nil),                       // 42: codespace.v1.RuntimeBoot
+	(*RuntimeResourceUsage)(nil),              // 43: codespace.v1.RuntimeResourceUsage
+	(*RuntimeCPUUsage)(nil),                   // 44: codespace.v1.RuntimeCPUUsage
+	(*RuntimeMemoryUsage)(nil),                // 45: codespace.v1.RuntimeMemoryUsage
+	(*RuntimeDiskUsage)(nil),                  // 46: codespace.v1.RuntimeDiskUsage
+	(*RequestGiteaTokenRequest)(nil),          // 47: codespace.v1.RequestGiteaTokenRequest
+	(*RequestGiteaTokenResponse)(nil),         // 48: codespace.v1.RequestGiteaTokenResponse
+	(*EnsureCodespaceGitSSHKeyRequest)(nil),   // 49: codespace.v1.EnsureCodespaceGitSSHKeyRequest
+	(*EnsureCodespaceGitSSHKeyResponse)(nil),  // 50: codespace.v1.EnsureCodespaceGitSSHKeyResponse
+	(*EffectiveCodespaceRuntimeSettings)(nil), // 51: codespace.v1.EffectiveCodespaceRuntimeSettings
+	(*RequestIdleStopRequest)(nil),            // 52: codespace.v1.RequestIdleStopRequest
+	(*RequestIdleStopResponse)(nil),           // 53: codespace.v1.RequestIdleStopResponse
+	(*IdleStopPending)(nil),                   // 54: codespace.v1.IdleStopPending
+	(*IdleStopObservationChanged)(nil),        // 55: codespace.v1.IdleStopObservationChanged
+	(*IdleStopNotApplicable)(nil),             // 56: codespace.v1.IdleStopNotApplicable
+	(*ValidateOpenTokenRequest)(nil),          // 57: codespace.v1.ValidateOpenTokenRequest
+	(*ValidateOpenTokenResponse)(nil),         // 58: codespace.v1.ValidateOpenTokenResponse
+	(*OpenTokenBinding)(nil),                  // 59: codespace.v1.OpenTokenBinding
+	(*ValidatePublicEndpointRequest)(nil),     // 60: codespace.v1.ValidatePublicEndpointRequest
+	(*ValidatePublicEndpointResponse)(nil),    // 61: codespace.v1.ValidatePublicEndpointResponse
+	(*PublicEndpointAllowed)(nil),             // 62: codespace.v1.PublicEndpointAllowed
+	(*VerifySSHPublicKeyRequest)(nil),         // 63: codespace.v1.VerifySSHPublicKeyRequest
+	(*VerifySSHPublicKeyResponse)(nil),        // 64: codespace.v1.VerifySSHPublicKeyResponse
+	(*SSHAuthBinding)(nil),                    // 65: codespace.v1.SSHAuthBinding
+	(*ReportInstancesRequest)(nil),            // 66: codespace.v1.ReportInstancesRequest
+	(*RuntimeInstanceRef)(nil),                // 67: codespace.v1.RuntimeInstanceRef
+	(*ReportInstancesResponse)(nil),           // 68: codespace.v1.ReportInstancesResponse
+	(*RuntimeInstanceResult)(nil),             // 69: codespace.v1.RuntimeInstanceResult
+	(*CleanupLocalRuntime)(nil),               // 70: codespace.v1.CleanupLocalRuntime
+	(*ReportRuntimeTransitionAction)(nil),     // 71: codespace.v1.ReportRuntimeTransitionAction
+	(*StopLocalRuntime)(nil),                  // 72: codespace.v1.StopLocalRuntime
+	(*RefetchOperation)(nil),                  // 73: codespace.v1.RefetchOperation
+	(*ClearOperationContext)(nil),             // 74: codespace.v1.ClearOperationContext
+	(*ReportRuntimeTransitionRequest)(nil),    // 75: codespace.v1.ReportRuntimeTransitionRequest
+	(*ReportRuntimeTransitionResponse)(nil),   // 76: codespace.v1.ReportRuntimeTransitionResponse
+	(*RevalidateGatewaySessionRequest)(nil),   // 77: codespace.v1.RevalidateGatewaySessionRequest
+	(*EndpointSessionBinding)(nil),            // 78: codespace.v1.EndpointSessionBinding
+	(*SSHSessionBinding)(nil),                 // 79: codespace.v1.SSHSessionBinding
+	(*RevalidateGatewaySessionResponse)(nil),  // 80: codespace.v1.RevalidateGatewaySessionResponse
+	(*SessionAllowed)(nil),                    // 81: codespace.v1.SessionAllowed
+	(*FailureDetail)(nil),                     // 82: codespace.v1.FailureDetail
+	(*StaleGenerationDetail)(nil),             // 83: codespace.v1.StaleGenerationDetail
+	(*LogOffsetDetail)(nil),                   // 84: codespace.v1.LogOffsetDetail
 }
 var file_codespace_v1_types_proto_depIdxs = []int32{
 	0,  // 0: codespace.v1.DeclareManagerRequest.manager_runtime_state:type_name -> codespace.v1.ManagerRuntimeState
 	1,  // 1: codespace.v1.FetchOperationsRequest.accepted_operation_types:type_name -> codespace.v1.AcceptedOperationType
-	15, // 2: codespace.v1.FetchOperationsRequest.observed_operations:type_name -> codespace.v1.ObservedOperation
-	18, // 3: codespace.v1.FetchOperationsResponse.operations:type_name -> codespace.v1.OperationPayload
-	17, // 4: codespace.v1.FetchOperationsResponse.renewed_leases:type_name -> codespace.v1.RenewedOperationLease
-	24, // 5: codespace.v1.OperationPayload.create:type_name -> codespace.v1.CreateOperationPayload
-	19, // 6: codespace.v1.OperationPayload.resume:type_name -> codespace.v1.ResumeOperationPayload
-	20, // 7: codespace.v1.OperationPayload.stop:type_name -> codespace.v1.StopOperationPayload
-	21, // 8: codespace.v1.OperationPayload.delete:type_name -> codespace.v1.DeleteOperationPayload
-	22, // 9: codespace.v1.OperationPayload.abort_create:type_name -> codespace.v1.AbortCreateOperationPayload
-	23, // 10: codespace.v1.OperationPayload.abort_resume:type_name -> codespace.v1.AbortResumeOperationPayload
-	50, // 11: codespace.v1.ResumeOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
-	8,  // 12: codespace.v1.CreateOperationPayload.owner_type:type_name -> codespace.v1.RepositoryOwnerType
-	9,  // 13: codespace.v1.CreateOperationPayload.ref_type:type_name -> codespace.v1.GitRefType
-	50, // 14: codespace.v1.CreateOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	16, // 2: codespace.v1.FetchOperationsRequest.observed_operations:type_name -> codespace.v1.ObservedOperation
+	19, // 3: codespace.v1.FetchOperationsResponse.operations:type_name -> codespace.v1.OperationPayload
+	18, // 4: codespace.v1.FetchOperationsResponse.renewed_leases:type_name -> codespace.v1.RenewedOperationLease
+	25, // 5: codespace.v1.OperationPayload.create:type_name -> codespace.v1.CreateOperationPayload
+	20, // 6: codespace.v1.OperationPayload.resume:type_name -> codespace.v1.ResumeOperationPayload
+	21, // 7: codespace.v1.OperationPayload.stop:type_name -> codespace.v1.StopOperationPayload
+	22, // 8: codespace.v1.OperationPayload.delete:type_name -> codespace.v1.DeleteOperationPayload
+	23, // 9: codespace.v1.OperationPayload.abort_create:type_name -> codespace.v1.AbortCreateOperationPayload
+	24, // 10: codespace.v1.OperationPayload.abort_resume:type_name -> codespace.v1.AbortResumeOperationPayload
+	51, // 11: codespace.v1.ResumeOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	9,  // 12: codespace.v1.CreateOperationPayload.owner_type:type_name -> codespace.v1.RepositoryOwnerType
+	10, // 13: codespace.v1.CreateOperationPayload.ref_type:type_name -> codespace.v1.GitRefType
+	51, // 14: codespace.v1.CreateOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
 	4,  // 15: codespace.v1.CreateOperationPayload.git_protocol:type_name -> codespace.v1.GitProtocol
-	25, // 16: codespace.v1.CreateOperationPayload.user_identity:type_name -> codespace.v1.CodespaceUserIdentity
-	26, // 17: codespace.v1.CreateOperationPayload.repository_config:type_name -> codespace.v1.RepositoryCodespaceConfig
-	28, // 18: codespace.v1.FinalizeOperationRequest.final:type_name -> codespace.v1.FinalResult
-	2,  // 19: codespace.v1.FinalResult.status:type_name -> codespace.v1.FinalStatus
-	3,  // 20: codespace.v1.FinalResult.operation_type:type_name -> codespace.v1.OperationType
-	30, // 21: codespace.v1.FinalizeOperationResponse.final_accepted:type_name -> codespace.v1.FinalAccepted
-	31, // 22: codespace.v1.FinalizeOperationResponse.idempotent_done:type_name -> codespace.v1.IdempotentDone
-	32, // 23: codespace.v1.FinalizeOperationResponse.stale_operation:type_name -> codespace.v1.StaleOperation
-	33, // 24: codespace.v1.FinalizeOperationResponse.resource_absent:type_name -> codespace.v1.ResourceAbsent
-	35, // 25: codespace.v1.UpdateLogRequest.lines:type_name -> codespace.v1.LogLine
-	39, // 26: codespace.v1.ReportRuntimeMetadataRequest.metadata:type_name -> codespace.v1.RuntimeMetadata
-	40, // 27: codespace.v1.RuntimeMetadata.endpoints:type_name -> codespace.v1.RuntimeEndpoint
-	41, // 28: codespace.v1.RuntimeMetadata.boot:type_name -> codespace.v1.RuntimeBoot
-	42, // 29: codespace.v1.RuntimeMetadata.resource_usage:type_name -> codespace.v1.RuntimeResourceUsage
-	6,  // 30: codespace.v1.RuntimeBoot.stage:type_name -> codespace.v1.RuntimeBootStage
-	43, // 31: codespace.v1.RuntimeResourceUsage.cpu:type_name -> codespace.v1.RuntimeCPUUsage
-	44, // 32: codespace.v1.RuntimeResourceUsage.memory:type_name -> codespace.v1.RuntimeMemoryUsage
-	45, // 33: codespace.v1.RuntimeResourceUsage.disk:type_name -> codespace.v1.RuntimeDiskUsage
-	53, // 34: codespace.v1.RequestIdleStopResponse.pending:type_name -> codespace.v1.IdleStopPending
-	54, // 35: codespace.v1.RequestIdleStopResponse.observation_changed:type_name -> codespace.v1.IdleStopObservationChanged
-	55, // 36: codespace.v1.RequestIdleStopResponse.not_applicable:type_name -> codespace.v1.IdleStopNotApplicable
-	50, // 37: codespace.v1.IdleStopObservationChanged.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
-	7,  // 38: codespace.v1.IdleStopNotApplicable.reason:type_name -> codespace.v1.IdleStopNotApplicableReason
-	58, // 39: codespace.v1.ValidateOpenTokenResponse.allowed:type_name -> codespace.v1.OpenTokenBinding
-	81, // 40: codespace.v1.ValidateOpenTokenResponse.denied:type_name -> codespace.v1.FailureDetail
-	61, // 41: codespace.v1.ValidatePublicEndpointResponse.allowed:type_name -> codespace.v1.PublicEndpointAllowed
-	81, // 42: codespace.v1.ValidatePublicEndpointResponse.denied:type_name -> codespace.v1.FailureDetail
-	64, // 43: codespace.v1.VerifySSHPublicKeyResponse.allowed:type_name -> codespace.v1.SSHAuthBinding
-	81, // 44: codespace.v1.VerifySSHPublicKeyResponse.denied:type_name -> codespace.v1.FailureDetail
-	66, // 45: codespace.v1.ReportInstancesRequest.instances:type_name -> codespace.v1.RuntimeInstanceRef
-	5,  // 46: codespace.v1.RuntimeInstanceRef.runtime_state:type_name -> codespace.v1.RuntimeState
-	68, // 47: codespace.v1.ReportInstancesResponse.results:type_name -> codespace.v1.RuntimeInstanceResult
-	50, // 48: codespace.v1.RuntimeInstanceResult.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
-	69, // 49: codespace.v1.RuntimeInstanceResult.cleanup_local_runtime:type_name -> codespace.v1.CleanupLocalRuntime
-	70, // 50: codespace.v1.RuntimeInstanceResult.report_runtime_transition:type_name -> codespace.v1.ReportRuntimeTransitionAction
-	72, // 51: codespace.v1.RuntimeInstanceResult.refetch_operation:type_name -> codespace.v1.RefetchOperation
-	71, // 52: codespace.v1.RuntimeInstanceResult.stop_local_runtime:type_name -> codespace.v1.StopLocalRuntime
-	73, // 53: codespace.v1.RuntimeInstanceResult.clear_operation_context:type_name -> codespace.v1.ClearOperationContext
-	5,  // 54: codespace.v1.ReportRuntimeTransitionRequest.runtime_state:type_name -> codespace.v1.RuntimeState
-	77, // 55: codespace.v1.RevalidateGatewaySessionRequest.endpoint:type_name -> codespace.v1.EndpointSessionBinding
-	78, // 56: codespace.v1.RevalidateGatewaySessionRequest.ssh:type_name -> codespace.v1.SSHSessionBinding
-	80, // 57: codespace.v1.RevalidateGatewaySessionResponse.allowed:type_name -> codespace.v1.SessionAllowed
-	81, // 58: codespace.v1.RevalidateGatewaySessionResponse.denied:type_name -> codespace.v1.FailureDetail
-	59, // [59:59] is the sub-list for method output_type
-	59, // [59:59] is the sub-list for method input_type
-	59, // [59:59] is the sub-list for extension type_name
-	59, // [59:59] is the sub-list for extension extendee
-	0,  // [0:59] is the sub-list for field type_name
+	26, // 16: codespace.v1.CreateOperationPayload.user_identity:type_name -> codespace.v1.CodespaceUserIdentity
+	27, // 17: codespace.v1.CreateOperationPayload.dev_container:type_name -> codespace.v1.DevContainerConfiguration
+	5,  // 18: codespace.v1.DevContainerConfiguration.source:type_name -> codespace.v1.DevContainerConfigurationSource
+	29, // 19: codespace.v1.FinalizeOperationRequest.final:type_name -> codespace.v1.FinalResult
+	2,  // 20: codespace.v1.FinalResult.status:type_name -> codespace.v1.FinalStatus
+	3,  // 21: codespace.v1.FinalResult.operation_type:type_name -> codespace.v1.OperationType
+	31, // 22: codespace.v1.FinalizeOperationResponse.final_accepted:type_name -> codespace.v1.FinalAccepted
+	32, // 23: codespace.v1.FinalizeOperationResponse.idempotent_done:type_name -> codespace.v1.IdempotentDone
+	33, // 24: codespace.v1.FinalizeOperationResponse.stale_operation:type_name -> codespace.v1.StaleOperation
+	34, // 25: codespace.v1.FinalizeOperationResponse.resource_absent:type_name -> codespace.v1.ResourceAbsent
+	36, // 26: codespace.v1.UpdateLogRequest.lines:type_name -> codespace.v1.LogLine
+	40, // 27: codespace.v1.ReportRuntimeMetadataRequest.metadata:type_name -> codespace.v1.RuntimeMetadata
+	41, // 28: codespace.v1.RuntimeMetadata.endpoints:type_name -> codespace.v1.RuntimeEndpoint
+	42, // 29: codespace.v1.RuntimeMetadata.boot:type_name -> codespace.v1.RuntimeBoot
+	43, // 30: codespace.v1.RuntimeMetadata.resource_usage:type_name -> codespace.v1.RuntimeResourceUsage
+	7,  // 31: codespace.v1.RuntimeBoot.stage:type_name -> codespace.v1.RuntimeBootStage
+	44, // 32: codespace.v1.RuntimeResourceUsage.cpu:type_name -> codespace.v1.RuntimeCPUUsage
+	45, // 33: codespace.v1.RuntimeResourceUsage.memory:type_name -> codespace.v1.RuntimeMemoryUsage
+	46, // 34: codespace.v1.RuntimeResourceUsage.disk:type_name -> codespace.v1.RuntimeDiskUsage
+	54, // 35: codespace.v1.RequestIdleStopResponse.pending:type_name -> codespace.v1.IdleStopPending
+	55, // 36: codespace.v1.RequestIdleStopResponse.observation_changed:type_name -> codespace.v1.IdleStopObservationChanged
+	56, // 37: codespace.v1.RequestIdleStopResponse.not_applicable:type_name -> codespace.v1.IdleStopNotApplicable
+	51, // 38: codespace.v1.IdleStopObservationChanged.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	8,  // 39: codespace.v1.IdleStopNotApplicable.reason:type_name -> codespace.v1.IdleStopNotApplicableReason
+	59, // 40: codespace.v1.ValidateOpenTokenResponse.allowed:type_name -> codespace.v1.OpenTokenBinding
+	82, // 41: codespace.v1.ValidateOpenTokenResponse.denied:type_name -> codespace.v1.FailureDetail
+	62, // 42: codespace.v1.ValidatePublicEndpointResponse.allowed:type_name -> codespace.v1.PublicEndpointAllowed
+	82, // 43: codespace.v1.ValidatePublicEndpointResponse.denied:type_name -> codespace.v1.FailureDetail
+	65, // 44: codespace.v1.VerifySSHPublicKeyResponse.allowed:type_name -> codespace.v1.SSHAuthBinding
+	82, // 45: codespace.v1.VerifySSHPublicKeyResponse.denied:type_name -> codespace.v1.FailureDetail
+	67, // 46: codespace.v1.ReportInstancesRequest.instances:type_name -> codespace.v1.RuntimeInstanceRef
+	6,  // 47: codespace.v1.RuntimeInstanceRef.runtime_state:type_name -> codespace.v1.RuntimeState
+	69, // 48: codespace.v1.ReportInstancesResponse.results:type_name -> codespace.v1.RuntimeInstanceResult
+	51, // 49: codespace.v1.RuntimeInstanceResult.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	70, // 50: codespace.v1.RuntimeInstanceResult.cleanup_local_runtime:type_name -> codespace.v1.CleanupLocalRuntime
+	71, // 51: codespace.v1.RuntimeInstanceResult.report_runtime_transition:type_name -> codespace.v1.ReportRuntimeTransitionAction
+	73, // 52: codespace.v1.RuntimeInstanceResult.refetch_operation:type_name -> codespace.v1.RefetchOperation
+	72, // 53: codespace.v1.RuntimeInstanceResult.stop_local_runtime:type_name -> codespace.v1.StopLocalRuntime
+	74, // 54: codespace.v1.RuntimeInstanceResult.clear_operation_context:type_name -> codespace.v1.ClearOperationContext
+	6,  // 55: codespace.v1.ReportRuntimeTransitionRequest.runtime_state:type_name -> codespace.v1.RuntimeState
+	78, // 56: codespace.v1.RevalidateGatewaySessionRequest.endpoint:type_name -> codespace.v1.EndpointSessionBinding
+	79, // 57: codespace.v1.RevalidateGatewaySessionRequest.ssh:type_name -> codespace.v1.SSHSessionBinding
+	81, // 58: codespace.v1.RevalidateGatewaySessionResponse.allowed:type_name -> codespace.v1.SessionAllowed
+	82, // 59: codespace.v1.RevalidateGatewaySessionResponse.denied:type_name -> codespace.v1.FailureDetail
+	60, // [60:60] is the sub-list for method output_type
+	60, // [60:60] is the sub-list for method input_type
+	60, // [60:60] is the sub-list for extension type_name
+	60, // [60:60] is the sub-list for extension extendee
+	0,  // [0:60] is the sub-list for field type_name
 }
 
 func init() { file_codespace_v1_types_proto_init() }
@@ -5794,7 +5857,7 @@ func file_codespace_v1_types_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_codespace_v1_types_proto_rawDesc), len(file_codespace_v1_types_proto_rawDesc)),
-			NumEnums:      10,
+			NumEnums:      11,
 			NumMessages:   74,
 			NumExtensions: 0,
 			NumServices:   0,
