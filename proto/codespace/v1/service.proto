@@ -26,11 +26,8 @@ service ManagerService {
   // ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
   rpc ReportRuntimeMetadata(ReportRuntimeMetadataRequest) returns (ReportRuntimeMetadataResponse);
 
-  // RequestGiteaToken returns or issues the current token for create, resume, or running recovery.
-  rpc RequestGiteaToken(RequestGiteaTokenRequest) returns (RequestGiteaTokenResponse);
-
-  // EnsureCodespaceGitSSHKey creates or confirms the Codespace-lifetime Git SSH public key.
-  rpc EnsureCodespaceGitSSHKey(EnsureCodespaceGitSSHKeyRequest) returns (EnsureCodespaceGitSSHKeyResponse);
+  // RequestRuntimeAccess prepares the current token, user secrets, and Git SSH trust for runtime startup or recovery.
+  rpc RequestRuntimeAccess(RequestRuntimeAccessRequest) returns (RequestRuntimeAccessResponse);
 
   // RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
   rpc RequestIdleStop(RequestIdleStopRequest) returns (RequestIdleStopResponse);

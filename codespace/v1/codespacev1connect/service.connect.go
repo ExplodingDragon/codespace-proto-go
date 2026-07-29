@@ -51,12 +51,9 @@ const (
 	// ManagerServiceReportRuntimeMetadataProcedure is the fully-qualified name of the ManagerService's
 	// ReportRuntimeMetadata RPC.
 	ManagerServiceReportRuntimeMetadataProcedure = "/codespace.v1.ManagerService/ReportRuntimeMetadata"
-	// ManagerServiceRequestGiteaTokenProcedure is the fully-qualified name of the ManagerService's
-	// RequestGiteaToken RPC.
-	ManagerServiceRequestGiteaTokenProcedure = "/codespace.v1.ManagerService/RequestGiteaToken"
-	// ManagerServiceEnsureCodespaceGitSSHKeyProcedure is the fully-qualified name of the
-	// ManagerService's EnsureCodespaceGitSSHKey RPC.
-	ManagerServiceEnsureCodespaceGitSSHKeyProcedure = "/codespace.v1.ManagerService/EnsureCodespaceGitSSHKey"
+	// ManagerServiceRequestRuntimeAccessProcedure is the fully-qualified name of the ManagerService's
+	// RequestRuntimeAccess RPC.
+	ManagerServiceRequestRuntimeAccessProcedure = "/codespace.v1.ManagerService/RequestRuntimeAccess"
 	// ManagerServiceRequestIdleStopProcedure is the fully-qualified name of the ManagerService's
 	// RequestIdleStop RPC.
 	ManagerServiceRequestIdleStopProcedure = "/codespace.v1.ManagerService/RequestIdleStop"
@@ -94,10 +91,8 @@ type ManagerServiceClient interface {
 	UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error)
 	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
 	ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error)
-	// RequestGiteaToken returns or issues the current token for create, resume, or running recovery.
-	RequestGiteaToken(context.Context, *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error)
-	// EnsureCodespaceGitSSHKey creates or confirms the Codespace-lifetime Git SSH public key.
-	EnsureCodespaceGitSSHKey(context.Context, *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error)
+	// RequestRuntimeAccess prepares the current token, user secrets, and Git SSH trust for runtime startup or recovery.
+	RequestRuntimeAccess(context.Context, *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error)
 	// RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
 	RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error)
 	// ValidateOpenToken validates and consumes a one-time Gateway Open Token.
@@ -161,16 +156,10 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeMetadata")),
 			connect.WithClientOptions(opts...),
 		),
-		requestGiteaToken: connect.NewClient[v1.RequestGiteaTokenRequest, v1.RequestGiteaTokenResponse](
+		requestRuntimeAccess: connect.NewClient[v1.RequestRuntimeAccessRequest, v1.RequestRuntimeAccessResponse](
 			httpClient,
-			baseURL+ManagerServiceRequestGiteaTokenProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("RequestGiteaToken")),
-			connect.WithClientOptions(opts...),
-		),
-		ensureCodespaceGitSSHKey: connect.NewClient[v1.EnsureCodespaceGitSSHKeyRequest, v1.EnsureCodespaceGitSSHKeyResponse](
-			httpClient,
-			baseURL+ManagerServiceEnsureCodespaceGitSSHKeyProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("EnsureCodespaceGitSSHKey")),
+			baseURL+ManagerServiceRequestRuntimeAccessProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("RequestRuntimeAccess")),
 			connect.WithClientOptions(opts...),
 		),
 		requestIdleStop: connect.NewClient[v1.RequestIdleStopRequest, v1.RequestIdleStopResponse](
@@ -226,8 +215,7 @@ type managerServiceClient struct {
 	finalizeOperation        *connect.Client[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse]
 	updateLog                *connect.Client[v1.UpdateLogRequest, v1.UpdateLogResponse]
 	reportRuntimeMetadata    *connect.Client[v1.ReportRuntimeMetadataRequest, v1.ReportRuntimeMetadataResponse]
-	requestGiteaToken        *connect.Client[v1.RequestGiteaTokenRequest, v1.RequestGiteaTokenResponse]
-	ensureCodespaceGitSSHKey *connect.Client[v1.EnsureCodespaceGitSSHKeyRequest, v1.EnsureCodespaceGitSSHKeyResponse]
+	requestRuntimeAccess     *connect.Client[v1.RequestRuntimeAccessRequest, v1.RequestRuntimeAccessResponse]
 	requestIdleStop          *connect.Client[v1.RequestIdleStopRequest, v1.RequestIdleStopResponse]
 	validateOpenToken        *connect.Client[v1.ValidateOpenTokenRequest, v1.ValidateOpenTokenResponse]
 	validatePublicEndpoint   *connect.Client[v1.ValidatePublicEndpointRequest, v1.ValidatePublicEndpointResponse]
@@ -267,14 +255,9 @@ func (c *managerServiceClient) ReportRuntimeMetadata(ctx context.Context, req *c
 	return c.reportRuntimeMetadata.CallUnary(ctx, req)
 }
 
-// RequestGiteaToken calls codespace.v1.ManagerService.RequestGiteaToken.
-func (c *managerServiceClient) RequestGiteaToken(ctx context.Context, req *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error) {
-	return c.requestGiteaToken.CallUnary(ctx, req)
-}
-
-// EnsureCodespaceGitSSHKey calls codespace.v1.ManagerService.EnsureCodespaceGitSSHKey.
-func (c *managerServiceClient) EnsureCodespaceGitSSHKey(ctx context.Context, req *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error) {
-	return c.ensureCodespaceGitSSHKey.CallUnary(ctx, req)
+// RequestRuntimeAccess calls codespace.v1.ManagerService.RequestRuntimeAccess.
+func (c *managerServiceClient) RequestRuntimeAccess(ctx context.Context, req *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error) {
+	return c.requestRuntimeAccess.CallUnary(ctx, req)
 }
 
 // RequestIdleStop calls codespace.v1.ManagerService.RequestIdleStop.
@@ -326,10 +309,8 @@ type ManagerServiceHandler interface {
 	UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error)
 	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
 	ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error)
-	// RequestGiteaToken returns or issues the current token for create, resume, or running recovery.
-	RequestGiteaToken(context.Context, *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error)
-	// EnsureCodespaceGitSSHKey creates or confirms the Codespace-lifetime Git SSH public key.
-	EnsureCodespaceGitSSHKey(context.Context, *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error)
+	// RequestRuntimeAccess prepares the current token, user secrets, and Git SSH trust for runtime startup or recovery.
+	RequestRuntimeAccess(context.Context, *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error)
 	// RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
 	RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error)
 	// ValidateOpenToken validates and consumes a one-time Gateway Open Token.
@@ -389,16 +370,10 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 		connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeMetadata")),
 		connect.WithHandlerOptions(opts...),
 	)
-	managerServiceRequestGiteaTokenHandler := connect.NewUnaryHandler(
-		ManagerServiceRequestGiteaTokenProcedure,
-		svc.RequestGiteaToken,
-		connect.WithSchema(managerServiceMethods.ByName("RequestGiteaToken")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceEnsureCodespaceGitSSHKeyHandler := connect.NewUnaryHandler(
-		ManagerServiceEnsureCodespaceGitSSHKeyProcedure,
-		svc.EnsureCodespaceGitSSHKey,
-		connect.WithSchema(managerServiceMethods.ByName("EnsureCodespaceGitSSHKey")),
+	managerServiceRequestRuntimeAccessHandler := connect.NewUnaryHandler(
+		ManagerServiceRequestRuntimeAccessProcedure,
+		svc.RequestRuntimeAccess,
+		connect.WithSchema(managerServiceMethods.ByName("RequestRuntimeAccess")),
 		connect.WithHandlerOptions(opts...),
 	)
 	managerServiceRequestIdleStopHandler := connect.NewUnaryHandler(
@@ -457,10 +432,8 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 			managerServiceUpdateLogHandler.ServeHTTP(w, r)
 		case ManagerServiceReportRuntimeMetadataProcedure:
 			managerServiceReportRuntimeMetadataHandler.ServeHTTP(w, r)
-		case ManagerServiceRequestGiteaTokenProcedure:
-			managerServiceRequestGiteaTokenHandler.ServeHTTP(w, r)
-		case ManagerServiceEnsureCodespaceGitSSHKeyProcedure:
-			managerServiceEnsureCodespaceGitSSHKeyHandler.ServeHTTP(w, r)
+		case ManagerServiceRequestRuntimeAccessProcedure:
+			managerServiceRequestRuntimeAccessHandler.ServeHTTP(w, r)
 		case ManagerServiceRequestIdleStopProcedure:
 			managerServiceRequestIdleStopHandler.ServeHTTP(w, r)
 		case ManagerServiceValidateOpenTokenProcedure:
@@ -508,12 +481,8 @@ func (UnimplementedManagerServiceHandler) ReportRuntimeMetadata(context.Context,
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportRuntimeMetadata is not implemented"))
 }
 
-func (UnimplementedManagerServiceHandler) RequestGiteaToken(context.Context, *connect.Request[v1.RequestGiteaTokenRequest]) (*connect.Response[v1.RequestGiteaTokenResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RequestGiteaToken is not implemented"))
-}
-
-func (UnimplementedManagerServiceHandler) EnsureCodespaceGitSSHKey(context.Context, *connect.Request[v1.EnsureCodespaceGitSSHKeyRequest]) (*connect.Response[v1.EnsureCodespaceGitSSHKeyResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.EnsureCodespaceGitSSHKey is not implemented"))
+func (UnimplementedManagerServiceHandler) RequestRuntimeAccess(context.Context, *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RequestRuntimeAccess is not implemented"))
 }
 
 func (UnimplementedManagerServiceHandler) RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error) {

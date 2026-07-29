@@ -41,16 +41,6 @@ enum GitProtocol {
   GIT_PROTOCOL_SSH = 2;
 }
 
-// DevContainerConfigurationSource identifies the selected configuration origin.
-enum DevContainerConfigurationSource {
-  // No configuration source was supplied.
-  DEV_CONTAINER_CONFIGURATION_SOURCE_UNSPECIFIED = 0;
-  // Gitea selected its site-wide default image.
-  DEV_CONTAINER_CONFIGURATION_SOURCE_PLATFORM_DEFAULT = 1;
-  // The user selected one devcontainer.json from the repository.
-  DEV_CONTAINER_CONFIGURATION_SOURCE_REPOSITORY = 2;
-}
-
 // RuntimeState is the manager-observed state of a local runtime instance.
 enum RuntimeState {
   RUNTIME_STATE_UNSPECIFIED = 0;
@@ -79,19 +69,14 @@ enum IdleStopNotApplicableReason {
   IDLE_STOP_NOT_APPLICABLE_REASON_STATE_UNAVAILABLE = 3;
 }
 
-// RepositoryOwnerType identifies the repository owner's account kind.
-enum RepositoryOwnerType {
-  REPOSITORY_OWNER_TYPE_UNSPECIFIED = 0;
-  REPOSITORY_OWNER_TYPE_USER = 1;
-  REPOSITORY_OWNER_TYPE_ORGANIZATION = 2;
-}
-
-// GitRefType identifies the kind of source ref used for create.
-enum GitRefType {
-  GIT_REF_TYPE_UNSPECIFIED = 0;
-  GIT_REF_TYPE_BRANCH = 1;
-  GIT_REF_TYPE_TAG = 2;
-  GIT_REF_TYPE_COMMIT = 3;
+// RuntimeReconcileAction tells the manager how to converge one local runtime.
+enum RuntimeReconcileAction {
+  RUNTIME_RECONCILE_ACTION_UNSPECIFIED = 0;
+  RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME = 1;
+  RUNTIME_RECONCILE_ACTION_REPORT_RUNTIME_TRANSITION = 2;
+  RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION = 3;
+  RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME = 4;
+  RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT = 5;
 }
 
 // RegisterManagerRequest exchanges a registration token for manager identity.
@@ -107,7 +92,7 @@ message RegisterManagerResponse {
   string manager_secret = 2;
 }
 
-// DeclareManagerRequest publishes the manager's current routing and capacity.
+// DeclareManagerRequest publishes the manager's current routing and identity metadata.
 message DeclareManagerRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
@@ -120,8 +105,6 @@ message DeclareManagerRequest {
   string gateway_ssh_host_key_algorithm = 8;
   string gateway_ssh_host_key_fingerprint_sha256 = 9;
   int64 gateway_ssh_host_key_updated_unix = 10;
-  int32 startup_capacity_total = 11;
-  int32 startup_capacity_available = 12;
 }
 
 // DeclareManagerResponse returns server-side control-plane limits.
@@ -138,9 +121,8 @@ message FetchOperationsRequest {
   int32 protocol_version = 1;
   int32 startup_capacity_available = 2;
   repeated AcceptedOperationType accepted_operation_types = 3;
-  int32 max_new_operations = 4;
-  repeated ObservedOperation observed_operations = 5;
-  int32 cleanup_capacity_available = 6;
+  repeated ObservedOperation observed_operations = 4;
+  int32 cleanup_capacity_available = 5;
 }
 
 // ObservedOperation reports an active operation context kept by the manager.
@@ -198,52 +180,33 @@ message AbortResumeOperationPayload {}
 
 // CreateOperationPayload contains the repository and runtime inputs for create.
 message CreateOperationPayload {
-  int64 repo_id = 1;
-  string repo_full_name = 2;
-  string repo_name = 3;
-  string repo_clone_http_url = 4;
-  string repo_web_url = 5;
-  int64 owner_id = 6;
-  string owner_name = 7;
-  RepositoryOwnerType owner_type = 8;
-  string owner_display_name = 9;
-  string codespace_owner_name = 10;
-  string start_ref = 11;
-  GitRefType ref_type = 12;
-  string ref_name = 13;
-  // commit_sha is the immutable commit that the runtime must check out.
-  string commit_sha = 14;
-  // environment_tag selects the manager-local runtime environment for this create.
-  string environment_tag = 15;
-  EffectiveCodespaceRuntimeSettings runtime_settings = 16;
+  string repo_full_name = 1;
+  string repo_clone_http_url = 2;
+  string repo_clone_ssh_url = 3;
   // git_protocol is computed from current Gitea Git transport settings for this create.
-  GitProtocol git_protocol = 17;
-  string repo_clone_ssh_url = 18;
-  CodespaceUserIdentity user_identity = 19;
+  GitProtocol git_protocol = 4;
+  string start_ref = 5;
+  // commit_sha is the immutable commit that the runtime must check out.
+  string commit_sha = 6;
+  // environment_tag selects the manager-local runtime environment for this create.
+  string environment_tag = 7;
+  EffectiveCodespaceRuntimeSettings runtime_settings = 8;
+  // username is the create-time Gitea username used for the runtime user and Git user.name.
+  string username = 9;
+  // git_user_email is the create-time privacy-aware Gitea email used for Git commits.
+  string git_user_email = 10;
   // dev_container is the immutable configuration selected for this create.
-  DevContainerConfiguration dev_container = 20;
-}
-
-// CodespaceUserIdentity carries the create-time user identity for runtime init.
-message CodespaceUserIdentity {
-  int64 user_id = 1;
-  string username = 2;
-  string display_name = 3;
-  string git_user_name = 4;
-  string git_user_email = 5;
+  DevContainerConfiguration dev_container = 11;
 }
 
 // DevContainerConfiguration fixes the configuration selected when the Codespace is created.
 message DevContainerConfiguration {
-  DevContainerConfigurationSource source = 1;
-  // path is repository-relative and is set only for repository Dev Container configurations.
-  string path = 2;
-  // commit_sha is the immutable repository commit containing path.
-  string commit_sha = 3;
-  // content_sha256 verifies the repository Dev Container configuration before it is executed.
-  string content_sha256 = 4;
+  // repository_path is set with repository_content_sha256 for a repository configuration.
+  string repository_path = 1;
+  // repository_content_sha256 verifies the selected repository configuration before execution.
+  string repository_content_sha256 = 2;
   // default_image is set only for the platform default configuration.
-  string default_image = 5;
+  string default_image = 3;
 }
 
 // FinalizeOperationRequest reports the terminal result of an active operation.
@@ -252,36 +215,14 @@ message FinalizeOperationRequest {
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   int64 operation_rversion = 3;
-  FinalResult final = 4;
+  FinalStatus status = 4;
+  OperationType operation_type = 5;
 }
 
-// FinalResult identifies the completed operation and result status.
-message FinalResult {
-  FinalStatus status = 1;
-  OperationType operation_type = 2;
-}
-
-// FinalizeOperationResponse returns the accepted or already-known final state.
+// FinalizeOperationResponse reports whether the target Codespace no longer exists.
 message FinalizeOperationResponse {
-  oneof outcome {
-    FinalAccepted final_accepted = 1;
-    IdempotentDone idempotent_done = 2;
-    StaleOperation stale_operation = 3;
-    ResourceAbsent resource_absent = 4;
-  }
+  bool resource_absent = 1;
 }
-
-// FinalAccepted means Gitea accepted the final result.
-message FinalAccepted {}
-
-// IdempotentDone means the same final result was already applied.
-message IdempotentDone {}
-
-// StaleOperation means the request no longer matches the active operation.
-message StaleOperation {}
-
-// ResourceAbsent means Gitea no longer has the target codespace.
-message ResourceAbsent {}
 
 // UpdateLogRequest appends lifecycle log lines at the expected offset.
 message UpdateLogRequest {
@@ -364,30 +305,27 @@ message RuntimeDiskUsage {
   int64 limit_bytes = 2;
 }
 
-// RequestGiteaTokenRequest asks Gitea to issue or return a runtime token.
-message RequestGiteaTokenRequest {
+// RuntimeSecretEnvironmentVariable contains one user secret exposed to the runtime.
+message RuntimeSecretEnvironmentVariable {
+  string name = 1;
+  string value = 2;
+}
+
+// RequestRuntimeAccessRequest asks Gitea for current runtime access material.
+message RequestRuntimeAccessRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
+  int64 operation_rversion = 3;
+  bytes git_ssh_public_key = 4;
 }
 
-// RequestGiteaTokenResponse returns the token and canonical Gitea base URL.
-message RequestGiteaTokenResponse {
+// RequestRuntimeAccessResponse returns transient credentials and Git SSH trust material.
+message RequestRuntimeAccessResponse {
   string token = 1;
   string server_url = 2;
-}
-
-// EnsureCodespaceGitSSHKeyRequest registers the runtime public key for Git SSH.
-message EnsureCodespaceGitSSHKeyRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
-  string codespace_uuid = 2;
-  bytes public_key = 3;
-}
-
-// EnsureCodespaceGitSSHKeyResponse returns trusted Gitea SSH host key lines.
-message EnsureCodespaceGitSSHKeyResponse {
-  repeated string known_hosts_lines = 1;
+  repeated RuntimeSecretEnvironmentVariable secrets = 3;
+  repeated string git_ssh_known_hosts_lines = 4;
 }
 
 // EffectiveCodespaceRuntimeSettings contains the current auto-stop policy.
@@ -402,9 +340,7 @@ message RequestIdleStopRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string codespace_uuid = 2;
-  bool observed_auto_stop_enabled = 3;
-  int64 observed_idle_timeout_seconds = 4;
-  int64 observed_interaction_generation = 5;
+  EffectiveCodespaceRuntimeSettings observed_settings = 3;
 }
 
 // RequestIdleStopResponse returns the idle-stop decision.
@@ -515,41 +451,13 @@ message ReportInstancesResponse {
   repeated RuntimeInstanceResult results = 1;
 }
 
-// RuntimeInstanceResult contains settings and at most one reconciliation action.
+// RuntimeInstanceResult contains settings and one optional reconciliation action.
 message RuntimeInstanceResult {
   string codespace_uuid = 1;
   EffectiveCodespaceRuntimeSettings runtime_settings = 2;
-
-  oneof action {
-    CleanupLocalRuntime cleanup_local_runtime = 10;
-    ReportRuntimeTransitionAction report_runtime_transition = 11;
-    RefetchOperation refetch_operation = 12;
-    StopLocalRuntime stop_local_runtime = 13;
-    ClearOperationContext clear_operation_context = 14;
-  }
-}
-
-// CleanupLocalRuntime authorizes the manager to delete a local runtime.
-message CleanupLocalRuntime {}
-
-// ReportRuntimeTransitionAction asks the manager to report a runtime transition.
-message ReportRuntimeTransitionAction {
-  int64 current_operation_rversion = 1;
-}
-
-// StopLocalRuntime asks the manager to stop a local runtime.
-message StopLocalRuntime {
-  int64 current_operation_rversion = 1;
-}
-
-// RefetchOperation asks the manager to fetch the current operation payload again.
-message RefetchOperation {
-  int64 current_operation_rversion = 1;
-}
-
-// ClearOperationContext asks the manager to drop stale local operation context.
-message ClearOperationContext {
-  int64 current_operation_rversion = 1;
+  RuntimeReconcileAction action = 3;
+  // current_operation_rversion is positive for actions tied to Gitea operation history.
+  int64 current_operation_rversion = 4;
 }
 
 // ReportRuntimeTransitionRequest reports a manager-observed runtime state.
