@@ -92,13 +92,19 @@ message RegisterManagerResponse {
   string manager_secret = 2;
 }
 
+// EnvironmentTag describes one manager-provided runtime environment.
+message EnvironmentTag {
+  string tag = 1;
+  string description = 2;
+}
+
 // DeclareManagerRequest publishes the manager's current routing and identity metadata.
 message DeclareManagerRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   string gateway_url = 2;
   string gateway_ssh_addr = 3;
-  repeated string tags = 4;
+  repeated EnvironmentTag environments = 4;
   string version = 5;
   string name = 6;
   ManagerRuntimeState manager_runtime_state = 7;
@@ -123,6 +129,8 @@ message FetchOperationsRequest {
   repeated AcceptedOperationType accepted_operation_types = 3;
   repeated ObservedOperation observed_operations = 4;
   int32 cleanup_capacity_available = 5;
+  // accepted_create_tags limits this fetch to environments that can create a runtime now.
+  repeated string accepted_create_tags = 6;
 }
 
 // ObservedOperation reports an active operation context kept by the manager.
