@@ -199,7 +199,7 @@ message CreateOperationPayload {
   DevContainerConfiguration dev_container = 11;
 }
 
-// DevContainerConfiguration carries the selected repository configuration and create-time additions.
+// DevContainerConfiguration carries the selected repository configuration.
 message DevContainerConfiguration {
   // repository_path is set with repository_content_sha256 for a repository configuration.
   string repository_path = 1;
@@ -207,24 +207,6 @@ message DevContainerConfiguration {
   string repository_content_sha256 = 2;
   // default_image is set only for the platform default configuration.
   string default_image = 3;
-  // user_features contains the user's current personal tools when create is claimed.
-  repeated DevContainerFeature user_features = 4;
-}
-
-// DevContainerFeature describes one user-selected OCI Dev Container Feature.
-message DevContainerFeature {
-  string reference = 1;
-  repeated DevContainerFeatureOption options = 2;
-}
-
-// DevContainerFeatureOption carries one typed Feature option.
-message DevContainerFeatureOption {
-  string name = 1;
-
-  oneof value {
-    string string_value = 2;
-    bool bool_value = 3;
-  }
 }
 
 // FinalizeOperationRequest reports the terminal result of an active operation.

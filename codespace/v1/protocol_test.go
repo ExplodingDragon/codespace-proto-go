@@ -9,23 +9,6 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-func TestDevContainerFeatureOptionsAreTyped(t *testing.T) {
-	feature := &codespacev1.DevContainerFeature{
-		Reference: "ghcr.io/example/features/tool:1",
-		Options: []*codespacev1.DevContainerFeatureOption{
-			{Name: "version", Value: &codespacev1.DevContainerFeatureOption_StringValue{StringValue: "1.2.3"}},
-			{Name: "enabled", Value: &codespacev1.DevContainerFeatureOption_BoolValue{BoolValue: true}},
-		},
-	}
-
-	if feature.Options[0].GetStringValue() != "1.2.3" {
-		t.Fatalf("string option = %q", feature.Options[0].GetStringValue())
-	}
-	if !feature.Options[1].GetBoolValue() {
-		t.Fatal("boolean option is false")
-	}
-}
-
 func TestManagerServiceName(t *testing.T) {
 	if codespacev1connect.ManagerServiceName != "codespace.v1.ManagerService" {
 		t.Fatalf("service name = %q", codespacev1connect.ManagerServiceName)
