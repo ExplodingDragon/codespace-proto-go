@@ -186,35 +186,45 @@ message AbortCreateOperationPayload {}
 // AbortResumeOperationPayload asks the manager to abort an active resume.
 message AbortResumeOperationPayload {}
 
-// CreateOperationPayload contains the repository and runtime inputs for create.
+// CreateOperationPayload contains immutable inputs selected for create.
 message CreateOperationPayload {
-  string repo_full_name = 1;
-  string repo_clone_http_url = 2;
-  string repo_clone_ssh_url = 3;
-  // git_protocol is computed from current Gitea Git transport settings for this create.
-  GitProtocol git_protocol = 4;
+  RepositoryCheckout repository = 1;
+  // environment_tag selects the manager-local runtime environment for this create.
+  string environment_tag = 2;
+  // git_identity is the create-time identity used for the runtime user and Git commits.
+  GitIdentity git_identity = 3;
+  // dev_container is the immutable Dev Container source selected for this create.
+  DevContainerConfiguration dev_container = 4;
+  EffectiveCodespaceRuntimeSettings runtime_settings = 5;
+}
+
+// RepositoryCheckout describes the repository content that bootstrap must check out.
+message RepositoryCheckout {
+  string full_name = 1;
+  string clone_http_url = 2;
+  string clone_ssh_url = 3;
+  // preferred_protocol is computed from current Gitea Git transport settings for this create.
+  GitProtocol preferred_protocol = 4;
   string start_ref = 5;
   // commit_sha is the immutable commit that the runtime must check out.
   string commit_sha = 6;
-  // environment_tag selects the manager-local runtime environment for this create.
-  string environment_tag = 7;
-  EffectiveCodespaceRuntimeSettings runtime_settings = 8;
-  // username is the create-time Gitea username used for the runtime user and Git user.name.
-  string username = 9;
-  // git_user_email is the create-time privacy-aware Gitea email used for Git commits.
-  string git_user_email = 10;
-  // dev_container is the immutable configuration selected for this create.
-  DevContainerConfiguration dev_container = 11;
 }
 
-// DevContainerConfiguration carries the selected repository configuration.
+// GitIdentity is the create-time user identity written to the workspace.
+message GitIdentity {
+  string gitea_username = 1;
+  // git_user_email is the privacy-aware Gitea email used for Git commits.
+  string git_user_email = 2;
+}
+
+// DevContainerConfiguration carries exactly one selected Dev Container source.
 message DevContainerConfiguration {
-  // repository_path is set with repository_content_sha256 for a repository configuration.
-  string repository_path = 1;
-  // repository_content_sha256 verifies the selected repository configuration before execution.
-  string repository_content_sha256 = 2;
-  // default_image is set only for the platform default configuration.
-  string default_image = 3;
+  oneof source {
+    // repository_path is the original repository path for a repository configuration.
+    string repository_path = 1;
+    // template_content is the non-repository template content selected for this create.
+    string template_content = 2;
+  }
 }
 
 // FinalizeOperationRequest reports the terminal result of an active operation.
@@ -325,15 +335,30 @@ message RequestRuntimeAccessRequest {
   int32 protocol_version = 1;
   string codespace_uuid = 2;
   int64 operation_rversion = 3;
-  bytes git_ssh_public_key = 4;
+  RuntimeGitSSHKey git_ssh_key = 4;
 }
 
-// RequestRuntimeAccessResponse returns transient credentials and Git SSH trust material.
+// RuntimeGitSSHKey carries the runtime Git SSH public key registered by Gitea.
+message RuntimeGitSSHKey {
+  bytes public_key = 1;
+}
+
+// RequestRuntimeAccessResponse returns the current runtime access bundle.
 message RequestRuntimeAccessResponse {
-  string token = 1;
-  string server_url = 2;
+  RuntimeAccessBundle access = 1;
+}
+
+// RuntimeAccessBundle contains startup credentials and Git SSH trust material.
+message RuntimeAccessBundle {
+  string gitea_token = 1;
+  string gitea_server_url = 2;
   repeated RuntimeSecretEnvironmentVariable secrets = 3;
-  repeated string git_ssh_known_hosts_lines = 4;
+  GitSSHTrust git_ssh_trust = 4;
+}
+
+// GitSSHTrust contains the known_hosts lines used for Git SSH connections.
+message GitSSHTrust {
+  repeated string known_hosts_lines = 1;
 }
 
 // EffectiveCodespaceRuntimeSettings contains the current auto-stop policy.
