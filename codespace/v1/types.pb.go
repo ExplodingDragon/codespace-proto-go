@@ -507,113 +507,6 @@ func (RuntimeReconcileAction) EnumDescriptor() ([]byte, []int) {
 	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
 }
 
-// RegisterManagerRequest exchanges a registration token for manager identity.
-type RegisterManagerRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// protocol_version is the wire protocol version and must be field 1.
-	ProtocolVersion   int32  `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	RegistrationToken string `protobuf:"bytes,2,opt,name=registration_token,json=registrationToken,proto3" json:"registration_token,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
-}
-
-func (x *RegisterManagerRequest) Reset() {
-	*x = RegisterManagerRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RegisterManagerRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RegisterManagerRequest) ProtoMessage() {}
-
-func (x *RegisterManagerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RegisterManagerRequest.ProtoReflect.Descriptor instead.
-func (*RegisterManagerRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *RegisterManagerRequest) GetProtocolVersion() int32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *RegisterManagerRequest) GetRegistrationToken() string {
-	if x != nil {
-		return x.RegistrationToken
-	}
-	return ""
-}
-
-// RegisterManagerResponse returns the new manager credentials.
-type RegisterManagerResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ManagerId     int64                  `protobuf:"varint,1,opt,name=manager_id,json=managerId,proto3" json:"manager_id,omitempty"`
-	ManagerSecret string                 `protobuf:"bytes,2,opt,name=manager_secret,json=managerSecret,proto3" json:"manager_secret,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RegisterManagerResponse) Reset() {
-	*x = RegisterManagerResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RegisterManagerResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RegisterManagerResponse) ProtoMessage() {}
-
-func (x *RegisterManagerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RegisterManagerResponse.ProtoReflect.Descriptor instead.
-func (*RegisterManagerResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *RegisterManagerResponse) GetManagerId() int64 {
-	if x != nil {
-		return x.ManagerId
-	}
-	return 0
-}
-
-func (x *RegisterManagerResponse) GetManagerSecret() string {
-	if x != nil {
-		return x.ManagerSecret
-	}
-	return ""
-}
-
 // EnvironmentTag describes one manager-provided runtime environment.
 type EnvironmentTag struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -625,7 +518,7 @@ type EnvironmentTag struct {
 
 func (x *EnvironmentTag) Reset() {
 	*x = EnvironmentTag{}
-	mi := &file_codespace_v1_types_proto_msgTypes[2]
+	mi := &file_codespace_v1_types_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -637,7 +530,7 @@ func (x *EnvironmentTag) String() string {
 func (*EnvironmentTag) ProtoMessage() {}
 
 func (x *EnvironmentTag) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[2]
+	mi := &file_codespace_v1_types_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -650,7 +543,7 @@ func (x *EnvironmentTag) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EnvironmentTag.ProtoReflect.Descriptor instead.
 func (*EnvironmentTag) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{2}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *EnvironmentTag) GetTag() string {
@@ -687,7 +580,7 @@ type DeclareManagerRequest struct {
 
 func (x *DeclareManagerRequest) Reset() {
 	*x = DeclareManagerRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[3]
+	mi := &file_codespace_v1_types_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -699,7 +592,7 @@ func (x *DeclareManagerRequest) String() string {
 func (*DeclareManagerRequest) ProtoMessage() {}
 
 func (x *DeclareManagerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[3]
+	mi := &file_codespace_v1_types_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -712,7 +605,7 @@ func (x *DeclareManagerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeclareManagerRequest.ProtoReflect.Descriptor instead.
 func (*DeclareManagerRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{3}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *DeclareManagerRequest) GetProtocolVersion() int32 {
@@ -798,7 +691,7 @@ type DeclareManagerResponse struct {
 
 func (x *DeclareManagerResponse) Reset() {
 	*x = DeclareManagerResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[4]
+	mi := &file_codespace_v1_types_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -810,7 +703,7 @@ func (x *DeclareManagerResponse) String() string {
 func (*DeclareManagerResponse) ProtoMessage() {}
 
 func (x *DeclareManagerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[4]
+	mi := &file_codespace_v1_types_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -823,7 +716,7 @@ func (x *DeclareManagerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeclareManagerResponse.ProtoReflect.Descriptor instead.
 func (*DeclareManagerResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{4}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *DeclareManagerResponse) GetHeartbeatIntervalMilliseconds() int64 {
@@ -871,7 +764,7 @@ type FetchOperationsRequest struct {
 
 func (x *FetchOperationsRequest) Reset() {
 	*x = FetchOperationsRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[5]
+	mi := &file_codespace_v1_types_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -883,7 +776,7 @@ func (x *FetchOperationsRequest) String() string {
 func (*FetchOperationsRequest) ProtoMessage() {}
 
 func (x *FetchOperationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[5]
+	mi := &file_codespace_v1_types_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -896,7 +789,7 @@ func (x *FetchOperationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FetchOperationsRequest.ProtoReflect.Descriptor instead.
 func (*FetchOperationsRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{5}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *FetchOperationsRequest) GetProtocolVersion() int32 {
@@ -944,7 +837,7 @@ func (x *FetchOperationsRequest) GetAcceptedCreateTags() []string {
 // ObservedOperation reports an active operation context kept by the manager.
 type ObservedOperation struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
-	CodespaceUuid     string                 `protobuf:"bytes,1,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid       string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	OperationRversion int64                  `protobuf:"varint,2,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	unknownFields     protoimpl.UnknownFields
 	sizeCache         protoimpl.SizeCache
@@ -952,7 +845,7 @@ type ObservedOperation struct {
 
 func (x *ObservedOperation) Reset() {
 	*x = ObservedOperation{}
-	mi := &file_codespace_v1_types_proto_msgTypes[6]
+	mi := &file_codespace_v1_types_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -964,7 +857,7 @@ func (x *ObservedOperation) String() string {
 func (*ObservedOperation) ProtoMessage() {}
 
 func (x *ObservedOperation) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[6]
+	mi := &file_codespace_v1_types_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -977,12 +870,12 @@ func (x *ObservedOperation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObservedOperation.ProtoReflect.Descriptor instead.
 func (*ObservedOperation) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{6}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ObservedOperation) GetCodespaceUuid() string {
+func (x *ObservedOperation) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -1005,7 +898,7 @@ type FetchOperationsResponse struct {
 
 func (x *FetchOperationsResponse) Reset() {
 	*x = FetchOperationsResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[7]
+	mi := &file_codespace_v1_types_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1017,7 +910,7 @@ func (x *FetchOperationsResponse) String() string {
 func (*FetchOperationsResponse) ProtoMessage() {}
 
 func (x *FetchOperationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[7]
+	mi := &file_codespace_v1_types_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1030,7 +923,7 @@ func (x *FetchOperationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FetchOperationsResponse.ProtoReflect.Descriptor instead.
 func (*FetchOperationsResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{7}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *FetchOperationsResponse) GetOperations() []*OperationPayload {
@@ -1050,7 +943,7 @@ func (x *FetchOperationsResponse) GetRenewedLeases() []*RenewedOperationLease {
 // RenewedOperationLease extends a manager-held operation without resending payload.
 type RenewedOperationLease struct {
 	state                     protoimpl.MessageState `protogen:"open.v1"`
-	CodespaceUuid             string                 `protobuf:"bytes,1,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid               string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	OperationRversion         int64                  `protobuf:"varint,2,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	LeaseValidForMilliseconds int64                  `protobuf:"varint,3,opt,name=lease_valid_for_milliseconds,json=leaseValidForMilliseconds,proto3" json:"lease_valid_for_milliseconds,omitempty"`
 	unknownFields             protoimpl.UnknownFields
@@ -1059,7 +952,7 @@ type RenewedOperationLease struct {
 
 func (x *RenewedOperationLease) Reset() {
 	*x = RenewedOperationLease{}
-	mi := &file_codespace_v1_types_proto_msgTypes[8]
+	mi := &file_codespace_v1_types_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1071,7 +964,7 @@ func (x *RenewedOperationLease) String() string {
 func (*RenewedOperationLease) ProtoMessage() {}
 
 func (x *RenewedOperationLease) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[8]
+	mi := &file_codespace_v1_types_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1084,12 +977,12 @@ func (x *RenewedOperationLease) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenewedOperationLease.ProtoReflect.Descriptor instead.
 func (*RenewedOperationLease) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *RenewedOperationLease) GetCodespaceUuid() string {
+func (x *RenewedOperationLease) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -1112,9 +1005,10 @@ func (x *RenewedOperationLease) GetLeaseValidForMilliseconds() int64 {
 type OperationPayload struct {
 	state                     protoimpl.MessageState `protogen:"open.v1"`
 	OperationRversion         int64                  `protobuf:"varint,1,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
-	CodespaceUuid             string                 `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
-	LogOffset                 int64                  `protobuf:"varint,3,opt,name=log_offset,json=logOffset,proto3" json:"log_offset,omitempty"`
-	LeaseValidForMilliseconds int64                  `protobuf:"varint,4,opt,name=lease_valid_for_milliseconds,json=leaseValidForMilliseconds,proto3" json:"lease_valid_for_milliseconds,omitempty"`
+	CodespaceId               int64                  `protobuf:"varint,2,opt,name=codespace_id,json=codespaceId,proto3" json:"codespace_id,omitempty"`
+	RuntimeUuid               string                 `protobuf:"bytes,3,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	LogOffset                 int64                  `protobuf:"varint,4,opt,name=log_offset,json=logOffset,proto3" json:"log_offset,omitempty"`
+	LeaseValidForMilliseconds int64                  `protobuf:"varint,5,opt,name=lease_valid_for_milliseconds,json=leaseValidForMilliseconds,proto3" json:"lease_valid_for_milliseconds,omitempty"`
 	// Types that are valid to be assigned to Command:
 	//
 	//	*OperationPayload_Create
@@ -1130,7 +1024,7 @@ type OperationPayload struct {
 
 func (x *OperationPayload) Reset() {
 	*x = OperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[9]
+	mi := &file_codespace_v1_types_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1142,7 +1036,7 @@ func (x *OperationPayload) String() string {
 func (*OperationPayload) ProtoMessage() {}
 
 func (x *OperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[9]
+	mi := &file_codespace_v1_types_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1155,7 +1049,7 @@ func (x *OperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OperationPayload.ProtoReflect.Descriptor instead.
 func (*OperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{9}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *OperationPayload) GetOperationRversion() int64 {
@@ -1165,9 +1059,16 @@ func (x *OperationPayload) GetOperationRversion() int64 {
 	return 0
 }
 
-func (x *OperationPayload) GetCodespaceUuid() string {
+func (x *OperationPayload) GetCodespaceId() int64 {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.CodespaceId
+	}
+	return 0
+}
+
+func (x *OperationPayload) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -1286,6 +1187,121 @@ func (*OperationPayload_Delete) isOperationPayload_Command() {}
 func (*OperationPayload_AbortCreate) isOperationPayload_Command() {}
 
 func (*OperationPayload_AbortResume) isOperationPayload_Command() {}
+
+// BindRuntimeIdentityRequest stores the manager-allocated runtime UUID for a create operation.
+type BindRuntimeIdentityRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// protocol_version is the wire protocol version and must be field 1.
+	ProtocolVersion   int32  `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	CodespaceId       int64  `protobuf:"varint,2,opt,name=codespace_id,json=codespaceId,proto3" json:"codespace_id,omitempty"`
+	OperationRversion int64  `protobuf:"varint,3,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
+	RuntimeUuid       string `protobuf:"bytes,4,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *BindRuntimeIdentityRequest) Reset() {
+	*x = BindRuntimeIdentityRequest{}
+	mi := &file_codespace_v1_types_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BindRuntimeIdentityRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BindRuntimeIdentityRequest) ProtoMessage() {}
+
+func (x *BindRuntimeIdentityRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_codespace_v1_types_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BindRuntimeIdentityRequest.ProtoReflect.Descriptor instead.
+func (*BindRuntimeIdentityRequest) Descriptor() ([]byte, []int) {
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *BindRuntimeIdentityRequest) GetProtocolVersion() int32 {
+	if x != nil {
+		return x.ProtocolVersion
+	}
+	return 0
+}
+
+func (x *BindRuntimeIdentityRequest) GetCodespaceId() int64 {
+	if x != nil {
+		return x.CodespaceId
+	}
+	return 0
+}
+
+func (x *BindRuntimeIdentityRequest) GetOperationRversion() int64 {
+	if x != nil {
+		return x.OperationRversion
+	}
+	return 0
+}
+
+func (x *BindRuntimeIdentityRequest) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+// BindRuntimeIdentityResponse returns the accepted runtime UUID.
+type BindRuntimeIdentityResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RuntimeUuid   string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BindRuntimeIdentityResponse) Reset() {
+	*x = BindRuntimeIdentityResponse{}
+	mi := &file_codespace_v1_types_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BindRuntimeIdentityResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BindRuntimeIdentityResponse) ProtoMessage() {}
+
+func (x *BindRuntimeIdentityResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_codespace_v1_types_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BindRuntimeIdentityResponse.ProtoReflect.Descriptor instead.
+func (*BindRuntimeIdentityResponse) Descriptor() ([]byte, []int) {
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *BindRuntimeIdentityResponse) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
 
 // ResumeOperationPayload contains only settings needed to restart an existing runtime.
 type ResumeOperationPayload struct {
@@ -1791,7 +1807,7 @@ type FinalizeOperationRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion   int32         `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid     string        `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid       string        `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	OperationRversion int64         `protobuf:"varint,3,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	Status            FinalStatus   `protobuf:"varint,4,opt,name=status,proto3,enum=codespace.v1.FinalStatus" json:"status,omitempty"`
 	OperationType     OperationType `protobuf:"varint,5,opt,name=operation_type,json=operationType,proto3,enum=codespace.v1.OperationType" json:"operation_type,omitempty"`
@@ -1836,9 +1852,9 @@ func (x *FinalizeOperationRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *FinalizeOperationRequest) GetCodespaceUuid() string {
+func (x *FinalizeOperationRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -1914,7 +1930,7 @@ type UpdateLogRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion   int32      `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid     string     `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid       string     `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	OperationRversion int64      `protobuf:"varint,3,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	Offset            int64      `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`
 	Lines             []*LogLine `protobuf:"bytes,5,rep,name=lines,proto3" json:"lines,omitempty"`
@@ -1959,9 +1975,9 @@ func (x *UpdateLogRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *UpdateLogRequest) GetCodespaceUuid() string {
+func (x *UpdateLogRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -2090,7 +2106,7 @@ type ReportRuntimeMetadataRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion    int32            `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid      string           `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid        string           `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	MetadataGeneration int64            `protobuf:"varint,3,opt,name=metadata_generation,json=metadataGeneration,proto3" json:"metadata_generation,omitempty"`
 	Metadata           *RuntimeMetadata `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
 	unknownFields      protoimpl.UnknownFields
@@ -2134,9 +2150,9 @@ func (x *ReportRuntimeMetadataRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *ReportRuntimeMetadataRequest) GetCodespaceUuid() string {
+func (x *ReportRuntimeMetadataRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -2669,7 +2685,7 @@ type RequestRuntimeAccessRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion   int32             `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid     string            `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid       string            `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	OperationRversion int64             `protobuf:"varint,3,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	GitSshKey         *RuntimeGitSSHKey `protobuf:"bytes,4,opt,name=git_ssh_key,json=gitSshKey,proto3" json:"git_ssh_key,omitempty"`
 	unknownFields     protoimpl.UnknownFields
@@ -2713,9 +2729,9 @@ func (x *RequestRuntimeAccessRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *RequestRuntimeAccessRequest) GetCodespaceUuid() string {
+func (x *RequestRuntimeAccessRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -3004,7 +3020,7 @@ type RequestIdleStopRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion  int32                              `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid    string                             `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid      string                             `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	ObservedSettings *EffectiveCodespaceRuntimeSettings `protobuf:"bytes,3,opt,name=observed_settings,json=observedSettings,proto3" json:"observed_settings,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
@@ -3047,9 +3063,9 @@ func (x *RequestIdleStopRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *RequestIdleStopRequest) GetCodespaceUuid() string {
+func (x *RequestIdleStopRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -3436,7 +3452,7 @@ func (*ValidateOpenTokenResponse_Denied) isValidateOpenTokenResponse_Outcome() {
 type OpenTokenBinding struct {
 	state                 protoimpl.MessageState `protogen:"open.v1"`
 	UserId                int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	CodespaceUuid         string                 `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid           string                 `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	EndpointId            string                 `protobuf:"bytes,3,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
 	InteractionGeneration int64                  `protobuf:"varint,4,opt,name=interaction_generation,json=interactionGeneration,proto3" json:"interaction_generation,omitempty"`
 	unknownFields         protoimpl.UnknownFields
@@ -3480,9 +3496,9 @@ func (x *OpenTokenBinding) GetUserId() int64 {
 	return 0
 }
 
-func (x *OpenTokenBinding) GetCodespaceUuid() string {
+func (x *OpenTokenBinding) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -3506,7 +3522,7 @@ type ValidatePublicEndpointRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion int32  `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid   string `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid     string `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	EndpointId      string `protobuf:"bytes,3,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -3549,9 +3565,9 @@ func (x *ValidatePublicEndpointRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *ValidatePublicEndpointRequest) GetCodespaceUuid() string {
+func (x *ValidatePublicEndpointRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -3688,7 +3704,7 @@ type VerifySSHPublicKeyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion int32  `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid   string `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid     string `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	PublicKey       []byte `protobuf:"bytes,3,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
@@ -3731,9 +3747,9 @@ func (x *VerifySSHPublicKeyRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *VerifySSHPublicKeyRequest) GetCodespaceUuid() string {
+func (x *VerifySSHPublicKeyRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -3946,7 +3962,7 @@ func (x *ReportInstancesRequest) GetInstances() []*RuntimeInstanceRef {
 // RuntimeInstanceRef is one manager-owned runtime instance in inventory.
 type RuntimeInstanceRef struct {
 	state                     protoimpl.MessageState `protogen:"open.v1"`
-	CodespaceUuid             string                 `protobuf:"bytes,1,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid               string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	RuntimeState              RuntimeState           `protobuf:"varint,2,opt,name=runtime_state,json=runtimeState,proto3,enum=codespace.v1.RuntimeState" json:"runtime_state,omitempty"`
 	ObservedOperationRversion int64                  `protobuf:"varint,3,opt,name=observed_operation_rversion,json=observedOperationRversion,proto3" json:"observed_operation_rversion,omitempty"`
 	unknownFields             protoimpl.UnknownFields
@@ -3983,9 +3999,9 @@ func (*RuntimeInstanceRef) Descriptor() ([]byte, []int) {
 	return file_codespace_v1_types_proto_rawDescGZIP(), []int{55}
 }
 
-func (x *RuntimeInstanceRef) GetCodespaceUuid() string {
+func (x *RuntimeInstanceRef) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -4052,7 +4068,7 @@ func (x *ReportInstancesResponse) GetResults() []*RuntimeInstanceResult {
 // RuntimeInstanceResult contains settings and one optional reconciliation action.
 type RuntimeInstanceResult struct {
 	state           protoimpl.MessageState             `protogen:"open.v1"`
-	CodespaceUuid   string                             `protobuf:"bytes,1,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid     string                             `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	RuntimeSettings *EffectiveCodespaceRuntimeSettings `protobuf:"bytes,2,opt,name=runtime_settings,json=runtimeSettings,proto3" json:"runtime_settings,omitempty"`
 	Action          RuntimeReconcileAction             `protobuf:"varint,3,opt,name=action,proto3,enum=codespace.v1.RuntimeReconcileAction" json:"action,omitempty"`
 	// current_operation_rversion is positive for actions tied to Gitea operation history.
@@ -4091,9 +4107,9 @@ func (*RuntimeInstanceResult) Descriptor() ([]byte, []int) {
 	return file_codespace_v1_types_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *RuntimeInstanceResult) GetCodespaceUuid() string {
+func (x *RuntimeInstanceResult) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -4124,7 +4140,7 @@ type ReportRuntimeTransitionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
 	ProtocolVersion           int32        `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CodespaceUuid             string       `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid               string       `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	RuntimeGeneration         int64        `protobuf:"varint,3,opt,name=runtime_generation,json=runtimeGeneration,proto3" json:"runtime_generation,omitempty"`
 	ObservedOperationRversion int64        `protobuf:"varint,4,opt,name=observed_operation_rversion,json=observedOperationRversion,proto3" json:"observed_operation_rversion,omitempty"`
 	RuntimeState              RuntimeState `protobuf:"varint,5,opt,name=runtime_state,json=runtimeState,proto3,enum=codespace.v1.RuntimeState" json:"runtime_state,omitempty"`
@@ -4169,9 +4185,9 @@ func (x *ReportRuntimeTransitionRequest) GetProtocolVersion() int32 {
 	return 0
 }
 
-func (x *ReportRuntimeTransitionRequest) GetCodespaceUuid() string {
+func (x *ReportRuntimeTransitionRequest) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -4330,7 +4346,7 @@ func (*RevalidateGatewaySessionRequest_Ssh) isRevalidateGatewaySessionRequest_Se
 type EndpointSessionBinding struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	CodespaceUuid string                 `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid   string                 `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	EndpointId    string                 `protobuf:"bytes,3,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -4373,9 +4389,9 @@ func (x *EndpointSessionBinding) GetUserId() int64 {
 	return 0
 }
 
-func (x *EndpointSessionBinding) GetCodespaceUuid() string {
+func (x *EndpointSessionBinding) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -4391,7 +4407,7 @@ func (x *EndpointSessionBinding) GetEndpointId() string {
 type SSHSessionBinding struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	CodespaceUuid string                 `protobuf:"bytes,2,opt,name=codespace_uuid,json=codespaceUuid,proto3" json:"codespace_uuid,omitempty"`
+	RuntimeUuid   string                 `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4433,9 +4449,9 @@ func (x *SSHSessionBinding) GetUserId() int64 {
 	return 0
 }
 
-func (x *SSHSessionBinding) GetCodespaceUuid() string {
+func (x *SSHSessionBinding) GetRuntimeUuid() string {
 	if x != nil {
-		return x.CodespaceUuid
+		return x.RuntimeUuid
 	}
 	return ""
 }
@@ -4700,14 +4716,7 @@ var File_codespace_v1_types_proto protoreflect.FileDescriptor
 
 const file_codespace_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x18codespace/v1/types.proto\x12\fcodespace.v1\"r\n" +
-	"\x16RegisterManagerRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12-\n" +
-	"\x12registration_token\x18\x02 \x01(\tR\x11registrationToken\"_\n" +
-	"\x17RegisterManagerResponse\x12\x1d\n" +
-	"\n" +
-	"manager_id\x18\x01 \x01(\x03R\tmanagerId\x12%\n" +
-	"\x0emanager_secret\x18\x02 \x01(\tR\rmanagerSecret\"D\n" +
+	"\x18codespace/v1/types.proto\x12\fcodespace.v1\"D\n" +
 	"\x0eEnvironmentTag\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\"\xb6\x04\n" +
@@ -4735,25 +4744,26 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x18accepted_operation_types\x18\x03 \x03(\x0e2#.codespace.v1.AcceptedOperationTypeR\x16acceptedOperationTypes\x12P\n" +
 	"\x13observed_operations\x18\x04 \x03(\v2\x1f.codespace.v1.ObservedOperationR\x12observedOperations\x12<\n" +
 	"\x1acleanup_capacity_available\x18\x05 \x01(\x05R\x18cleanupCapacityAvailable\x120\n" +
-	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTags\"i\n" +
-	"\x11ObservedOperation\x12%\n" +
-	"\x0ecodespace_uuid\x18\x01 \x01(\tR\rcodespaceUuid\x12-\n" +
+	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTags\"e\n" +
+	"\x11ObservedOperation\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\"\xa5\x01\n" +
 	"\x17FetchOperationsResponse\x12>\n" +
 	"\n" +
 	"operations\x18\x01 \x03(\v2\x1e.codespace.v1.OperationPayloadR\n" +
 	"operations\x12J\n" +
-	"\x0erenewed_leases\x18\x02 \x03(\v2#.codespace.v1.RenewedOperationLeaseR\rrenewedLeases\"\xae\x01\n" +
-	"\x15RenewedOperationLease\x12%\n" +
-	"\x0ecodespace_uuid\x18\x01 \x01(\tR\rcodespaceUuid\x12-\n" +
+	"\x0erenewed_leases\x18\x02 \x03(\v2#.codespace.v1.RenewedOperationLeaseR\rrenewedLeases\"\xaa\x01\n" +
+	"\x15RenewedOperationLease\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\x12?\n" +
-	"\x1clease_valid_for_milliseconds\x18\x03 \x01(\x03R\x19leaseValidForMilliseconds\"\xed\x04\n" +
+	"\x1clease_valid_for_milliseconds\x18\x03 \x01(\x03R\x19leaseValidForMilliseconds\"\x8c\x05\n" +
 	"\x10OperationPayload\x12-\n" +
-	"\x12operation_rversion\x18\x01 \x01(\x03R\x11operationRversion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12\x1d\n" +
+	"\x12operation_rversion\x18\x01 \x01(\x03R\x11operationRversion\x12!\n" +
+	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12!\n" +
+	"\fruntime_uuid\x18\x03 \x01(\tR\vruntimeUuid\x12\x1d\n" +
 	"\n" +
-	"log_offset\x18\x03 \x01(\x03R\tlogOffset\x12?\n" +
-	"\x1clease_valid_for_milliseconds\x18\x04 \x01(\x03R\x19leaseValidForMilliseconds\x12>\n" +
+	"log_offset\x18\x04 \x01(\x03R\tlogOffset\x12?\n" +
+	"\x1clease_valid_for_milliseconds\x18\x05 \x01(\x03R\x19leaseValidForMilliseconds\x12>\n" +
 	"\x06create\x18\n" +
 	" \x01(\v2$.codespace.v1.CreateOperationPayloadH\x00R\x06create\x12>\n" +
 	"\x06resume\x18\v \x01(\v2$.codespace.v1.ResumeOperationPayloadH\x00R\x06resume\x128\n" +
@@ -4761,7 +4771,14 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x06delete\x18\r \x01(\v2$.codespace.v1.DeleteOperationPayloadH\x00R\x06delete\x12N\n" +
 	"\fabort_create\x18\x0e \x01(\v2).codespace.v1.AbortCreateOperationPayloadH\x00R\vabortCreate\x12N\n" +
 	"\fabort_resume\x18\x0f \x01(\v2).codespace.v1.AbortResumeOperationPayloadH\x00R\vabortResumeB\t\n" +
-	"\acommand\"t\n" +
+	"\acommand\"\xbc\x01\n" +
+	"\x1aBindRuntimeIdentityRequest\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12-\n" +
+	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x12!\n" +
+	"\fruntime_uuid\x18\x04 \x01(\tR\vruntimeUuid\"@\n" +
+	"\x1bBindRuntimeIdentityResponse\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\"t\n" +
 	"\x16ResumeOperationPayload\x12Z\n" +
 	"\x10runtime_settings\x18\x01 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\x16\n" +
 	"\x14StopOperationPayload\"\x18\n" +
@@ -4790,18 +4807,18 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x19DevContainerConfiguration\x12)\n" +
 	"\x0frepository_path\x18\x01 \x01(\tH\x00R\x0erepositoryPath\x12+\n" +
 	"\x10template_content\x18\x02 \x01(\tH\x00R\x0ftemplateContentB\b\n" +
-	"\x06source\"\x92\x02\n" +
+	"\x06source\"\x8e\x02\n" +
 	"\x18FinalizeOperationRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12-\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x121\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x19.codespace.v1.FinalStatusR\x06status\x12B\n" +
 	"\x0eoperation_type\x18\x05 \x01(\x0e2\x1b.codespace.v1.OperationTypeR\roperationType\"D\n" +
 	"\x19FinalizeOperationResponse\x12'\n" +
-	"\x0fresource_absent\x18\x01 \x01(\bR\x0eresourceAbsent\"\xd8\x01\n" +
+	"\x0fresource_absent\x18\x01 \x01(\bR\x0eresourceAbsent\"\xd4\x01\n" +
 	"\x10UpdateLogRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12-\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x12\x16\n" +
 	"\x06offset\x18\x04 \x01(\x03R\x06offset\x12+\n" +
 	"\x05lines\x18\x05 \x03(\v2\x15.codespace.v1.LogLineR\x05lines\"S\n" +
@@ -4810,10 +4827,10 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"4\n" +
 	"\x11UpdateLogResponse\x12\x1f\n" +
 	"\vnext_offset\x18\x01 \x01(\x03R\n" +
-	"nextOffset\"\xdc\x01\n" +
+	"nextOffset\"\xd8\x01\n" +
 	"\x1cReportRuntimeMetadataRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12/\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12/\n" +
 	"\x13metadata_generation\x18\x03 \x01(\x03R\x12metadataGeneration\x129\n" +
 	"\bmetadata\x18\x04 \x01(\v2\x1d.codespace.v1.RuntimeMetadataR\bmetadata\"\x1f\n" +
 	"\x1dReportRuntimeMetadataResponse\"\xc8\x01\n" +
@@ -4851,10 +4868,10 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"limitBytes\"L\n" +
 	" RuntimeSecretEnvironmentVariable\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\"\xde\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value\"\xda\x01\n" +
 	"\x1bRequestRuntimeAccessRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12-\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x12>\n" +
 	"\vgit_ssh_key\x18\x04 \x01(\v2\x1e.codespace.v1.RuntimeGitSSHKeyR\tgitSshKey\"1\n" +
 	"\x10RuntimeGitSSHKey\x12\x1d\n" +
@@ -4873,10 +4890,10 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"!EffectiveCodespaceRuntimeSettings\x12*\n" +
 	"\x11auto_stop_enabled\x18\x01 \x01(\bR\x0fautoStopEnabled\x120\n" +
 	"\x14idle_timeout_seconds\x18\x02 \x01(\x03R\x12idleTimeoutSeconds\x125\n" +
-	"\x16interaction_generation\x18\x03 \x01(\x03R\x15interactionGeneration\"\xc8\x01\n" +
+	"\x16interaction_generation\x18\x03 \x01(\x03R\x15interactionGeneration\"\xc4\x01\n" +
 	"\x16RequestIdleStopRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12\\\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\\\n" +
 	"\x11observed_settings\x18\x03 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x10observedSettings\"\x8a\x02\n" +
 	"\x17RequestIdleStopResponse\x129\n" +
 	"\apending\x18\x01 \x01(\v2\x1d.codespace.v1.IdleStopPendingH\x00R\apending\x12[\n" +
@@ -4895,26 +4912,26 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x19ValidateOpenTokenResponse\x12:\n" +
 	"\aallowed\x18\x01 \x01(\v2\x1e.codespace.v1.OpenTokenBindingH\x00R\aallowed\x125\n" +
 	"\x06denied\x18\x02 \x01(\v2\x1b.codespace.v1.FailureDetailH\x00R\x06deniedB\t\n" +
-	"\aoutcome\"\xaa\x01\n" +
+	"\aoutcome\"\xa6\x01\n" +
 	"\x10OpenTokenBinding\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12\x1f\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\x1f\n" +
 	"\vendpoint_id\x18\x03 \x01(\tR\n" +
 	"endpointId\x125\n" +
-	"\x16interaction_generation\x18\x04 \x01(\x03R\x15interactionGeneration\"\x92\x01\n" +
+	"\x16interaction_generation\x18\x04 \x01(\x03R\x15interactionGeneration\"\x8e\x01\n" +
 	"\x1dValidatePublicEndpointRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12\x1f\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\x1f\n" +
 	"\vendpoint_id\x18\x03 \x01(\tR\n" +
 	"endpointId\"\xa3\x01\n" +
 	"\x1eValidatePublicEndpointResponse\x12?\n" +
 	"\aallowed\x18\x01 \x01(\v2#.codespace.v1.PublicEndpointAllowedH\x00R\aallowed\x125\n" +
 	"\x06denied\x18\x02 \x01(\v2\x1b.codespace.v1.FailureDetailH\x00R\x06deniedB\t\n" +
 	"\aoutcome\"\x17\n" +
-	"\x15PublicEndpointAllowed\"\x8c\x01\n" +
+	"\x15PublicEndpointAllowed\"\x88\x01\n" +
 	"\x19VerifySSHPublicKeyRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12\x1d\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\x1d\n" +
 	"\n" +
 	"public_key\x18\x03 \x01(\fR\tpublicKey\"\x98\x01\n" +
 	"\x1aVerifySSHPublicKeyResponse\x128\n" +
@@ -4927,21 +4944,21 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x16ReportInstancesRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x121\n" +
 	"\x14inventory_generation\x18\x02 \x01(\x03R\x13inventoryGeneration\x12>\n" +
-	"\tinstances\x18\x03 \x03(\v2 .codespace.v1.RuntimeInstanceRefR\tinstances\"\xbc\x01\n" +
-	"\x12RuntimeInstanceRef\x12%\n" +
-	"\x0ecodespace_uuid\x18\x01 \x01(\tR\rcodespaceUuid\x12?\n" +
+	"\tinstances\x18\x03 \x03(\v2 .codespace.v1.RuntimeInstanceRefR\tinstances\"\xb8\x01\n" +
+	"\x12RuntimeInstanceRef\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12?\n" +
 	"\rruntime_state\x18\x02 \x01(\x0e2\x1a.codespace.v1.RuntimeStateR\fruntimeState\x12>\n" +
 	"\x1bobserved_operation_rversion\x18\x03 \x01(\x03R\x19observedOperationRversion\"X\n" +
 	"\x17ReportInstancesResponse\x12=\n" +
-	"\aresults\x18\x01 \x03(\v2#.codespace.v1.RuntimeInstanceResultR\aresults\"\x96\x02\n" +
-	"\x15RuntimeInstanceResult\x12%\n" +
-	"\x0ecodespace_uuid\x18\x01 \x01(\tR\rcodespaceUuid\x12Z\n" +
+	"\aresults\x18\x01 \x03(\v2#.codespace.v1.RuntimeInstanceResultR\aresults\"\x92\x02\n" +
+	"\x15RuntimeInstanceResult\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12Z\n" +
 	"\x10runtime_settings\x18\x02 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\x12<\n" +
 	"\x06action\x18\x03 \x01(\x0e2$.codespace.v1.RuntimeReconcileActionR\x06action\x12<\n" +
-	"\x1acurrent_operation_rversion\x18\x04 \x01(\x03R\x18currentOperationRversion\"\xa2\x02\n" +
+	"\x1acurrent_operation_rversion\x18\x04 \x01(\x03R\x18currentOperationRversion\"\x9e\x02\n" +
 	"\x1eReportRuntimeTransitionRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12-\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12runtime_generation\x18\x03 \x01(\x03R\x11runtimeGeneration\x12>\n" +
 	"\x1bobserved_operation_rversion\x18\x04 \x01(\x03R\x19observedOperationRversion\x12?\n" +
 	"\rruntime_state\x18\x05 \x01(\x0e2\x1a.codespace.v1.RuntimeStateR\fruntimeState\"!\n" +
@@ -4950,15 +4967,15 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12B\n" +
 	"\bendpoint\x18\x02 \x01(\v2$.codespace.v1.EndpointSessionBindingH\x00R\bendpoint\x123\n" +
 	"\x03ssh\x18\x03 \x01(\v2\x1f.codespace.v1.SSHSessionBindingH\x00R\x03sshB\t\n" +
-	"\asession\"y\n" +
+	"\asession\"u\n" +
 	"\x16EndpointSessionBinding\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\x12\x1f\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\x1f\n" +
 	"\vendpoint_id\x18\x03 \x01(\tR\n" +
-	"endpointId\"S\n" +
+	"endpointId\"O\n" +
 	"\x11SSHSessionBinding\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12%\n" +
-	"\x0ecodespace_uuid\x18\x02 \x01(\tR\rcodespaceUuid\"\x9e\x01\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\"\x9e\x01\n" +
 	" RevalidateGatewaySessionResponse\x128\n" +
 	"\aallowed\x18\x01 \x01(\v2\x1c.codespace.v1.SessionAllowedH\x00R\aallowed\x125\n" +
 	"\x06denied\x18\x02 \x01(\v2\x1b.codespace.v1.FailureDetailH\x00R\x06deniedB\t\n" +
@@ -5043,16 +5060,16 @@ var file_codespace_v1_types_proto_goTypes = []any{
 	(RuntimeBootStage)(0),                     // 6: codespace.v1.RuntimeBootStage
 	(IdleStopNotApplicableReason)(0),          // 7: codespace.v1.IdleStopNotApplicableReason
 	(RuntimeReconcileAction)(0),               // 8: codespace.v1.RuntimeReconcileAction
-	(*RegisterManagerRequest)(nil),            // 9: codespace.v1.RegisterManagerRequest
-	(*RegisterManagerResponse)(nil),           // 10: codespace.v1.RegisterManagerResponse
-	(*EnvironmentTag)(nil),                    // 11: codespace.v1.EnvironmentTag
-	(*DeclareManagerRequest)(nil),             // 12: codespace.v1.DeclareManagerRequest
-	(*DeclareManagerResponse)(nil),            // 13: codespace.v1.DeclareManagerResponse
-	(*FetchOperationsRequest)(nil),            // 14: codespace.v1.FetchOperationsRequest
-	(*ObservedOperation)(nil),                 // 15: codespace.v1.ObservedOperation
-	(*FetchOperationsResponse)(nil),           // 16: codespace.v1.FetchOperationsResponse
-	(*RenewedOperationLease)(nil),             // 17: codespace.v1.RenewedOperationLease
-	(*OperationPayload)(nil),                  // 18: codespace.v1.OperationPayload
+	(*EnvironmentTag)(nil),                    // 9: codespace.v1.EnvironmentTag
+	(*DeclareManagerRequest)(nil),             // 10: codespace.v1.DeclareManagerRequest
+	(*DeclareManagerResponse)(nil),            // 11: codespace.v1.DeclareManagerResponse
+	(*FetchOperationsRequest)(nil),            // 12: codespace.v1.FetchOperationsRequest
+	(*ObservedOperation)(nil),                 // 13: codespace.v1.ObservedOperation
+	(*FetchOperationsResponse)(nil),           // 14: codespace.v1.FetchOperationsResponse
+	(*RenewedOperationLease)(nil),             // 15: codespace.v1.RenewedOperationLease
+	(*OperationPayload)(nil),                  // 16: codespace.v1.OperationPayload
+	(*BindRuntimeIdentityRequest)(nil),        // 17: codespace.v1.BindRuntimeIdentityRequest
+	(*BindRuntimeIdentityResponse)(nil),       // 18: codespace.v1.BindRuntimeIdentityResponse
 	(*ResumeOperationPayload)(nil),            // 19: codespace.v1.ResumeOperationPayload
 	(*StopOperationPayload)(nil),              // 20: codespace.v1.StopOperationPayload
 	(*DeleteOperationPayload)(nil),            // 21: codespace.v1.DeleteOperationPayload
@@ -5113,12 +5130,12 @@ var file_codespace_v1_types_proto_goTypes = []any{
 	(*LogOffsetDetail)(nil),                   // 76: codespace.v1.LogOffsetDetail
 }
 var file_codespace_v1_types_proto_depIdxs = []int32{
-	11, // 0: codespace.v1.DeclareManagerRequest.environments:type_name -> codespace.v1.EnvironmentTag
+	9,  // 0: codespace.v1.DeclareManagerRequest.environments:type_name -> codespace.v1.EnvironmentTag
 	0,  // 1: codespace.v1.DeclareManagerRequest.manager_runtime_state:type_name -> codespace.v1.ManagerRuntimeState
 	1,  // 2: codespace.v1.FetchOperationsRequest.accepted_operation_types:type_name -> codespace.v1.AcceptedOperationType
-	15, // 3: codespace.v1.FetchOperationsRequest.observed_operations:type_name -> codespace.v1.ObservedOperation
-	18, // 4: codespace.v1.FetchOperationsResponse.operations:type_name -> codespace.v1.OperationPayload
-	17, // 5: codespace.v1.FetchOperationsResponse.renewed_leases:type_name -> codespace.v1.RenewedOperationLease
+	13, // 3: codespace.v1.FetchOperationsRequest.observed_operations:type_name -> codespace.v1.ObservedOperation
+	16, // 4: codespace.v1.FetchOperationsResponse.operations:type_name -> codespace.v1.OperationPayload
+	15, // 5: codespace.v1.FetchOperationsResponse.renewed_leases:type_name -> codespace.v1.RenewedOperationLease
 	24, // 6: codespace.v1.OperationPayload.create:type_name -> codespace.v1.CreateOperationPayload
 	19, // 7: codespace.v1.OperationPayload.resume:type_name -> codespace.v1.ResumeOperationPayload
 	20, // 8: codespace.v1.OperationPayload.stop:type_name -> codespace.v1.StopOperationPayload
@@ -5180,7 +5197,7 @@ func file_codespace_v1_types_proto_init() {
 	if File_codespace_v1_types_proto != nil {
 		return
 	}
-	file_codespace_v1_types_proto_msgTypes[9].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[7].OneofWrappers = []any{
 		(*OperationPayload_Create)(nil),
 		(*OperationPayload_Resume)(nil),
 		(*OperationPayload_Stop)(nil),

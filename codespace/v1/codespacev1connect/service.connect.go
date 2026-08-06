@@ -33,15 +33,15 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// ManagerServiceRegisterManagerProcedure is the fully-qualified name of the ManagerService's
-	// RegisterManager RPC.
-	ManagerServiceRegisterManagerProcedure = "/codespace.v1.ManagerService/RegisterManager"
 	// ManagerServiceDeclareManagerProcedure is the fully-qualified name of the ManagerService's
 	// DeclareManager RPC.
 	ManagerServiceDeclareManagerProcedure = "/codespace.v1.ManagerService/DeclareManager"
 	// ManagerServiceFetchOperationsProcedure is the fully-qualified name of the ManagerService's
 	// FetchOperations RPC.
 	ManagerServiceFetchOperationsProcedure = "/codespace.v1.ManagerService/FetchOperations"
+	// ManagerServiceBindRuntimeIdentityProcedure is the fully-qualified name of the ManagerService's
+	// BindRuntimeIdentity RPC.
+	ManagerServiceBindRuntimeIdentityProcedure = "/codespace.v1.ManagerService/BindRuntimeIdentity"
 	// ManagerServiceFinalizeOperationProcedure is the fully-qualified name of the ManagerService's
 	// FinalizeOperation RPC.
 	ManagerServiceFinalizeOperationProcedure = "/codespace.v1.ManagerService/FinalizeOperation"
@@ -79,12 +79,12 @@ const (
 
 // ManagerServiceClient is a client for the codespace.v1.ManagerService service.
 type ManagerServiceClient interface {
-	// RegisterManager exchanges the current site-wide or personal registration token for a Manager identity.
-	RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
 	// FetchOperations returns operations for the Manager to execute.
 	FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error)
+	// BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
+	BindRuntimeIdentity(context.Context, *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error)
 	// FinalizeOperation reports the final result of an active operation.
 	FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error)
 	// UpdateLog appends sanitized log lines at a given offset for an active operation.
@@ -120,12 +120,6 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 	baseURL = strings.TrimRight(baseURL, "/")
 	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
 	return &managerServiceClient{
-		registerManager: connect.NewClient[v1.RegisterManagerRequest, v1.RegisterManagerResponse](
-			httpClient,
-			baseURL+ManagerServiceRegisterManagerProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("RegisterManager")),
-			connect.WithClientOptions(opts...),
-		),
 		declareManager: connect.NewClient[v1.DeclareManagerRequest, v1.DeclareManagerResponse](
 			httpClient,
 			baseURL+ManagerServiceDeclareManagerProcedure,
@@ -136,6 +130,12 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			httpClient,
 			baseURL+ManagerServiceFetchOperationsProcedure,
 			connect.WithSchema(managerServiceMethods.ByName("FetchOperations")),
+			connect.WithClientOptions(opts...),
+		),
+		bindRuntimeIdentity: connect.NewClient[v1.BindRuntimeIdentityRequest, v1.BindRuntimeIdentityResponse](
+			httpClient,
+			baseURL+ManagerServiceBindRuntimeIdentityProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("BindRuntimeIdentity")),
 			connect.WithClientOptions(opts...),
 		),
 		finalizeOperation: connect.NewClient[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse](
@@ -209,9 +209,9 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 
 // managerServiceClient implements ManagerServiceClient.
 type managerServiceClient struct {
-	registerManager          *connect.Client[v1.RegisterManagerRequest, v1.RegisterManagerResponse]
 	declareManager           *connect.Client[v1.DeclareManagerRequest, v1.DeclareManagerResponse]
 	fetchOperations          *connect.Client[v1.FetchOperationsRequest, v1.FetchOperationsResponse]
+	bindRuntimeIdentity      *connect.Client[v1.BindRuntimeIdentityRequest, v1.BindRuntimeIdentityResponse]
 	finalizeOperation        *connect.Client[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse]
 	updateLog                *connect.Client[v1.UpdateLogRequest, v1.UpdateLogResponse]
 	reportRuntimeMetadata    *connect.Client[v1.ReportRuntimeMetadataRequest, v1.ReportRuntimeMetadataResponse]
@@ -225,11 +225,6 @@ type managerServiceClient struct {
 	revalidateGatewaySession *connect.Client[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse]
 }
 
-// RegisterManager calls codespace.v1.ManagerService.RegisterManager.
-func (c *managerServiceClient) RegisterManager(ctx context.Context, req *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error) {
-	return c.registerManager.CallUnary(ctx, req)
-}
-
 // DeclareManager calls codespace.v1.ManagerService.DeclareManager.
 func (c *managerServiceClient) DeclareManager(ctx context.Context, req *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
 	return c.declareManager.CallUnary(ctx, req)
@@ -238,6 +233,11 @@ func (c *managerServiceClient) DeclareManager(ctx context.Context, req *connect.
 // FetchOperations calls codespace.v1.ManagerService.FetchOperations.
 func (c *managerServiceClient) FetchOperations(ctx context.Context, req *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error) {
 	return c.fetchOperations.CallUnary(ctx, req)
+}
+
+// BindRuntimeIdentity calls codespace.v1.ManagerService.BindRuntimeIdentity.
+func (c *managerServiceClient) BindRuntimeIdentity(ctx context.Context, req *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error) {
+	return c.bindRuntimeIdentity.CallUnary(ctx, req)
 }
 
 // FinalizeOperation calls codespace.v1.ManagerService.FinalizeOperation.
@@ -297,12 +297,12 @@ func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req
 
 // ManagerServiceHandler is an implementation of the codespace.v1.ManagerService service.
 type ManagerServiceHandler interface {
-	// RegisterManager exchanges the current site-wide or personal registration token for a Manager identity.
-	RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
 	// FetchOperations returns operations for the Manager to execute.
 	FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error)
+	// BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
+	BindRuntimeIdentity(context.Context, *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error)
 	// FinalizeOperation reports the final result of an active operation.
 	FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error)
 	// UpdateLog appends sanitized log lines at a given offset for an active operation.
@@ -334,12 +334,6 @@ type ManagerServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
 	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
-	managerServiceRegisterManagerHandler := connect.NewUnaryHandler(
-		ManagerServiceRegisterManagerProcedure,
-		svc.RegisterManager,
-		connect.WithSchema(managerServiceMethods.ByName("RegisterManager")),
-		connect.WithHandlerOptions(opts...),
-	)
 	managerServiceDeclareManagerHandler := connect.NewUnaryHandler(
 		ManagerServiceDeclareManagerProcedure,
 		svc.DeclareManager,
@@ -350,6 +344,12 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 		ManagerServiceFetchOperationsProcedure,
 		svc.FetchOperations,
 		connect.WithSchema(managerServiceMethods.ByName("FetchOperations")),
+		connect.WithHandlerOptions(opts...),
+	)
+	managerServiceBindRuntimeIdentityHandler := connect.NewUnaryHandler(
+		ManagerServiceBindRuntimeIdentityProcedure,
+		svc.BindRuntimeIdentity,
+		connect.WithSchema(managerServiceMethods.ByName("BindRuntimeIdentity")),
 		connect.WithHandlerOptions(opts...),
 	)
 	managerServiceFinalizeOperationHandler := connect.NewUnaryHandler(
@@ -420,12 +420,12 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 	)
 	return "/codespace.v1.ManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case ManagerServiceRegisterManagerProcedure:
-			managerServiceRegisterManagerHandler.ServeHTTP(w, r)
 		case ManagerServiceDeclareManagerProcedure:
 			managerServiceDeclareManagerHandler.ServeHTTP(w, r)
 		case ManagerServiceFetchOperationsProcedure:
 			managerServiceFetchOperationsHandler.ServeHTTP(w, r)
+		case ManagerServiceBindRuntimeIdentityProcedure:
+			managerServiceBindRuntimeIdentityHandler.ServeHTTP(w, r)
 		case ManagerServiceFinalizeOperationProcedure:
 			managerServiceFinalizeOperationHandler.ServeHTTP(w, r)
 		case ManagerServiceUpdateLogProcedure:
@@ -457,16 +457,16 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 // UnimplementedManagerServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedManagerServiceHandler struct{}
 
-func (UnimplementedManagerServiceHandler) RegisterManager(context.Context, *connect.Request[v1.RegisterManagerRequest]) (*connect.Response[v1.RegisterManagerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RegisterManager is not implemented"))
-}
-
 func (UnimplementedManagerServiceHandler) DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.DeclareManager is not implemented"))
 }
 
 func (UnimplementedManagerServiceHandler) FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.FetchOperations is not implemented"))
+}
+
+func (UnimplementedManagerServiceHandler) BindRuntimeIdentity(context.Context, *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.BindRuntimeIdentity is not implemented"))
 }
 
 func (UnimplementedManagerServiceHandler) FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error) {

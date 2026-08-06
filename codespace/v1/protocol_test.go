@@ -17,9 +17,9 @@ func TestManagerServiceName(t *testing.T) {
 
 func TestManagerServiceRequestsCarryProtocolVersionAsFieldOne(t *testing.T) {
 	requests := []proto.Message{
-		&codespacev1.RegisterManagerRequest{},
 		&codespacev1.DeclareManagerRequest{},
 		&codespacev1.FetchOperationsRequest{},
+		&codespacev1.BindRuntimeIdentityRequest{},
 		&codespacev1.FinalizeOperationRequest{},
 		&codespacev1.UpdateLogRequest{},
 		&codespacev1.ReportRuntimeMetadataRequest{},

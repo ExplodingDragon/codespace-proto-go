@@ -79,19 +79,6 @@ enum RuntimeReconcileAction {
   RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT = 5;
 }
 
-// RegisterManagerRequest exchanges a registration token for manager identity.
-message RegisterManagerRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
-  string registration_token = 2;
-}
-
-// RegisterManagerResponse returns the new manager credentials.
-message RegisterManagerResponse {
-  int64 manager_id = 1;
-  string manager_secret = 2;
-}
-
 // EnvironmentTag describes one manager-provided runtime environment.
 message EnvironmentTag {
   string tag = 1;
@@ -135,7 +122,7 @@ message FetchOperationsRequest {
 
 // ObservedOperation reports an active operation context kept by the manager.
 message ObservedOperation {
-  string codespace_uuid = 1;
+  string runtime_uuid = 1;
   int64 operation_rversion = 2;
 }
 
@@ -147,7 +134,7 @@ message FetchOperationsResponse {
 
 // RenewedOperationLease extends a manager-held operation without resending payload.
 message RenewedOperationLease {
-  string codespace_uuid = 1;
+  string runtime_uuid = 1;
   int64 operation_rversion = 2;
   int64 lease_valid_for_milliseconds = 3;
 }
@@ -155,9 +142,10 @@ message RenewedOperationLease {
 // OperationPayload is one Gitea-issued lifecycle command.
 message OperationPayload {
   int64 operation_rversion = 1;
-  string codespace_uuid = 2;
-  int64 log_offset = 3;
-  int64 lease_valid_for_milliseconds = 4;
+  int64 codespace_id = 2;
+  string runtime_uuid = 3;
+  int64 log_offset = 4;
+  int64 lease_valid_for_milliseconds = 5;
 
   oneof command {
     CreateOperationPayload create = 10;
@@ -167,6 +155,20 @@ message OperationPayload {
     AbortCreateOperationPayload abort_create = 14;
     AbortResumeOperationPayload abort_resume = 15;
   }
+}
+
+// BindRuntimeIdentityRequest stores the manager-allocated runtime UUID for a create operation.
+message BindRuntimeIdentityRequest {
+  // protocol_version is the wire protocol version and must be field 1.
+  int32 protocol_version = 1;
+  int64 codespace_id = 2;
+  int64 operation_rversion = 3;
+  string runtime_uuid = 4;
+}
+
+// BindRuntimeIdentityResponse returns the accepted runtime UUID.
+message BindRuntimeIdentityResponse {
+  string runtime_uuid = 1;
 }
 
 // ResumeOperationPayload contains only settings needed to restart an existing runtime.
@@ -231,7 +233,7 @@ message DevContainerConfiguration {
 message FinalizeOperationRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   int64 operation_rversion = 3;
   FinalStatus status = 4;
   OperationType operation_type = 5;
@@ -246,7 +248,7 @@ message FinalizeOperationResponse {
 message UpdateLogRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   int64 operation_rversion = 3;
   int64 offset = 4;
   repeated LogLine lines = 5;
@@ -267,7 +269,7 @@ message UpdateLogResponse {
 message ReportRuntimeMetadataRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   int64 metadata_generation = 3;
   RuntimeMetadata metadata = 4;
 }
@@ -333,7 +335,7 @@ message RuntimeSecretEnvironmentVariable {
 message RequestRuntimeAccessRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   int64 operation_rversion = 3;
   RuntimeGitSSHKey git_ssh_key = 4;
 }
@@ -372,7 +374,7 @@ message EffectiveCodespaceRuntimeSettings {
 message RequestIdleStopRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   EffectiveCodespaceRuntimeSettings observed_settings = 3;
 }
 
@@ -418,7 +420,7 @@ message ValidateOpenTokenResponse {
 // OpenTokenBinding binds an allowed browser session to one endpoint.
 message OpenTokenBinding {
   int64 user_id = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   string endpoint_id = 3;
   int64 interaction_generation = 4;
 }
@@ -427,7 +429,7 @@ message OpenTokenBinding {
 message ValidatePublicEndpointRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   string endpoint_id = 3;
 }
 
@@ -446,7 +448,7 @@ message PublicEndpointAllowed {}
 message VerifySSHPublicKeyRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   bytes public_key = 3;
 }
 
@@ -474,7 +476,7 @@ message ReportInstancesRequest {
 
 // RuntimeInstanceRef is one manager-owned runtime instance in inventory.
 message RuntimeInstanceRef {
-  string codespace_uuid = 1;
+  string runtime_uuid = 1;
   RuntimeState runtime_state = 2;
   int64 observed_operation_rversion = 3;
 }
@@ -486,7 +488,7 @@ message ReportInstancesResponse {
 
 // RuntimeInstanceResult contains settings and one optional reconciliation action.
 message RuntimeInstanceResult {
-  string codespace_uuid = 1;
+  string runtime_uuid = 1;
   EffectiveCodespaceRuntimeSettings runtime_settings = 2;
   RuntimeReconcileAction action = 3;
   // current_operation_rversion is positive for actions tied to Gitea operation history.
@@ -497,7 +499,7 @@ message RuntimeInstanceResult {
 message ReportRuntimeTransitionRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   int64 runtime_generation = 3;
   int64 observed_operation_rversion = 4;
   RuntimeState runtime_state = 5;
@@ -519,14 +521,14 @@ message RevalidateGatewaySessionRequest {
 // EndpointSessionBinding identifies a live endpoint session.
 message EndpointSessionBinding {
   int64 user_id = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
   string endpoint_id = 3;
 }
 
 // SSHSessionBinding identifies a live SSH session.
 message SSHSessionBinding {
   int64 user_id = 1;
-  string codespace_uuid = 2;
+  string runtime_uuid = 2;
 }
 
 // RevalidateGatewaySessionResponse returns the live session decision.

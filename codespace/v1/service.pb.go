@@ -24,11 +24,11 @@ var File_codespace_v1_service_proto protoreflect.FileDescriptor
 
 const file_codespace_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1acodespace/v1/service.proto\x12\fcodespace.v1\x1a\x18codespace/v1/types.proto2\xb9\v\n" +
-	"\x0eManagerService\x12^\n" +
-	"\x0fRegisterManager\x12$.codespace.v1.RegisterManagerRequest\x1a%.codespace.v1.RegisterManagerResponse\x12[\n" +
+	"\x1acodespace/v1/service.proto\x12\fcodespace.v1\x1a\x18codespace/v1/types.proto2\xc5\v\n" +
+	"\x0eManagerService\x12[\n" +
 	"\x0eDeclareManager\x12#.codespace.v1.DeclareManagerRequest\x1a$.codespace.v1.DeclareManagerResponse\x12^\n" +
-	"\x0fFetchOperations\x12$.codespace.v1.FetchOperationsRequest\x1a%.codespace.v1.FetchOperationsResponse\x12d\n" +
+	"\x0fFetchOperations\x12$.codespace.v1.FetchOperationsRequest\x1a%.codespace.v1.FetchOperationsResponse\x12j\n" +
+	"\x13BindRuntimeIdentity\x12(.codespace.v1.BindRuntimeIdentityRequest\x1a).codespace.v1.BindRuntimeIdentityResponse\x12d\n" +
 	"\x11FinalizeOperation\x12&.codespace.v1.FinalizeOperationRequest\x1a'.codespace.v1.FinalizeOperationResponse\x12L\n" +
 	"\tUpdateLog\x12\x1e.codespace.v1.UpdateLogRequest\x1a\x1f.codespace.v1.UpdateLogResponse\x12p\n" +
 	"\x15ReportRuntimeMetadata\x12*.codespace.v1.ReportRuntimeMetadataRequest\x1a+.codespace.v1.ReportRuntimeMetadataResponse\x12m\n" +
@@ -42,9 +42,9 @@ const file_codespace_v1_service_proto_rawDesc = "" +
 	"\x18RevalidateGatewaySession\x12-.codespace.v1.RevalidateGatewaySessionRequest\x1a..codespace.v1.RevalidateGatewaySessionResponseB7Z5gitea.dev/codespace-proto-go/codespace/v1;codespacev1b\x06proto3"
 
 var file_codespace_v1_service_proto_goTypes = []any{
-	(*RegisterManagerRequest)(nil),           // 0: codespace.v1.RegisterManagerRequest
-	(*DeclareManagerRequest)(nil),            // 1: codespace.v1.DeclareManagerRequest
-	(*FetchOperationsRequest)(nil),           // 2: codespace.v1.FetchOperationsRequest
+	(*DeclareManagerRequest)(nil),            // 0: codespace.v1.DeclareManagerRequest
+	(*FetchOperationsRequest)(nil),           // 1: codespace.v1.FetchOperationsRequest
+	(*BindRuntimeIdentityRequest)(nil),       // 2: codespace.v1.BindRuntimeIdentityRequest
 	(*FinalizeOperationRequest)(nil),         // 3: codespace.v1.FinalizeOperationRequest
 	(*UpdateLogRequest)(nil),                 // 4: codespace.v1.UpdateLogRequest
 	(*ReportRuntimeMetadataRequest)(nil),     // 5: codespace.v1.ReportRuntimeMetadataRequest
@@ -56,9 +56,9 @@ var file_codespace_v1_service_proto_goTypes = []any{
 	(*ReportInstancesRequest)(nil),           // 11: codespace.v1.ReportInstancesRequest
 	(*ReportRuntimeTransitionRequest)(nil),   // 12: codespace.v1.ReportRuntimeTransitionRequest
 	(*RevalidateGatewaySessionRequest)(nil),  // 13: codespace.v1.RevalidateGatewaySessionRequest
-	(*RegisterManagerResponse)(nil),          // 14: codespace.v1.RegisterManagerResponse
-	(*DeclareManagerResponse)(nil),           // 15: codespace.v1.DeclareManagerResponse
-	(*FetchOperationsResponse)(nil),          // 16: codespace.v1.FetchOperationsResponse
+	(*DeclareManagerResponse)(nil),           // 14: codespace.v1.DeclareManagerResponse
+	(*FetchOperationsResponse)(nil),          // 15: codespace.v1.FetchOperationsResponse
+	(*BindRuntimeIdentityResponse)(nil),      // 16: codespace.v1.BindRuntimeIdentityResponse
 	(*FinalizeOperationResponse)(nil),        // 17: codespace.v1.FinalizeOperationResponse
 	(*UpdateLogResponse)(nil),                // 18: codespace.v1.UpdateLogResponse
 	(*ReportRuntimeMetadataResponse)(nil),    // 19: codespace.v1.ReportRuntimeMetadataResponse
@@ -72,9 +72,9 @@ var file_codespace_v1_service_proto_goTypes = []any{
 	(*RevalidateGatewaySessionResponse)(nil), // 27: codespace.v1.RevalidateGatewaySessionResponse
 }
 var file_codespace_v1_service_proto_depIdxs = []int32{
-	0,  // 0: codespace.v1.ManagerService.RegisterManager:input_type -> codespace.v1.RegisterManagerRequest
-	1,  // 1: codespace.v1.ManagerService.DeclareManager:input_type -> codespace.v1.DeclareManagerRequest
-	2,  // 2: codespace.v1.ManagerService.FetchOperations:input_type -> codespace.v1.FetchOperationsRequest
+	0,  // 0: codespace.v1.ManagerService.DeclareManager:input_type -> codespace.v1.DeclareManagerRequest
+	1,  // 1: codespace.v1.ManagerService.FetchOperations:input_type -> codespace.v1.FetchOperationsRequest
+	2,  // 2: codespace.v1.ManagerService.BindRuntimeIdentity:input_type -> codespace.v1.BindRuntimeIdentityRequest
 	3,  // 3: codespace.v1.ManagerService.FinalizeOperation:input_type -> codespace.v1.FinalizeOperationRequest
 	4,  // 4: codespace.v1.ManagerService.UpdateLog:input_type -> codespace.v1.UpdateLogRequest
 	5,  // 5: codespace.v1.ManagerService.ReportRuntimeMetadata:input_type -> codespace.v1.ReportRuntimeMetadataRequest
@@ -86,9 +86,9 @@ var file_codespace_v1_service_proto_depIdxs = []int32{
 	11, // 11: codespace.v1.ManagerService.ReportInstances:input_type -> codespace.v1.ReportInstancesRequest
 	12, // 12: codespace.v1.ManagerService.ReportRuntimeTransition:input_type -> codespace.v1.ReportRuntimeTransitionRequest
 	13, // 13: codespace.v1.ManagerService.RevalidateGatewaySession:input_type -> codespace.v1.RevalidateGatewaySessionRequest
-	14, // 14: codespace.v1.ManagerService.RegisterManager:output_type -> codespace.v1.RegisterManagerResponse
-	15, // 15: codespace.v1.ManagerService.DeclareManager:output_type -> codespace.v1.DeclareManagerResponse
-	16, // 16: codespace.v1.ManagerService.FetchOperations:output_type -> codespace.v1.FetchOperationsResponse
+	14, // 14: codespace.v1.ManagerService.DeclareManager:output_type -> codespace.v1.DeclareManagerResponse
+	15, // 15: codespace.v1.ManagerService.FetchOperations:output_type -> codespace.v1.FetchOperationsResponse
+	16, // 16: codespace.v1.ManagerService.BindRuntimeIdentity:output_type -> codespace.v1.BindRuntimeIdentityResponse
 	17, // 17: codespace.v1.ManagerService.FinalizeOperation:output_type -> codespace.v1.FinalizeOperationResponse
 	18, // 18: codespace.v1.ManagerService.UpdateLog:output_type -> codespace.v1.UpdateLogResponse
 	19, // 19: codespace.v1.ManagerService.ReportRuntimeMetadata:output_type -> codespace.v1.ReportRuntimeMetadataResponse
