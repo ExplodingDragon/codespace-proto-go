@@ -85,7 +85,7 @@ message EnvironmentTag {
   string description = 2;
 }
 
-// DeclareManagerRequest publishes the manager's current routing and identity metadata.
+// DeclareManagerRequest publishes the manager's current routing and runtime metadata.
 message DeclareManagerRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
@@ -93,11 +93,10 @@ message DeclareManagerRequest {
   string gateway_ssh_addr = 3;
   repeated EnvironmentTag environments = 4;
   string version = 5;
-  string name = 6;
-  ManagerRuntimeState manager_runtime_state = 7;
-  string gateway_ssh_host_key_algorithm = 8;
-  string gateway_ssh_host_key_fingerprint_sha256 = 9;
-  int64 gateway_ssh_host_key_updated_unix = 10;
+  ManagerRuntimeState manager_runtime_state = 6;
+  string gateway_ssh_host_key_algorithm = 7;
+  string gateway_ssh_host_key_fingerprint_sha256 = 8;
+  int64 gateway_ssh_host_key_updated_unix = 9;
 }
 
 // DeclareManagerResponse returns server-side control-plane limits.

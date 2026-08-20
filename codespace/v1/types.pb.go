@@ -560,7 +560,7 @@ func (x *EnvironmentTag) GetDescription() string {
 	return ""
 }
 
-// DeclareManagerRequest publishes the manager's current routing and identity metadata.
+// DeclareManagerRequest publishes the manager's current routing and runtime metadata.
 type DeclareManagerRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
@@ -569,11 +569,10 @@ type DeclareManagerRequest struct {
 	GatewaySshAddr                     string              `protobuf:"bytes,3,opt,name=gateway_ssh_addr,json=gatewaySshAddr,proto3" json:"gateway_ssh_addr,omitempty"`
 	Environments                       []*EnvironmentTag   `protobuf:"bytes,4,rep,name=environments,proto3" json:"environments,omitempty"`
 	Version                            string              `protobuf:"bytes,5,opt,name=version,proto3" json:"version,omitempty"`
-	Name                               string              `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
-	ManagerRuntimeState                ManagerRuntimeState `protobuf:"varint,7,opt,name=manager_runtime_state,json=managerRuntimeState,proto3,enum=codespace.v1.ManagerRuntimeState" json:"manager_runtime_state,omitempty"`
-	GatewaySshHostKeyAlgorithm         string              `protobuf:"bytes,8,opt,name=gateway_ssh_host_key_algorithm,json=gatewaySshHostKeyAlgorithm,proto3" json:"gateway_ssh_host_key_algorithm,omitempty"`
-	GatewaySshHostKeyFingerprintSha256 string              `protobuf:"bytes,9,opt,name=gateway_ssh_host_key_fingerprint_sha256,json=gatewaySshHostKeyFingerprintSha256,proto3" json:"gateway_ssh_host_key_fingerprint_sha256,omitempty"`
-	GatewaySshHostKeyUpdatedUnix       int64               `protobuf:"varint,10,opt,name=gateway_ssh_host_key_updated_unix,json=gatewaySshHostKeyUpdatedUnix,proto3" json:"gateway_ssh_host_key_updated_unix,omitempty"`
+	ManagerRuntimeState                ManagerRuntimeState `protobuf:"varint,6,opt,name=manager_runtime_state,json=managerRuntimeState,proto3,enum=codespace.v1.ManagerRuntimeState" json:"manager_runtime_state,omitempty"`
+	GatewaySshHostKeyAlgorithm         string              `protobuf:"bytes,7,opt,name=gateway_ssh_host_key_algorithm,json=gatewaySshHostKeyAlgorithm,proto3" json:"gateway_ssh_host_key_algorithm,omitempty"`
+	GatewaySshHostKeyFingerprintSha256 string              `protobuf:"bytes,8,opt,name=gateway_ssh_host_key_fingerprint_sha256,json=gatewaySshHostKeyFingerprintSha256,proto3" json:"gateway_ssh_host_key_fingerprint_sha256,omitempty"`
+	GatewaySshHostKeyUpdatedUnix       int64               `protobuf:"varint,9,opt,name=gateway_ssh_host_key_updated_unix,json=gatewaySshHostKeyUpdatedUnix,proto3" json:"gateway_ssh_host_key_updated_unix,omitempty"`
 	unknownFields                      protoimpl.UnknownFields
 	sizeCache                          protoimpl.SizeCache
 }
@@ -639,13 +638,6 @@ func (x *DeclareManagerRequest) GetEnvironments() []*EnvironmentTag {
 func (x *DeclareManagerRequest) GetVersion() string {
 	if x != nil {
 		return x.Version
-	}
-	return ""
-}
-
-func (x *DeclareManagerRequest) GetName() string {
-	if x != nil {
-		return x.Name
 	}
 	return ""
 }
@@ -4719,20 +4711,18 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x18codespace/v1/types.proto\x12\fcodespace.v1\"D\n" +
 	"\x0eEnvironmentTag\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\"\xb6\x04\n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\"\xa2\x04\n" +
 	"\x15DeclareManagerRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12\x1f\n" +
 	"\vgateway_url\x18\x02 \x01(\tR\n" +
 	"gatewayUrl\x12(\n" +
 	"\x10gateway_ssh_addr\x18\x03 \x01(\tR\x0egatewaySshAddr\x12@\n" +
 	"\fenvironments\x18\x04 \x03(\v2\x1c.codespace.v1.EnvironmentTagR\fenvironments\x12\x18\n" +
-	"\aversion\x18\x05 \x01(\tR\aversion\x12\x12\n" +
-	"\x04name\x18\x06 \x01(\tR\x04name\x12U\n" +
-	"\x15manager_runtime_state\x18\a \x01(\x0e2!.codespace.v1.ManagerRuntimeStateR\x13managerRuntimeState\x12B\n" +
-	"\x1egateway_ssh_host_key_algorithm\x18\b \x01(\tR\x1agatewaySshHostKeyAlgorithm\x12S\n" +
-	"'gateway_ssh_host_key_fingerprint_sha256\x18\t \x01(\tR\"gatewaySshHostKeyFingerprintSha256\x12G\n" +
-	"!gateway_ssh_host_key_updated_unix\x18\n" +
-	" \x01(\x03R\x1cgatewaySshHostKeyUpdatedUnix\"\xb7\x02\n" +
+	"\aversion\x18\x05 \x01(\tR\aversion\x12U\n" +
+	"\x15manager_runtime_state\x18\x06 \x01(\x0e2!.codespace.v1.ManagerRuntimeStateR\x13managerRuntimeState\x12B\n" +
+	"\x1egateway_ssh_host_key_algorithm\x18\a \x01(\tR\x1agatewaySshHostKeyAlgorithm\x12S\n" +
+	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256\x12G\n" +
+	"!gateway_ssh_host_key_updated_unix\x18\t \x01(\x03R\x1cgatewaySshHostKeyUpdatedUnix\"\xb7\x02\n" +
 	"\x16DeclareManagerResponse\x12F\n" +
 	"\x1fheartbeat_interval_milliseconds\x18\x01 \x01(\x03R\x1dheartbeatIntervalMilliseconds\x12b\n" +
 	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12M\n" +
