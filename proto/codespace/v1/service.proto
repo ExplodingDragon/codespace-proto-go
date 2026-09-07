@@ -8,6 +8,9 @@ option go_package = "gitea.dev/codespace-proto-go/codespace/v1;codespacev1";
 
 // ManagerService is implemented by Gitea and called by Codespace Manager.
 service ManagerService {
+  // CheckManager verifies the configured Manager identity without changing runtime state.
+  rpc CheckManager(CheckManagerRequest) returns (CheckManagerResponse);
+
   // DeclareManager updates Manager metadata, tags, and serves as heartbeat.
   rpc DeclareManager(DeclareManagerRequest) returns (DeclareManagerResponse);
 

@@ -85,6 +85,18 @@ message EnvironmentTag {
   string description = 2;
 }
 
+// CheckManagerRequest verifies Manager authentication and protocol compatibility.
+message CheckManagerRequest {
+  // protocol_version is the wire protocol version and must be field 1.
+  int32 protocol_version = 1;
+}
+
+// CheckManagerResponse identifies the authenticated Gitea and Manager.
+message CheckManagerResponse {
+  string gitea_web_url = 1;
+  string manager_name = 2;
+}
+
 // DeclareManagerRequest publishes the manager's current routing and runtime metadata.
 message DeclareManagerRequest {
   // protocol_version is the wire protocol version and must be field 1.

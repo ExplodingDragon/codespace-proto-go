@@ -33,6 +33,9 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
+	// ManagerServiceCheckManagerProcedure is the fully-qualified name of the ManagerService's
+	// CheckManager RPC.
+	ManagerServiceCheckManagerProcedure = "/codespace.v1.ManagerService/CheckManager"
 	// ManagerServiceDeclareManagerProcedure is the fully-qualified name of the ManagerService's
 	// DeclareManager RPC.
 	ManagerServiceDeclareManagerProcedure = "/codespace.v1.ManagerService/DeclareManager"
@@ -79,6 +82,8 @@ const (
 
 // ManagerServiceClient is a client for the codespace.v1.ManagerService service.
 type ManagerServiceClient interface {
+	// CheckManager verifies the configured Manager identity without changing runtime state.
+	CheckManager(context.Context, *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
 	// FetchOperations returns operations for the Manager to execute.
@@ -120,6 +125,12 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 	baseURL = strings.TrimRight(baseURL, "/")
 	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
 	return &managerServiceClient{
+		checkManager: connect.NewClient[v1.CheckManagerRequest, v1.CheckManagerResponse](
+			httpClient,
+			baseURL+ManagerServiceCheckManagerProcedure,
+			connect.WithSchema(managerServiceMethods.ByName("CheckManager")),
+			connect.WithClientOptions(opts...),
+		),
 		declareManager: connect.NewClient[v1.DeclareManagerRequest, v1.DeclareManagerResponse](
 			httpClient,
 			baseURL+ManagerServiceDeclareManagerProcedure,
@@ -209,6 +220,7 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 
 // managerServiceClient implements ManagerServiceClient.
 type managerServiceClient struct {
+	checkManager             *connect.Client[v1.CheckManagerRequest, v1.CheckManagerResponse]
 	declareManager           *connect.Client[v1.DeclareManagerRequest, v1.DeclareManagerResponse]
 	fetchOperations          *connect.Client[v1.FetchOperationsRequest, v1.FetchOperationsResponse]
 	bindRuntimeIdentity      *connect.Client[v1.BindRuntimeIdentityRequest, v1.BindRuntimeIdentityResponse]
@@ -223,6 +235,11 @@ type managerServiceClient struct {
 	reportInstances          *connect.Client[v1.ReportInstancesRequest, v1.ReportInstancesResponse]
 	reportRuntimeTransition  *connect.Client[v1.ReportRuntimeTransitionRequest, v1.ReportRuntimeTransitionResponse]
 	revalidateGatewaySession *connect.Client[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse]
+}
+
+// CheckManager calls codespace.v1.ManagerService.CheckManager.
+func (c *managerServiceClient) CheckManager(ctx context.Context, req *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error) {
+	return c.checkManager.CallUnary(ctx, req)
 }
 
 // DeclareManager calls codespace.v1.ManagerService.DeclareManager.
@@ -297,6 +314,8 @@ func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req
 
 // ManagerServiceHandler is an implementation of the codespace.v1.ManagerService service.
 type ManagerServiceHandler interface {
+	// CheckManager verifies the configured Manager identity without changing runtime state.
+	CheckManager(context.Context, *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
 	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
 	// FetchOperations returns operations for the Manager to execute.
@@ -334,6 +353,12 @@ type ManagerServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
 	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
+	managerServiceCheckManagerHandler := connect.NewUnaryHandler(
+		ManagerServiceCheckManagerProcedure,
+		svc.CheckManager,
+		connect.WithSchema(managerServiceMethods.ByName("CheckManager")),
+		connect.WithHandlerOptions(opts...),
+	)
 	managerServiceDeclareManagerHandler := connect.NewUnaryHandler(
 		ManagerServiceDeclareManagerProcedure,
 		svc.DeclareManager,
@@ -420,6 +445,8 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 	)
 	return "/codespace.v1.ManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case ManagerServiceCheckManagerProcedure:
+			managerServiceCheckManagerHandler.ServeHTTP(w, r)
 		case ManagerServiceDeclareManagerProcedure:
 			managerServiceDeclareManagerHandler.ServeHTTP(w, r)
 		case ManagerServiceFetchOperationsProcedure:
@@ -456,6 +483,10 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 
 // UnimplementedManagerServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedManagerServiceHandler struct{}
+
+func (UnimplementedManagerServiceHandler) CheckManager(context.Context, *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.CheckManager is not implemented"))
+}
 
 func (UnimplementedManagerServiceHandler) DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.DeclareManager is not implemented"))
