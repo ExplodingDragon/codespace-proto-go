@@ -1677,7 +1677,9 @@ type RepositoryCheckout struct {
 	PreferredProtocol GitProtocol `protobuf:"varint,4,opt,name=preferred_protocol,json=preferredProtocol,proto3,enum=codespace.v1.GitProtocol" json:"preferred_protocol,omitempty"`
 	StartRef          string      `protobuf:"bytes,5,opt,name=start_ref,json=startRef,proto3" json:"start_ref,omitempty"`
 	// commit_sha is the immutable commit that the runtime must check out.
-	CommitSha     string `protobuf:"bytes,6,opt,name=commit_sha,json=commitSha,proto3" json:"commit_sha,omitempty"`
+	CommitSha string `protobuf:"bytes,6,opt,name=commit_sha,json=commitSha,proto3" json:"commit_sha,omitempty"`
+	// repository_id is stable across repository renames within this Gitea site.
+	RepositoryId  int64 `protobuf:"varint,7,opt,name=repository_id,json=repositoryId,proto3" json:"repository_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1754,12 +1756,21 @@ func (x *RepositoryCheckout) GetCommitSha() string {
 	return ""
 }
 
+func (x *RepositoryCheckout) GetRepositoryId() int64 {
+	if x != nil {
+		return x.RepositoryId
+	}
+	return 0
+}
+
 // GitIdentity is the create-time user identity written to the workspace.
 type GitIdentity struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GiteaUsername string                 `protobuf:"bytes,1,opt,name=gitea_username,json=giteaUsername,proto3" json:"gitea_username,omitempty"`
 	// git_user_email is the privacy-aware Gitea email used for Git commits.
-	GitUserEmail  string `protobuf:"bytes,2,opt,name=git_user_email,json=gitUserEmail,proto3" json:"git_user_email,omitempty"`
+	GitUserEmail string `protobuf:"bytes,2,opt,name=git_user_email,json=gitUserEmail,proto3" json:"git_user_email,omitempty"`
+	// user_id scopes private build caches to the workspace owner.
+	UserId        int64 `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1806,6 +1817,13 @@ func (x *GitIdentity) GetGitUserEmail() string {
 		return x.GitUserEmail
 	}
 	return ""
+}
+
+func (x *GitIdentity) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
 }
 
 // DevContainerConfiguration carries exactly one selected Dev Container source.
@@ -4886,7 +4904,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x0fenvironment_tag\x18\x02 \x01(\tR\x0eenvironmentTag\x12<\n" +
 	"\fgit_identity\x18\x03 \x01(\v2\x19.codespace.v1.GitIdentityR\vgitIdentity\x12L\n" +
 	"\rdev_container\x18\x04 \x01(\v2'.codespace.v1.DevContainerConfigurationR\fdevContainer\x12Z\n" +
-	"\x10runtime_settings\x18\x05 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\x81\x02\n" +
+	"\x10runtime_settings\x18\x05 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\xa6\x02\n" +
 	"\x12RepositoryCheckout\x12\x1b\n" +
 	"\tfull_name\x18\x01 \x01(\tR\bfullName\x12$\n" +
 	"\x0eclone_http_url\x18\x02 \x01(\tR\fcloneHttpUrl\x12\"\n" +
@@ -4894,10 +4912,12 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x12preferred_protocol\x18\x04 \x01(\x0e2\x19.codespace.v1.GitProtocolR\x11preferredProtocol\x12\x1b\n" +
 	"\tstart_ref\x18\x05 \x01(\tR\bstartRef\x12\x1d\n" +
 	"\n" +
-	"commit_sha\x18\x06 \x01(\tR\tcommitSha\"Z\n" +
+	"commit_sha\x18\x06 \x01(\tR\tcommitSha\x12#\n" +
+	"\rrepository_id\x18\a \x01(\x03R\frepositoryId\"s\n" +
 	"\vGitIdentity\x12%\n" +
 	"\x0egitea_username\x18\x01 \x01(\tR\rgiteaUsername\x12$\n" +
-	"\x0egit_user_email\x18\x02 \x01(\tR\fgitUserEmail\"}\n" +
+	"\x0egit_user_email\x18\x02 \x01(\tR\fgitUserEmail\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\x03R\x06userId\"}\n" +
 	"\x19DevContainerConfiguration\x12)\n" +
 	"\x0frepository_path\x18\x01 \x01(\tH\x00R\x0erepositoryPath\x12+\n" +
 	"\x10template_content\x18\x02 \x01(\tH\x00R\x0ftemplateContentB\b\n" +

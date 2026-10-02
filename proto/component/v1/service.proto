@@ -1,0 +1,327 @@
+syntax = "proto3";
+
+package component.v1;
+
+option go_package = "gitea.dev/codespace-proto-go/component/v1;componentv1";
+
+// ComponentService is the typed control API used by Gateway and Cache.
+service ComponentService {
+  // GetGatewayConfig returns a complete Gateway configuration snapshot.
+  rpc GetGatewayConfig(GetGatewayConfigRequest) returns (GetGatewayConfigResponse);
+
+  // WatchGatewayConfig waits for configuration or runtime changes after a revision.
+  rpc WatchGatewayConfig(WatchGatewayConfigRequest) returns (WatchGatewayConfigResponse);
+
+  // ReportGatewayActivity publishes live Gateway session counts.
+  rpc ReportGatewayActivity(ReportGatewayActivityRequest) returns (ReportGatewayActivityResponse);
+
+  // GetCache returns the configuration and private key for one cache.
+  rpc GetCache(GetCacheRequest) returns (GetCacheResponse);
+
+  // ClaimCache claims one cache service instance.
+  rpc ClaimCache(ClaimCacheRequest) returns (ClaimCacheResponse);
+
+  // HeartbeatCache publishes cache health while the owner lease is active.
+  rpc HeartbeatCache(HeartbeatCacheRequest) returns (HeartbeatCacheResponse);
+
+  // ReleaseCache releases one cache service owner.
+  rpc ReleaseCache(ReleaseCacheRequest) returns (ReleaseCacheResponse);
+
+  // VerifyCacheToken verifies a cache build credential.
+  rpc VerifyCacheToken(VerifyCacheTokenRequest) returns (VerifyCacheTokenResponse);
+
+  // BeginCacheGC grants one cache instance permission to collect local data.
+  rpc BeginCacheGC(BeginCacheGCRequest) returns (BeginCacheGCResponse);
+
+  // CompleteCacheGC records the result of one granted collection pass.
+  rpc CompleteCacheGC(CompleteCacheGCRequest) returns (CompleteCacheGCResponse);
+}
+
+message GetGatewayConfigRequest {
+  uint32 protocol_version = 1;
+}
+
+message GetGatewayConfigResponse {
+  uint64 revision = 1;
+  GatewayConfiguration config = 2;
+  repeated RuntimeBinding placements = 3;
+  repeated GatewayRuntimeSnapshot runtimes = 4;
+}
+
+message WatchGatewayConfigRequest {
+  uint32 protocol_version = 1;
+  uint64 revision = 2;
+}
+
+message WatchGatewayConfigResponse {
+  uint64 revision = 1;
+  bool reset = 2;
+  GatewayConfiguration config = 3;
+  repeated GatewayRuntimeEvent runtime_events = 4;
+  repeated RuntimeBindingEvent binding_events = 5;
+}
+
+message ReportGatewayActivityRequest {
+  uint32 protocol_version = 1;
+  string instance_id = 2;
+  map<string, int64> counts = 3;
+  bool release = 4;
+}
+
+message ReportGatewayActivityResponse {}
+
+message GatewayConfiguration {
+  NodeConfiguration node = 1;
+  GatewayConfigurationValue gateway = 2;
+  repeated ComponentSite sites = 3;
+  repeated ComponentBackend backends = 4;
+  bytes ssh_private_key = 5;
+  int64 ssh_private_key_updated_unix = 6;
+}
+
+message NodeConfiguration {
+  int64 http_timeout_milliseconds = 1;
+  int64 shutdown_timeout_milliseconds = 2;
+}
+
+message GatewayConfigurationValue {
+  GatewayHTTPConfiguration http = 1;
+  GatewaySSHConfiguration ssh = 2;
+  GatewaySessionConfiguration sessions = 3;
+  GatewayLimitsConfiguration limits = 4;
+}
+
+message GatewayHTTPConfiguration {
+  string listen = 1;
+  string public_url = 2;
+}
+
+message GatewaySSHConfiguration {
+  string listen = 1;
+  string public_addr = 2;
+  int64 handshake_timeout_milliseconds = 3;
+  int32 max_channels_per_connection = 4;
+  GatewaySSHAuthConfiguration auth = 5;
+}
+
+message GatewaySSHAuthConfiguration {
+  int32 max_attempts_per_ip = 1;
+  int32 max_attempts_per_codespace = 2;
+  int32 max_attempts_per_ip_codespace = 3;
+  int32 max_attempts_per_public_key = 4;
+  int64 failure_window_milliseconds = 5;
+}
+
+message GatewaySessionConfiguration {
+  int64 ttl_milliseconds = 1;
+  int64 idle_timeout_milliseconds = 2;
+  int64 revalidate_interval_milliseconds = 3;
+  int32 max_per_codespace = 4;
+  int32 max_per_user = 5;
+}
+
+message GatewayLimitsConfiguration {
+  int32 max_inflight_total = 1;
+  int32 max_inflight_per_session = 2;
+  int32 public_max_connections_per_endpoint = 3;
+  int32 public_max_connections_per_ip = 4;
+  int32 validation_max_inflight = 5;
+}
+
+message ComponentSite {
+  int64 id = 1;
+  string gitea_url = 2;
+  int64 manager_id = 3;
+  bytes manager_secret = 4;
+  bool enabled = 5;
+}
+
+message ComponentBackend {
+  string id = 1;
+  bool enabled = 2;
+  ComponentIncusConfiguration incus = 3;
+}
+
+message ComponentIncusConfiguration {
+  string endpoint = 1;
+  bytes client_certificate = 2;
+  bytes client_key = 3;
+  bytes server_certificate = 4;
+  string project_name = 5;
+}
+
+message RuntimeBinding {
+  string runtime_uuid = 1;
+  int64 site_id = 2;
+  string backend_id = 3;
+}
+
+message GatewayRuntimeSnapshot {
+  string runtime_uuid = 1;
+  int64 site_id = 2;
+  string instance_name = 3;
+  string workdir = 4;
+  uint32 uid = 5;
+  uint32 gid = 6;
+  string container_id = 7;
+  string container_user = 8;
+  string container_workdir = 9;
+  uint32 editor_port = 10;
+  repeated GatewayEndpointSnapshot endpoints = 11;
+}
+
+message GatewayEndpointSnapshot {
+  string endpoint_id = 1;
+  string label = 2;
+  uint32 upstream_port = 3;
+  bool public = 4;
+}
+
+message GatewayRuntimeEvent {
+  oneof event {
+    GatewayRuntimeSnapshot upsert = 1;
+    RuntimeDelete delete = 2;
+  }
+}
+
+message RuntimeBindingEvent {
+  oneof event {
+    RuntimeBinding upsert = 1;
+    RuntimeDelete delete = 2;
+  }
+}
+
+message RuntimeDelete {
+  string runtime_uuid = 1;
+}
+
+message GetCacheRequest {
+  uint32 protocol_version = 1;
+  string cache_id = 2;
+}
+
+message GetCacheResponse {
+  CacheConfiguration config = 1;
+  bytes registry_key = 2;
+  int64 cleanup_revision = 3;
+  bool active_builds = 4;
+}
+
+message CacheConfiguration {
+  string id = 1;
+  string name = 2;
+  int64 revision = 3;
+  bool enabled = 4;
+  string listen = 5;
+  string public_url = 6;
+  CacheStorageConfiguration storage = 7;
+  string max_size = 8;
+  int64 max_age_milliseconds = 9;
+  int64 gc_interval_milliseconds = 10;
+  map<string, CacheUpstreamConfiguration> upstreams = 11;
+}
+
+message CacheStorageConfiguration {
+  string driver = 1;
+  string path = 2;
+  string min_free_space = 3;
+  CacheS3Configuration s3 = 4;
+}
+
+message CacheS3Configuration {
+  string endpoint = 1;
+  string region = 2;
+  string bucket = 3;
+  string prefix = 4;
+  bool force_path_style = 5;
+  bytes access_key = 6;
+  bytes secret_key = 7;
+}
+
+message CacheUpstreamConfiguration {
+  repeated string allow = 1;
+}
+
+message CacheOwner {
+  string cache_id = 1;
+  string id = 2;
+  int64 config_revision = 3;
+  int64 expires_at_unix_milliseconds = 4;
+}
+
+message CacheStatus {
+  string public_url = 1;
+  int64 config_revision = 2;
+  int64 cache_bytes = 3;
+  int64 mirror_bytes = 4;
+  int64 scanned_at_unix_milliseconds = 5;
+  int64 last_cleanup_unix_milliseconds = 6;
+  string cleanup_result = 7;
+}
+
+message CacheSession {
+  string cache_id = 1;
+  string namespace = 2;
+  bool public = 3;
+  bool build = 4;
+}
+
+message CacheGCGrant {
+  string cache_id = 1;
+  string id = 2;
+  int64 config_revision = 3;
+  int64 expires_at_unix_milliseconds = 4;
+}
+
+message ClaimCacheRequest {
+  uint32 protocol_version = 1;
+  string cache_id = 2;
+  string instance_id = 3;
+}
+
+message ClaimCacheResponse {
+  CacheOwner owner = 1;
+}
+
+message HeartbeatCacheRequest {
+  uint32 protocol_version = 1;
+  CacheOwner owner = 2;
+  CacheStatus status = 3;
+}
+
+message HeartbeatCacheResponse {}
+
+message ReleaseCacheRequest {
+  uint32 protocol_version = 1;
+  CacheOwner owner = 2;
+}
+
+message ReleaseCacheResponse {}
+
+message VerifyCacheTokenRequest {
+  uint32 protocol_version = 1;
+  string cache_id = 2;
+  string token = 3;
+}
+
+message VerifyCacheTokenResponse {
+  CacheSession session = 1;
+}
+
+message BeginCacheGCRequest {
+  uint32 protocol_version = 1;
+  CacheOwner owner = 2;
+  int64 cleanup_revision = 3;
+}
+
+message BeginCacheGCResponse {
+  CacheGCGrant grant = 1;
+}
+
+message CompleteCacheGCRequest {
+  uint32 protocol_version = 1;
+  CacheGCGrant grant = 2;
+  string result = 3;
+}
+
+message CompleteCacheGCResponse {}

@@ -221,6 +221,8 @@ message RepositoryCheckout {
   string start_ref = 5;
   // commit_sha is the immutable commit that the runtime must check out.
   string commit_sha = 6;
+  // repository_id is stable across repository renames within this Gitea site.
+  int64 repository_id = 7;
 }
 
 // GitIdentity is the create-time user identity written to the workspace.
@@ -228,6 +230,8 @@ message GitIdentity {
   string gitea_username = 1;
   // git_user_email is the privacy-aware Gitea email used for Git commits.
   string git_user_email = 2;
+  // user_id scopes private build caches to the workspace owner.
+  int64 user_id = 3;
 }
 
 // DevContainerConfiguration carries exactly one selected Dev Container source.

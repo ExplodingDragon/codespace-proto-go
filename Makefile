@@ -36,3 +36,5 @@ test:
 clean:
 	rm -f codespace/v1/*.pb.go
 	rm -rf codespace/v1/codespacev1connect
+	rm -f component/v1/*.pb.go
+	rm -rf component/v1/componentv1connect
