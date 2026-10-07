@@ -33,60 +33,30 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// ComponentServiceGetGatewayConfigProcedure is the fully-qualified name of the ComponentService's
-	// GetGatewayConfig RPC.
-	ComponentServiceGetGatewayConfigProcedure = "/component.v1.ComponentService/GetGatewayConfig"
-	// ComponentServiceWatchGatewayConfigProcedure is the fully-qualified name of the ComponentService's
-	// WatchGatewayConfig RPC.
-	ComponentServiceWatchGatewayConfigProcedure = "/component.v1.ComponentService/WatchGatewayConfig"
-	// ComponentServiceReportGatewayActivityProcedure is the fully-qualified name of the
-	// ComponentService's ReportGatewayActivity RPC.
-	ComponentServiceReportGatewayActivityProcedure = "/component.v1.ComponentService/ReportGatewayActivity"
-	// ComponentServiceGetCacheProcedure is the fully-qualified name of the ComponentService's GetCache
-	// RPC.
-	ComponentServiceGetCacheProcedure = "/component.v1.ComponentService/GetCache"
-	// ComponentServiceClaimCacheProcedure is the fully-qualified name of the ComponentService's
-	// ClaimCache RPC.
-	ComponentServiceClaimCacheProcedure = "/component.v1.ComponentService/ClaimCache"
-	// ComponentServiceHeartbeatCacheProcedure is the fully-qualified name of the ComponentService's
-	// HeartbeatCache RPC.
-	ComponentServiceHeartbeatCacheProcedure = "/component.v1.ComponentService/HeartbeatCache"
-	// ComponentServiceReleaseCacheProcedure is the fully-qualified name of the ComponentService's
-	// ReleaseCache RPC.
-	ComponentServiceReleaseCacheProcedure = "/component.v1.ComponentService/ReleaseCache"
-	// ComponentServiceVerifyCacheTokenProcedure is the fully-qualified name of the ComponentService's
-	// VerifyCacheToken RPC.
-	ComponentServiceVerifyCacheTokenProcedure = "/component.v1.ComponentService/VerifyCacheToken"
-	// ComponentServiceBeginCacheGCProcedure is the fully-qualified name of the ComponentService's
-	// BeginCacheGC RPC.
-	ComponentServiceBeginCacheGCProcedure = "/component.v1.ComponentService/BeginCacheGC"
-	// ComponentServiceCompleteCacheGCProcedure is the fully-qualified name of the ComponentService's
-	// CompleteCacheGC RPC.
-	ComponentServiceCompleteCacheGCProcedure = "/component.v1.ComponentService/CompleteCacheGC"
+	// ComponentServiceGatewayControlProcedure is the fully-qualified name of the ComponentService's
+	// GatewayControl RPC.
+	ComponentServiceGatewayControlProcedure = "/component.v1.ComponentService/GatewayControl"
+	// ComponentServiceAuthorizeGatewayProcedure is the fully-qualified name of the ComponentService's
+	// AuthorizeGateway RPC.
+	ComponentServiceAuthorizeGatewayProcedure = "/component.v1.ComponentService/AuthorizeGateway"
+	// ComponentServiceIssueAgentAccessProcedure is the fully-qualified name of the ComponentService's
+	// IssueAgentAccess RPC.
+	ComponentServiceIssueAgentAccessProcedure = "/component.v1.ComponentService/IssueAgentAccess"
+	// ComponentServiceCacheControlProcedure is the fully-qualified name of the ComponentService's
+	// CacheControl RPC.
+	ComponentServiceCacheControlProcedure = "/component.v1.ComponentService/CacheControl"
 )
 
 // ComponentServiceClient is a client for the component.v1.ComponentService service.
 type ComponentServiceClient interface {
-	// GetGatewayConfig returns a complete Gateway configuration snapshot.
-	GetGatewayConfig(context.Context, *connect.Request[v1.GetGatewayConfigRequest]) (*connect.Response[v1.GetGatewayConfigResponse], error)
-	// WatchGatewayConfig waits for configuration or runtime changes after a revision.
-	WatchGatewayConfig(context.Context, *connect.Request[v1.WatchGatewayConfigRequest]) (*connect.Response[v1.WatchGatewayConfigResponse], error)
-	// ReportGatewayActivity publishes live Gateway session counts.
-	ReportGatewayActivity(context.Context, *connect.Request[v1.ReportGatewayActivityRequest]) (*connect.Response[v1.ReportGatewayActivityResponse], error)
-	// GetCache returns the configuration and private key for one cache.
-	GetCache(context.Context, *connect.Request[v1.GetCacheRequest]) (*connect.Response[v1.GetCacheResponse], error)
-	// ClaimCache claims one cache service instance.
-	ClaimCache(context.Context, *connect.Request[v1.ClaimCacheRequest]) (*connect.Response[v1.ClaimCacheResponse], error)
-	// HeartbeatCache publishes cache health while the owner lease is active.
-	HeartbeatCache(context.Context, *connect.Request[v1.HeartbeatCacheRequest]) (*connect.Response[v1.HeartbeatCacheResponse], error)
-	// ReleaseCache releases one cache service owner.
-	ReleaseCache(context.Context, *connect.Request[v1.ReleaseCacheRequest]) (*connect.Response[v1.ReleaseCacheResponse], error)
-	// VerifyCacheToken verifies a cache build credential.
-	VerifyCacheToken(context.Context, *connect.Request[v1.VerifyCacheTokenRequest]) (*connect.Response[v1.VerifyCacheTokenResponse], error)
-	// BeginCacheGC grants one cache instance permission to collect local data.
-	BeginCacheGC(context.Context, *connect.Request[v1.BeginCacheGCRequest]) (*connect.Response[v1.BeginCacheGCResponse], error)
-	// CompleteCacheGC records the result of one granted collection pass.
-	CompleteCacheGC(context.Context, *connect.Request[v1.CompleteCacheGCRequest]) (*connect.Response[v1.CompleteCacheGCResponse], error)
+	// GatewayControl publishes Gateway activity and streams its current configuration and routes.
+	GatewayControl(context.Context) *connect.BidiStreamForClient[v1.GatewayControlRequest, v1.GatewayControlResponse]
+	// AuthorizeGateway delegates one user authorization decision to its Gitea site.
+	AuthorizeGateway(context.Context, *connect.Request[v1.AuthorizeGatewayRequest]) (*connect.Response[v1.AuthorizeGatewayResponse], error)
+	// IssueAgentAccess binds one short-lived ticket to the current Runtime Pod target.
+	IssueAgentAccess(context.Context, *connect.Request[v1.IssueAgentAccessRequest]) (*connect.Response[v1.IssueAgentAccessResponse], error)
+	// CacheControl publishes cache health and streams configuration and cleanup grants.
+	CacheControl(context.Context) *connect.BidiStreamForClient[v1.CacheControlRequest, v1.CacheControlResponse]
 }
 
 // NewComponentServiceClient constructs a client for the component.v1.ComponentService service. By
@@ -100,64 +70,28 @@ func NewComponentServiceClient(httpClient connect.HTTPClient, baseURL string, op
 	baseURL = strings.TrimRight(baseURL, "/")
 	componentServiceMethods := v1.File_component_v1_service_proto.Services().ByName("ComponentService").Methods()
 	return &componentServiceClient{
-		getGatewayConfig: connect.NewClient[v1.GetGatewayConfigRequest, v1.GetGatewayConfigResponse](
+		gatewayControl: connect.NewClient[v1.GatewayControlRequest, v1.GatewayControlResponse](
 			httpClient,
-			baseURL+ComponentServiceGetGatewayConfigProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("GetGatewayConfig")),
+			baseURL+ComponentServiceGatewayControlProcedure,
+			connect.WithSchema(componentServiceMethods.ByName("GatewayControl")),
 			connect.WithClientOptions(opts...),
 		),
-		watchGatewayConfig: connect.NewClient[v1.WatchGatewayConfigRequest, v1.WatchGatewayConfigResponse](
+		authorizeGateway: connect.NewClient[v1.AuthorizeGatewayRequest, v1.AuthorizeGatewayResponse](
 			httpClient,
-			baseURL+ComponentServiceWatchGatewayConfigProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("WatchGatewayConfig")),
+			baseURL+ComponentServiceAuthorizeGatewayProcedure,
+			connect.WithSchema(componentServiceMethods.ByName("AuthorizeGateway")),
 			connect.WithClientOptions(opts...),
 		),
-		reportGatewayActivity: connect.NewClient[v1.ReportGatewayActivityRequest, v1.ReportGatewayActivityResponse](
+		issueAgentAccess: connect.NewClient[v1.IssueAgentAccessRequest, v1.IssueAgentAccessResponse](
 			httpClient,
-			baseURL+ComponentServiceReportGatewayActivityProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("ReportGatewayActivity")),
+			baseURL+ComponentServiceIssueAgentAccessProcedure,
+			connect.WithSchema(componentServiceMethods.ByName("IssueAgentAccess")),
 			connect.WithClientOptions(opts...),
 		),
-		getCache: connect.NewClient[v1.GetCacheRequest, v1.GetCacheResponse](
+		cacheControl: connect.NewClient[v1.CacheControlRequest, v1.CacheControlResponse](
 			httpClient,
-			baseURL+ComponentServiceGetCacheProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("GetCache")),
-			connect.WithClientOptions(opts...),
-		),
-		claimCache: connect.NewClient[v1.ClaimCacheRequest, v1.ClaimCacheResponse](
-			httpClient,
-			baseURL+ComponentServiceClaimCacheProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("ClaimCache")),
-			connect.WithClientOptions(opts...),
-		),
-		heartbeatCache: connect.NewClient[v1.HeartbeatCacheRequest, v1.HeartbeatCacheResponse](
-			httpClient,
-			baseURL+ComponentServiceHeartbeatCacheProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("HeartbeatCache")),
-			connect.WithClientOptions(opts...),
-		),
-		releaseCache: connect.NewClient[v1.ReleaseCacheRequest, v1.ReleaseCacheResponse](
-			httpClient,
-			baseURL+ComponentServiceReleaseCacheProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("ReleaseCache")),
-			connect.WithClientOptions(opts...),
-		),
-		verifyCacheToken: connect.NewClient[v1.VerifyCacheTokenRequest, v1.VerifyCacheTokenResponse](
-			httpClient,
-			baseURL+ComponentServiceVerifyCacheTokenProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("VerifyCacheToken")),
-			connect.WithClientOptions(opts...),
-		),
-		beginCacheGC: connect.NewClient[v1.BeginCacheGCRequest, v1.BeginCacheGCResponse](
-			httpClient,
-			baseURL+ComponentServiceBeginCacheGCProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("BeginCacheGC")),
-			connect.WithClientOptions(opts...),
-		),
-		completeCacheGC: connect.NewClient[v1.CompleteCacheGCRequest, v1.CompleteCacheGCResponse](
-			httpClient,
-			baseURL+ComponentServiceCompleteCacheGCProcedure,
-			connect.WithSchema(componentServiceMethods.ByName("CompleteCacheGC")),
+			baseURL+ComponentServiceCacheControlProcedure,
+			connect.WithSchema(componentServiceMethods.ByName("CacheControl")),
 			connect.WithClientOptions(opts...),
 		),
 	}
@@ -165,90 +99,42 @@ func NewComponentServiceClient(httpClient connect.HTTPClient, baseURL string, op
 
 // componentServiceClient implements ComponentServiceClient.
 type componentServiceClient struct {
-	getGatewayConfig      *connect.Client[v1.GetGatewayConfigRequest, v1.GetGatewayConfigResponse]
-	watchGatewayConfig    *connect.Client[v1.WatchGatewayConfigRequest, v1.WatchGatewayConfigResponse]
-	reportGatewayActivity *connect.Client[v1.ReportGatewayActivityRequest, v1.ReportGatewayActivityResponse]
-	getCache              *connect.Client[v1.GetCacheRequest, v1.GetCacheResponse]
-	claimCache            *connect.Client[v1.ClaimCacheRequest, v1.ClaimCacheResponse]
-	heartbeatCache        *connect.Client[v1.HeartbeatCacheRequest, v1.HeartbeatCacheResponse]
-	releaseCache          *connect.Client[v1.ReleaseCacheRequest, v1.ReleaseCacheResponse]
-	verifyCacheToken      *connect.Client[v1.VerifyCacheTokenRequest, v1.VerifyCacheTokenResponse]
-	beginCacheGC          *connect.Client[v1.BeginCacheGCRequest, v1.BeginCacheGCResponse]
-	completeCacheGC       *connect.Client[v1.CompleteCacheGCRequest, v1.CompleteCacheGCResponse]
+	gatewayControl   *connect.Client[v1.GatewayControlRequest, v1.GatewayControlResponse]
+	authorizeGateway *connect.Client[v1.AuthorizeGatewayRequest, v1.AuthorizeGatewayResponse]
+	issueAgentAccess *connect.Client[v1.IssueAgentAccessRequest, v1.IssueAgentAccessResponse]
+	cacheControl     *connect.Client[v1.CacheControlRequest, v1.CacheControlResponse]
 }
 
-// GetGatewayConfig calls component.v1.ComponentService.GetGatewayConfig.
-func (c *componentServiceClient) GetGatewayConfig(ctx context.Context, req *connect.Request[v1.GetGatewayConfigRequest]) (*connect.Response[v1.GetGatewayConfigResponse], error) {
-	return c.getGatewayConfig.CallUnary(ctx, req)
+// GatewayControl calls component.v1.ComponentService.GatewayControl.
+func (c *componentServiceClient) GatewayControl(ctx context.Context) *connect.BidiStreamForClient[v1.GatewayControlRequest, v1.GatewayControlResponse] {
+	return c.gatewayControl.CallBidiStream(ctx)
 }
 
-// WatchGatewayConfig calls component.v1.ComponentService.WatchGatewayConfig.
-func (c *componentServiceClient) WatchGatewayConfig(ctx context.Context, req *connect.Request[v1.WatchGatewayConfigRequest]) (*connect.Response[v1.WatchGatewayConfigResponse], error) {
-	return c.watchGatewayConfig.CallUnary(ctx, req)
+// AuthorizeGateway calls component.v1.ComponentService.AuthorizeGateway.
+func (c *componentServiceClient) AuthorizeGateway(ctx context.Context, req *connect.Request[v1.AuthorizeGatewayRequest]) (*connect.Response[v1.AuthorizeGatewayResponse], error) {
+	return c.authorizeGateway.CallUnary(ctx, req)
 }
 
-// ReportGatewayActivity calls component.v1.ComponentService.ReportGatewayActivity.
-func (c *componentServiceClient) ReportGatewayActivity(ctx context.Context, req *connect.Request[v1.ReportGatewayActivityRequest]) (*connect.Response[v1.ReportGatewayActivityResponse], error) {
-	return c.reportGatewayActivity.CallUnary(ctx, req)
+// IssueAgentAccess calls component.v1.ComponentService.IssueAgentAccess.
+func (c *componentServiceClient) IssueAgentAccess(ctx context.Context, req *connect.Request[v1.IssueAgentAccessRequest]) (*connect.Response[v1.IssueAgentAccessResponse], error) {
+	return c.issueAgentAccess.CallUnary(ctx, req)
 }
 
-// GetCache calls component.v1.ComponentService.GetCache.
-func (c *componentServiceClient) GetCache(ctx context.Context, req *connect.Request[v1.GetCacheRequest]) (*connect.Response[v1.GetCacheResponse], error) {
-	return c.getCache.CallUnary(ctx, req)
-}
-
-// ClaimCache calls component.v1.ComponentService.ClaimCache.
-func (c *componentServiceClient) ClaimCache(ctx context.Context, req *connect.Request[v1.ClaimCacheRequest]) (*connect.Response[v1.ClaimCacheResponse], error) {
-	return c.claimCache.CallUnary(ctx, req)
-}
-
-// HeartbeatCache calls component.v1.ComponentService.HeartbeatCache.
-func (c *componentServiceClient) HeartbeatCache(ctx context.Context, req *connect.Request[v1.HeartbeatCacheRequest]) (*connect.Response[v1.HeartbeatCacheResponse], error) {
-	return c.heartbeatCache.CallUnary(ctx, req)
-}
-
-// ReleaseCache calls component.v1.ComponentService.ReleaseCache.
-func (c *componentServiceClient) ReleaseCache(ctx context.Context, req *connect.Request[v1.ReleaseCacheRequest]) (*connect.Response[v1.ReleaseCacheResponse], error) {
-	return c.releaseCache.CallUnary(ctx, req)
-}
-
-// VerifyCacheToken calls component.v1.ComponentService.VerifyCacheToken.
-func (c *componentServiceClient) VerifyCacheToken(ctx context.Context, req *connect.Request[v1.VerifyCacheTokenRequest]) (*connect.Response[v1.VerifyCacheTokenResponse], error) {
-	return c.verifyCacheToken.CallUnary(ctx, req)
-}
-
-// BeginCacheGC calls component.v1.ComponentService.BeginCacheGC.
-func (c *componentServiceClient) BeginCacheGC(ctx context.Context, req *connect.Request[v1.BeginCacheGCRequest]) (*connect.Response[v1.BeginCacheGCResponse], error) {
-	return c.beginCacheGC.CallUnary(ctx, req)
-}
-
-// CompleteCacheGC calls component.v1.ComponentService.CompleteCacheGC.
-func (c *componentServiceClient) CompleteCacheGC(ctx context.Context, req *connect.Request[v1.CompleteCacheGCRequest]) (*connect.Response[v1.CompleteCacheGCResponse], error) {
-	return c.completeCacheGC.CallUnary(ctx, req)
+// CacheControl calls component.v1.ComponentService.CacheControl.
+func (c *componentServiceClient) CacheControl(ctx context.Context) *connect.BidiStreamForClient[v1.CacheControlRequest, v1.CacheControlResponse] {
+	return c.cacheControl.CallBidiStream(ctx)
 }
 
 // ComponentServiceHandler is an implementation of the component.v1.ComponentService service.
 type ComponentServiceHandler interface {
-	// GetGatewayConfig returns a complete Gateway configuration snapshot.
-	GetGatewayConfig(context.Context, *connect.Request[v1.GetGatewayConfigRequest]) (*connect.Response[v1.GetGatewayConfigResponse], error)
-	// WatchGatewayConfig waits for configuration or runtime changes after a revision.
-	WatchGatewayConfig(context.Context, *connect.Request[v1.WatchGatewayConfigRequest]) (*connect.Response[v1.WatchGatewayConfigResponse], error)
-	// ReportGatewayActivity publishes live Gateway session counts.
-	ReportGatewayActivity(context.Context, *connect.Request[v1.ReportGatewayActivityRequest]) (*connect.Response[v1.ReportGatewayActivityResponse], error)
-	// GetCache returns the configuration and private key for one cache.
-	GetCache(context.Context, *connect.Request[v1.GetCacheRequest]) (*connect.Response[v1.GetCacheResponse], error)
-	// ClaimCache claims one cache service instance.
-	ClaimCache(context.Context, *connect.Request[v1.ClaimCacheRequest]) (*connect.Response[v1.ClaimCacheResponse], error)
-	// HeartbeatCache publishes cache health while the owner lease is active.
-	HeartbeatCache(context.Context, *connect.Request[v1.HeartbeatCacheRequest]) (*connect.Response[v1.HeartbeatCacheResponse], error)
-	// ReleaseCache releases one cache service owner.
-	ReleaseCache(context.Context, *connect.Request[v1.ReleaseCacheRequest]) (*connect.Response[v1.ReleaseCacheResponse], error)
-	// VerifyCacheToken verifies a cache build credential.
-	VerifyCacheToken(context.Context, *connect.Request[v1.VerifyCacheTokenRequest]) (*connect.Response[v1.VerifyCacheTokenResponse], error)
-	// BeginCacheGC grants one cache instance permission to collect local data.
-	BeginCacheGC(context.Context, *connect.Request[v1.BeginCacheGCRequest]) (*connect.Response[v1.BeginCacheGCResponse], error)
-	// CompleteCacheGC records the result of one granted collection pass.
-	CompleteCacheGC(context.Context, *connect.Request[v1.CompleteCacheGCRequest]) (*connect.Response[v1.CompleteCacheGCResponse], error)
+	// GatewayControl publishes Gateway activity and streams its current configuration and routes.
+	GatewayControl(context.Context, *connect.BidiStream[v1.GatewayControlRequest, v1.GatewayControlResponse]) error
+	// AuthorizeGateway delegates one user authorization decision to its Gitea site.
+	AuthorizeGateway(context.Context, *connect.Request[v1.AuthorizeGatewayRequest]) (*connect.Response[v1.AuthorizeGatewayResponse], error)
+	// IssueAgentAccess binds one short-lived ticket to the current Runtime Pod target.
+	IssueAgentAccess(context.Context, *connect.Request[v1.IssueAgentAccessRequest]) (*connect.Response[v1.IssueAgentAccessResponse], error)
+	// CacheControl publishes cache health and streams configuration and cleanup grants.
+	CacheControl(context.Context, *connect.BidiStream[v1.CacheControlRequest, v1.CacheControlResponse]) error
 }
 
 // NewComponentServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -258,88 +144,40 @@ type ComponentServiceHandler interface {
 // and JSON codecs. They also support gzip compression.
 func NewComponentServiceHandler(svc ComponentServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
 	componentServiceMethods := v1.File_component_v1_service_proto.Services().ByName("ComponentService").Methods()
-	componentServiceGetGatewayConfigHandler := connect.NewUnaryHandler(
-		ComponentServiceGetGatewayConfigProcedure,
-		svc.GetGatewayConfig,
-		connect.WithSchema(componentServiceMethods.ByName("GetGatewayConfig")),
+	componentServiceGatewayControlHandler := connect.NewBidiStreamHandler(
+		ComponentServiceGatewayControlProcedure,
+		svc.GatewayControl,
+		connect.WithSchema(componentServiceMethods.ByName("GatewayControl")),
 		connect.WithHandlerOptions(opts...),
 	)
-	componentServiceWatchGatewayConfigHandler := connect.NewUnaryHandler(
-		ComponentServiceWatchGatewayConfigProcedure,
-		svc.WatchGatewayConfig,
-		connect.WithSchema(componentServiceMethods.ByName("WatchGatewayConfig")),
+	componentServiceAuthorizeGatewayHandler := connect.NewUnaryHandler(
+		ComponentServiceAuthorizeGatewayProcedure,
+		svc.AuthorizeGateway,
+		connect.WithSchema(componentServiceMethods.ByName("AuthorizeGateway")),
 		connect.WithHandlerOptions(opts...),
 	)
-	componentServiceReportGatewayActivityHandler := connect.NewUnaryHandler(
-		ComponentServiceReportGatewayActivityProcedure,
-		svc.ReportGatewayActivity,
-		connect.WithSchema(componentServiceMethods.ByName("ReportGatewayActivity")),
+	componentServiceIssueAgentAccessHandler := connect.NewUnaryHandler(
+		ComponentServiceIssueAgentAccessProcedure,
+		svc.IssueAgentAccess,
+		connect.WithSchema(componentServiceMethods.ByName("IssueAgentAccess")),
 		connect.WithHandlerOptions(opts...),
 	)
-	componentServiceGetCacheHandler := connect.NewUnaryHandler(
-		ComponentServiceGetCacheProcedure,
-		svc.GetCache,
-		connect.WithSchema(componentServiceMethods.ByName("GetCache")),
-		connect.WithHandlerOptions(opts...),
-	)
-	componentServiceClaimCacheHandler := connect.NewUnaryHandler(
-		ComponentServiceClaimCacheProcedure,
-		svc.ClaimCache,
-		connect.WithSchema(componentServiceMethods.ByName("ClaimCache")),
-		connect.WithHandlerOptions(opts...),
-	)
-	componentServiceHeartbeatCacheHandler := connect.NewUnaryHandler(
-		ComponentServiceHeartbeatCacheProcedure,
-		svc.HeartbeatCache,
-		connect.WithSchema(componentServiceMethods.ByName("HeartbeatCache")),
-		connect.WithHandlerOptions(opts...),
-	)
-	componentServiceReleaseCacheHandler := connect.NewUnaryHandler(
-		ComponentServiceReleaseCacheProcedure,
-		svc.ReleaseCache,
-		connect.WithSchema(componentServiceMethods.ByName("ReleaseCache")),
-		connect.WithHandlerOptions(opts...),
-	)
-	componentServiceVerifyCacheTokenHandler := connect.NewUnaryHandler(
-		ComponentServiceVerifyCacheTokenProcedure,
-		svc.VerifyCacheToken,
-		connect.WithSchema(componentServiceMethods.ByName("VerifyCacheToken")),
-		connect.WithHandlerOptions(opts...),
-	)
-	componentServiceBeginCacheGCHandler := connect.NewUnaryHandler(
-		ComponentServiceBeginCacheGCProcedure,
-		svc.BeginCacheGC,
-		connect.WithSchema(componentServiceMethods.ByName("BeginCacheGC")),
-		connect.WithHandlerOptions(opts...),
-	)
-	componentServiceCompleteCacheGCHandler := connect.NewUnaryHandler(
-		ComponentServiceCompleteCacheGCProcedure,
-		svc.CompleteCacheGC,
-		connect.WithSchema(componentServiceMethods.ByName("CompleteCacheGC")),
+	componentServiceCacheControlHandler := connect.NewBidiStreamHandler(
+		ComponentServiceCacheControlProcedure,
+		svc.CacheControl,
+		connect.WithSchema(componentServiceMethods.ByName("CacheControl")),
 		connect.WithHandlerOptions(opts...),
 	)
 	return "/component.v1.ComponentService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case ComponentServiceGetGatewayConfigProcedure:
-			componentServiceGetGatewayConfigHandler.ServeHTTP(w, r)
-		case ComponentServiceWatchGatewayConfigProcedure:
-			componentServiceWatchGatewayConfigHandler.ServeHTTP(w, r)
-		case ComponentServiceReportGatewayActivityProcedure:
-			componentServiceReportGatewayActivityHandler.ServeHTTP(w, r)
-		case ComponentServiceGetCacheProcedure:
-			componentServiceGetCacheHandler.ServeHTTP(w, r)
-		case ComponentServiceClaimCacheProcedure:
-			componentServiceClaimCacheHandler.ServeHTTP(w, r)
-		case ComponentServiceHeartbeatCacheProcedure:
-			componentServiceHeartbeatCacheHandler.ServeHTTP(w, r)
-		case ComponentServiceReleaseCacheProcedure:
-			componentServiceReleaseCacheHandler.ServeHTTP(w, r)
-		case ComponentServiceVerifyCacheTokenProcedure:
-			componentServiceVerifyCacheTokenHandler.ServeHTTP(w, r)
-		case ComponentServiceBeginCacheGCProcedure:
-			componentServiceBeginCacheGCHandler.ServeHTTP(w, r)
-		case ComponentServiceCompleteCacheGCProcedure:
-			componentServiceCompleteCacheGCHandler.ServeHTTP(w, r)
+		case ComponentServiceGatewayControlProcedure:
+			componentServiceGatewayControlHandler.ServeHTTP(w, r)
+		case ComponentServiceAuthorizeGatewayProcedure:
+			componentServiceAuthorizeGatewayHandler.ServeHTTP(w, r)
+		case ComponentServiceIssueAgentAccessProcedure:
+			componentServiceIssueAgentAccessHandler.ServeHTTP(w, r)
+		case ComponentServiceCacheControlProcedure:
+			componentServiceCacheControlHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -349,42 +187,18 @@ func NewComponentServiceHandler(svc ComponentServiceHandler, opts ...connect.Han
 // UnimplementedComponentServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedComponentServiceHandler struct{}
 
-func (UnimplementedComponentServiceHandler) GetGatewayConfig(context.Context, *connect.Request[v1.GetGatewayConfigRequest]) (*connect.Response[v1.GetGatewayConfigResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.GetGatewayConfig is not implemented"))
+func (UnimplementedComponentServiceHandler) GatewayControl(context.Context, *connect.BidiStream[v1.GatewayControlRequest, v1.GatewayControlResponse]) error {
+	return connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.GatewayControl is not implemented"))
 }
 
-func (UnimplementedComponentServiceHandler) WatchGatewayConfig(context.Context, *connect.Request[v1.WatchGatewayConfigRequest]) (*connect.Response[v1.WatchGatewayConfigResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.WatchGatewayConfig is not implemented"))
+func (UnimplementedComponentServiceHandler) AuthorizeGateway(context.Context, *connect.Request[v1.AuthorizeGatewayRequest]) (*connect.Response[v1.AuthorizeGatewayResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.AuthorizeGateway is not implemented"))
 }
 
-func (UnimplementedComponentServiceHandler) ReportGatewayActivity(context.Context, *connect.Request[v1.ReportGatewayActivityRequest]) (*connect.Response[v1.ReportGatewayActivityResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.ReportGatewayActivity is not implemented"))
+func (UnimplementedComponentServiceHandler) IssueAgentAccess(context.Context, *connect.Request[v1.IssueAgentAccessRequest]) (*connect.Response[v1.IssueAgentAccessResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.IssueAgentAccess is not implemented"))
 }
 
-func (UnimplementedComponentServiceHandler) GetCache(context.Context, *connect.Request[v1.GetCacheRequest]) (*connect.Response[v1.GetCacheResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.GetCache is not implemented"))
-}
-
-func (UnimplementedComponentServiceHandler) ClaimCache(context.Context, *connect.Request[v1.ClaimCacheRequest]) (*connect.Response[v1.ClaimCacheResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.ClaimCache is not implemented"))
-}
-
-func (UnimplementedComponentServiceHandler) HeartbeatCache(context.Context, *connect.Request[v1.HeartbeatCacheRequest]) (*connect.Response[v1.HeartbeatCacheResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.HeartbeatCache is not implemented"))
-}
-
-func (UnimplementedComponentServiceHandler) ReleaseCache(context.Context, *connect.Request[v1.ReleaseCacheRequest]) (*connect.Response[v1.ReleaseCacheResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.ReleaseCache is not implemented"))
-}
-
-func (UnimplementedComponentServiceHandler) VerifyCacheToken(context.Context, *connect.Request[v1.VerifyCacheTokenRequest]) (*connect.Response[v1.VerifyCacheTokenResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.VerifyCacheToken is not implemented"))
-}
-
-func (UnimplementedComponentServiceHandler) BeginCacheGC(context.Context, *connect.Request[v1.BeginCacheGCRequest]) (*connect.Response[v1.BeginCacheGCResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.BeginCacheGC is not implemented"))
-}
-
-func (UnimplementedComponentServiceHandler) CompleteCacheGC(context.Context, *connect.Request[v1.CompleteCacheGCRequest]) (*connect.Response[v1.CompleteCacheGCResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.CompleteCacheGC is not implemented"))
+func (UnimplementedComponentServiceHandler) CacheControl(context.Context, *connect.BidiStream[v1.CacheControlRequest, v1.CacheControlResponse]) error {
+	return connect.NewError(connect.CodeUnimplemented, errors.New("component.v1.ComponentService.CacheControl is not implemented"))
 }

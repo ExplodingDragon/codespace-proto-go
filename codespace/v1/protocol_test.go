@@ -29,7 +29,6 @@ func TestManagerServiceRequestsCarryProtocolVersionAsFieldOne(t *testing.T) {
 		&codespacev1.ValidatePublicEndpointRequest{},
 		&codespacev1.VerifySSHPublicKeyRequest{},
 		&codespacev1.ReportInstancesRequest{},
-		&codespacev1.ReportRuntimeTransitionRequest{},
 		&codespacev1.RevalidateGatewaySessionRequest{},
 	}
 

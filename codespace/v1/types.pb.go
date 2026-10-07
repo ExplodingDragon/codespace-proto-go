@@ -285,7 +285,6 @@ const (
 	RuntimeState_RUNTIME_STATE_CREATING    RuntimeState = 1
 	RuntimeState_RUNTIME_STATE_RUNNING     RuntimeState = 2
 	RuntimeState_RUNTIME_STATE_STOPPED     RuntimeState = 3
-	RuntimeState_RUNTIME_STATE_FAILED      RuntimeState = 4
 )
 
 // Enum value maps for RuntimeState.
@@ -295,14 +294,12 @@ var (
 		1: "RUNTIME_STATE_CREATING",
 		2: "RUNTIME_STATE_RUNNING",
 		3: "RUNTIME_STATE_STOPPED",
-		4: "RUNTIME_STATE_FAILED",
 	}
 	RuntimeState_value = map[string]int32{
 		"RUNTIME_STATE_UNSPECIFIED": 0,
 		"RUNTIME_STATE_CREATING":    1,
 		"RUNTIME_STATE_RUNNING":     2,
 		"RUNTIME_STATE_STOPPED":     3,
-		"RUNTIME_STATE_FAILED":      4,
 	}
 )
 
@@ -452,12 +449,11 @@ func (IdleStopNotApplicableReason) EnumDescriptor() ([]byte, []int) {
 type RuntimeReconcileAction int32
 
 const (
-	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_UNSPECIFIED               RuntimeReconcileAction = 0
-	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME     RuntimeReconcileAction = 1
-	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_REPORT_RUNTIME_TRANSITION RuntimeReconcileAction = 2
-	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION         RuntimeReconcileAction = 3
-	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME        RuntimeReconcileAction = 4
-	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT   RuntimeReconcileAction = 5
+	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_UNSPECIFIED             RuntimeReconcileAction = 0
+	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME   RuntimeReconcileAction = 1
+	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION       RuntimeReconcileAction = 2
+	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME      RuntimeReconcileAction = 3
+	RuntimeReconcileAction_RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT RuntimeReconcileAction = 4
 )
 
 // Enum value maps for RuntimeReconcileAction.
@@ -465,18 +461,16 @@ var (
 	RuntimeReconcileAction_name = map[int32]string{
 		0: "RUNTIME_RECONCILE_ACTION_UNSPECIFIED",
 		1: "RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME",
-		2: "RUNTIME_RECONCILE_ACTION_REPORT_RUNTIME_TRANSITION",
-		3: "RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION",
-		4: "RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME",
-		5: "RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT",
+		2: "RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION",
+		3: "RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME",
+		4: "RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT",
 	}
 	RuntimeReconcileAction_value = map[string]int32{
-		"RUNTIME_RECONCILE_ACTION_UNSPECIFIED":               0,
-		"RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME":     1,
-		"RUNTIME_RECONCILE_ACTION_REPORT_RUNTIME_TRANSITION": 2,
-		"RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION":         3,
-		"RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME":        4,
-		"RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT":   5,
+		"RUNTIME_RECONCILE_ACTION_UNSPECIFIED":             0,
+		"RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME":   1,
+		"RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION":       2,
+		"RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME":      3,
+		"RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT": 4,
 	}
 )
 
@@ -560,7 +554,7 @@ func (x *EnvironmentTag) GetDescription() string {
 	return ""
 }
 
-// CheckManagerRequest verifies Manager authentication and protocol compatibility.
+// CheckManagerRequest verifies Manager authentication and the exact protocol version.
 type CheckManagerRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// protocol_version is the wire protocol version and must be field 1.
@@ -849,8 +843,10 @@ type FetchOperationsRequest struct {
 	CleanupCapacityAvailable int32                   `protobuf:"varint,5,opt,name=cleanup_capacity_available,json=cleanupCapacityAvailable,proto3" json:"cleanup_capacity_available,omitempty"`
 	// accepted_create_tags limits this fetch to environments that can create a runtime now.
 	AcceptedCreateTags []string `protobuf:"bytes,6,rep,name=accepted_create_tags,json=acceptedCreateTags,proto3" json:"accepted_create_tags,omitempty"`
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	// wait_timeout_milliseconds bounds how long an empty fetch may wait for work.
+	WaitTimeoutMilliseconds int64 `protobuf:"varint,7,opt,name=wait_timeout_milliseconds,json=waitTimeoutMilliseconds,proto3" json:"wait_timeout_milliseconds,omitempty"`
+	unknownFields           protoimpl.UnknownFields
+	sizeCache               protoimpl.SizeCache
 }
 
 func (x *FetchOperationsRequest) Reset() {
@@ -923,6 +919,13 @@ func (x *FetchOperationsRequest) GetAcceptedCreateTags() []string {
 		return x.AcceptedCreateTags
 	}
 	return nil
+}
+
+func (x *FetchOperationsRequest) GetWaitTimeoutMilliseconds() int64 {
+	if x != nil {
+		return x.WaitTimeoutMilliseconds
+	}
+	return 0
 }
 
 // ObservedOperation reports an active operation context kept by the manager.
@@ -2319,10 +2322,11 @@ func (*ReportRuntimeMetadataResponse) Descriptor() ([]byte, []int) {
 
 // RuntimeMetadata describes the user-visible runtime entry points and usage.
 type RuntimeMetadata struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Endpoints     []*RuntimeEndpoint     `protobuf:"bytes,1,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
-	Boot          *RuntimeBoot           `protobuf:"bytes,2,opt,name=boot,proto3" json:"boot,omitempty"`
-	ResourceUsage *RuntimeResourceUsage  `protobuf:"bytes,3,opt,name=resource_usage,json=resourceUsage,proto3" json:"resource_usage,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	Endpoints []*RuntimeEndpoint     `protobuf:"bytes,1,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
+	Boot      *RuntimeBoot           `protobuf:"bytes,2,opt,name=boot,proto3" json:"boot,omitempty"`
+	// Optional samples refresh independently of the endpoint and boot generation.
+	ResourceUsage *RuntimeResourceUsage `protobuf:"bytes,3,opt,name=resource_usage,json=resourceUsage,proto3" json:"resource_usage,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2380,10 +2384,12 @@ func (x *RuntimeMetadata) GetResourceUsage() *RuntimeResourceUsage {
 
 // RuntimeEndpoint describes one HTTP/WebSocket endpoint exposed by the manager.
 type RuntimeEndpoint struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	EndpointId    string                 `protobuf:"bytes,1,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
-	Label         string                 `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
-	Public        bool                   `protobuf:"varint,3,opt,name=public,proto3" json:"public,omitempty"`
+	state      protoimpl.MessageState `protogen:"open.v1"`
+	EndpointId string                 `protobuf:"bytes,1,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
+	Label      string                 `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
+	Public     bool                   `protobuf:"varint,3,opt,name=public,proto3" json:"public,omitempty"`
+	// Port is the user-visible application port, or zero when it is not applicable.
+	Port          uint32 `protobuf:"varint,4,opt,name=port,proto3" json:"port,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2437,6 +2443,13 @@ func (x *RuntimeEndpoint) GetPublic() bool {
 		return x.Public
 	}
 	return false
+}
+
+func (x *RuntimeEndpoint) GetPort() uint32 {
+	if x != nil {
+		return x.Port
+	}
+	return 0
 }
 
 // RuntimeBoot reports startup progress for the active operation.
@@ -4244,121 +4257,6 @@ func (x *RuntimeInstanceResult) GetCurrentOperationRversion() int64 {
 	return 0
 }
 
-// ReportRuntimeTransitionRequest reports a manager-observed runtime state.
-type ReportRuntimeTransitionRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// protocol_version is the wire protocol version and must be field 1.
-	ProtocolVersion           int32        `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	RuntimeUuid               string       `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
-	RuntimeGeneration         int64        `protobuf:"varint,3,opt,name=runtime_generation,json=runtimeGeneration,proto3" json:"runtime_generation,omitempty"`
-	ObservedOperationRversion int64        `protobuf:"varint,4,opt,name=observed_operation_rversion,json=observedOperationRversion,proto3" json:"observed_operation_rversion,omitempty"`
-	RuntimeState              RuntimeState `protobuf:"varint,5,opt,name=runtime_state,json=runtimeState,proto3,enum=codespace.v1.RuntimeState" json:"runtime_state,omitempty"`
-	unknownFields             protoimpl.UnknownFields
-	sizeCache                 protoimpl.SizeCache
-}
-
-func (x *ReportRuntimeTransitionRequest) Reset() {
-	*x = ReportRuntimeTransitionRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[60]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReportRuntimeTransitionRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReportRuntimeTransitionRequest) ProtoMessage() {}
-
-func (x *ReportRuntimeTransitionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[60]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReportRuntimeTransitionRequest.ProtoReflect.Descriptor instead.
-func (*ReportRuntimeTransitionRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{60}
-}
-
-func (x *ReportRuntimeTransitionRequest) GetProtocolVersion() int32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *ReportRuntimeTransitionRequest) GetRuntimeUuid() string {
-	if x != nil {
-		return x.RuntimeUuid
-	}
-	return ""
-}
-
-func (x *ReportRuntimeTransitionRequest) GetRuntimeGeneration() int64 {
-	if x != nil {
-		return x.RuntimeGeneration
-	}
-	return 0
-}
-
-func (x *ReportRuntimeTransitionRequest) GetObservedOperationRversion() int64 {
-	if x != nil {
-		return x.ObservedOperationRversion
-	}
-	return 0
-}
-
-func (x *ReportRuntimeTransitionRequest) GetRuntimeState() RuntimeState {
-	if x != nil {
-		return x.RuntimeState
-	}
-	return RuntimeState_RUNTIME_STATE_UNSPECIFIED
-}
-
-// ReportRuntimeTransitionResponse is empty when the transition is accepted.
-type ReportRuntimeTransitionResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReportRuntimeTransitionResponse) Reset() {
-	*x = ReportRuntimeTransitionResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[61]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReportRuntimeTransitionResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReportRuntimeTransitionResponse) ProtoMessage() {}
-
-func (x *ReportRuntimeTransitionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[61]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReportRuntimeTransitionResponse.ProtoReflect.Descriptor instead.
-func (*ReportRuntimeTransitionResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{61}
-}
-
 // RevalidateGatewaySessionRequest rechecks a live gateway session.
 type RevalidateGatewaySessionRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -4375,7 +4273,7 @@ type RevalidateGatewaySessionRequest struct {
 
 func (x *RevalidateGatewaySessionRequest) Reset() {
 	*x = RevalidateGatewaySessionRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[62]
+	mi := &file_codespace_v1_types_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4387,7 +4285,7 @@ func (x *RevalidateGatewaySessionRequest) String() string {
 func (*RevalidateGatewaySessionRequest) ProtoMessage() {}
 
 func (x *RevalidateGatewaySessionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[62]
+	mi := &file_codespace_v1_types_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4400,7 +4298,7 @@ func (x *RevalidateGatewaySessionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevalidateGatewaySessionRequest.ProtoReflect.Descriptor instead.
 func (*RevalidateGatewaySessionRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{62}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *RevalidateGatewaySessionRequest) GetProtocolVersion() int32 {
@@ -4463,7 +4361,7 @@ type EndpointSessionBinding struct {
 
 func (x *EndpointSessionBinding) Reset() {
 	*x = EndpointSessionBinding{}
-	mi := &file_codespace_v1_types_proto_msgTypes[63]
+	mi := &file_codespace_v1_types_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4475,7 +4373,7 @@ func (x *EndpointSessionBinding) String() string {
 func (*EndpointSessionBinding) ProtoMessage() {}
 
 func (x *EndpointSessionBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[63]
+	mi := &file_codespace_v1_types_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4488,7 +4386,7 @@ func (x *EndpointSessionBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndpointSessionBinding.ProtoReflect.Descriptor instead.
 func (*EndpointSessionBinding) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{63}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *EndpointSessionBinding) GetUserId() int64 {
@@ -4523,7 +4421,7 @@ type SSHSessionBinding struct {
 
 func (x *SSHSessionBinding) Reset() {
 	*x = SSHSessionBinding{}
-	mi := &file_codespace_v1_types_proto_msgTypes[64]
+	mi := &file_codespace_v1_types_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4535,7 +4433,7 @@ func (x *SSHSessionBinding) String() string {
 func (*SSHSessionBinding) ProtoMessage() {}
 
 func (x *SSHSessionBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[64]
+	mi := &file_codespace_v1_types_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4548,7 +4446,7 @@ func (x *SSHSessionBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SSHSessionBinding.ProtoReflect.Descriptor instead.
 func (*SSHSessionBinding) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{64}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *SSHSessionBinding) GetUserId() int64 {
@@ -4579,7 +4477,7 @@ type RevalidateGatewaySessionResponse struct {
 
 func (x *RevalidateGatewaySessionResponse) Reset() {
 	*x = RevalidateGatewaySessionResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[65]
+	mi := &file_codespace_v1_types_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4591,7 +4489,7 @@ func (x *RevalidateGatewaySessionResponse) String() string {
 func (*RevalidateGatewaySessionResponse) ProtoMessage() {}
 
 func (x *RevalidateGatewaySessionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[65]
+	mi := &file_codespace_v1_types_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4604,7 +4502,7 @@ func (x *RevalidateGatewaySessionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevalidateGatewaySessionResponse.ProtoReflect.Descriptor instead.
 func (*RevalidateGatewaySessionResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{65}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *RevalidateGatewaySessionResponse) GetOutcome() isRevalidateGatewaySessionResponse_Outcome {
@@ -4657,7 +4555,7 @@ type SessionAllowed struct {
 
 func (x *SessionAllowed) Reset() {
 	*x = SessionAllowed{}
-	mi := &file_codespace_v1_types_proto_msgTypes[66]
+	mi := &file_codespace_v1_types_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4669,7 +4567,7 @@ func (x *SessionAllowed) String() string {
 func (*SessionAllowed) ProtoMessage() {}
 
 func (x *SessionAllowed) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[66]
+	mi := &file_codespace_v1_types_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4682,7 +4580,7 @@ func (x *SessionAllowed) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionAllowed.ProtoReflect.Descriptor instead.
 func (*SessionAllowed) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{66}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{64}
 }
 
 // FailureDetail carries a stable denial category for gateway and control-plane decisions.
@@ -4696,7 +4594,7 @@ type FailureDetail struct {
 
 func (x *FailureDetail) Reset() {
 	*x = FailureDetail{}
-	mi := &file_codespace_v1_types_proto_msgTypes[67]
+	mi := &file_codespace_v1_types_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4708,7 +4606,7 @@ func (x *FailureDetail) String() string {
 func (*FailureDetail) ProtoMessage() {}
 
 func (x *FailureDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[67]
+	mi := &file_codespace_v1_types_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4721,7 +4619,7 @@ func (x *FailureDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FailureDetail.ProtoReflect.Descriptor instead.
 func (*FailureDetail) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{67}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *FailureDetail) GetCategory() string {
@@ -4741,7 +4639,7 @@ type StaleGenerationDetail struct {
 
 func (x *StaleGenerationDetail) Reset() {
 	*x = StaleGenerationDetail{}
-	mi := &file_codespace_v1_types_proto_msgTypes[68]
+	mi := &file_codespace_v1_types_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4753,7 +4651,7 @@ func (x *StaleGenerationDetail) String() string {
 func (*StaleGenerationDetail) ProtoMessage() {}
 
 func (x *StaleGenerationDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[68]
+	mi := &file_codespace_v1_types_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4766,7 +4664,7 @@ func (x *StaleGenerationDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StaleGenerationDetail.ProtoReflect.Descriptor instead.
 func (*StaleGenerationDetail) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{68}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{66}
 }
 
 func (x *StaleGenerationDetail) GetCurrentGeneration() int64 {
@@ -4786,7 +4684,7 @@ type LogOffsetDetail struct {
 
 func (x *LogOffsetDetail) Reset() {
 	*x = LogOffsetDetail{}
-	mi := &file_codespace_v1_types_proto_msgTypes[69]
+	mi := &file_codespace_v1_types_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4798,7 +4696,7 @@ func (x *LogOffsetDetail) String() string {
 func (*LogOffsetDetail) ProtoMessage() {}
 
 func (x *LogOffsetDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[69]
+	mi := &file_codespace_v1_types_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4811,7 +4709,7 @@ func (x *LogOffsetDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogOffsetDetail.ProtoReflect.Descriptor instead.
 func (*LogOffsetDetail) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{69}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *LogOffsetDetail) GetCurrentOffset() int64 {
@@ -4849,14 +4747,15 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x1fheartbeat_interval_milliseconds\x18\x01 \x01(\x03R\x1dheartbeatIntervalMilliseconds\x12b\n" +
 	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12M\n" +
 	"$control_plane_max_message_size_bytes\x18\x03 \x01(\x03R\x1fcontrolPlaneMaxMessageSizeBytes\x12\"\n" +
-	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"\xa2\x03\n" +
+	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"\xde\x03\n" +
 	"\x16FetchOperationsRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12<\n" +
 	"\x1astartup_capacity_available\x18\x02 \x01(\x05R\x18startupCapacityAvailable\x12]\n" +
 	"\x18accepted_operation_types\x18\x03 \x03(\x0e2#.codespace.v1.AcceptedOperationTypeR\x16acceptedOperationTypes\x12P\n" +
 	"\x13observed_operations\x18\x04 \x03(\v2\x1f.codespace.v1.ObservedOperationR\x12observedOperations\x12<\n" +
 	"\x1acleanup_capacity_available\x18\x05 \x01(\x05R\x18cleanupCapacityAvailable\x120\n" +
-	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTags\"e\n" +
+	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTags\x12:\n" +
+	"\x19wait_timeout_milliseconds\x18\a \x01(\x03R\x17waitTimeoutMilliseconds\"e\n" +
 	"\x11ObservedOperation\x12!\n" +
 	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\"\xa5\x01\n" +
@@ -4951,12 +4850,13 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x0fRuntimeMetadata\x12;\n" +
 	"\tendpoints\x18\x01 \x03(\v2\x1d.codespace.v1.RuntimeEndpointR\tendpoints\x12-\n" +
 	"\x04boot\x18\x02 \x01(\v2\x19.codespace.v1.RuntimeBootR\x04boot\x12I\n" +
-	"\x0eresource_usage\x18\x03 \x01(\v2\".codespace.v1.RuntimeResourceUsageR\rresourceUsage\"`\n" +
+	"\x0eresource_usage\x18\x03 \x01(\v2\".codespace.v1.RuntimeResourceUsageR\rresourceUsage\"t\n" +
 	"\x0fRuntimeEndpoint\x12\x1f\n" +
 	"\vendpoint_id\x18\x01 \x01(\tR\n" +
 	"endpointId\x12\x14\n" +
 	"\x05label\x18\x02 \x01(\tR\x05label\x12\x16\n" +
-	"\x06public\x18\x03 \x01(\bR\x06public\"\xbf\x01\n" +
+	"\x06public\x18\x03 \x01(\bR\x06public\x12\x12\n" +
+	"\x04port\x18\x04 \x01(\rR\x04port\"\xbf\x01\n" +
 	"\vRuntimeBoot\x12-\n" +
 	"\x12operation_rversion\x18\x01 \x01(\x03R\x11operationRversion\x124\n" +
 	"\x05stage\x18\x02 \x01(\x0e2\x1e.codespace.v1.RuntimeBootStageR\x05stage\x12!\n" +
@@ -5069,14 +4969,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12Z\n" +
 	"\x10runtime_settings\x18\x02 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\x12<\n" +
 	"\x06action\x18\x03 \x01(\x0e2$.codespace.v1.RuntimeReconcileActionR\x06action\x12<\n" +
-	"\x1acurrent_operation_rversion\x18\x04 \x01(\x03R\x18currentOperationRversion\"\x9e\x02\n" +
-	"\x1eReportRuntimeTransitionRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
-	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12-\n" +
-	"\x12runtime_generation\x18\x03 \x01(\x03R\x11runtimeGeneration\x12>\n" +
-	"\x1bobserved_operation_rversion\x18\x04 \x01(\x03R\x19observedOperationRversion\x12?\n" +
-	"\rruntime_state\x18\x05 \x01(\x0e2\x1a.codespace.v1.RuntimeStateR\fruntimeState\"!\n" +
-	"\x1fReportRuntimeTransitionResponse\"\xd0\x01\n" +
+	"\x1acurrent_operation_rversion\x18\x04 \x01(\x03R\x18currentOperationRversion\"\xd0\x01\n" +
 	"\x1fRevalidateGatewaySessionRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12B\n" +
 	"\bendpoint\x18\x02 \x01(\v2$.codespace.v1.EndpointSessionBindingH\x00R\bendpoint\x123\n" +
@@ -5122,13 +5015,12 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\vGitProtocol\x12\x1c\n" +
 	"\x18GIT_PROTOCOL_UNSPECIFIED\x10\x00\x12\x15\n" +
 	"\x11GIT_PROTOCOL_HTTP\x10\x01\x12\x14\n" +
-	"\x10GIT_PROTOCOL_SSH\x10\x02*\x99\x01\n" +
+	"\x10GIT_PROTOCOL_SSH\x10\x02*\x7f\n" +
 	"\fRuntimeState\x12\x1d\n" +
 	"\x19RUNTIME_STATE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16RUNTIME_STATE_CREATING\x10\x01\x12\x19\n" +
 	"\x15RUNTIME_STATE_RUNNING\x10\x02\x12\x19\n" +
-	"\x15RUNTIME_STATE_STOPPED\x10\x03\x12\x18\n" +
-	"\x14RUNTIME_STATE_FAILED\x10\x04*\xa0\x02\n" +
+	"\x15RUNTIME_STATE_STOPPED\x10\x03*\xa0\x02\n" +
 	"\x10RuntimeBootStage\x12\"\n" +
 	"\x1eRUNTIME_BOOT_STAGE_UNSPECIFIED\x10\x00\x12&\n" +
 	"\"RUNTIME_BOOT_STAGE_PREPARE_RUNTIME\x10\x01\x12(\n" +
@@ -5141,14 +5033,13 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"+IDLE_STOP_NOT_APPLICABLE_REASON_UNSPECIFIED\x10\x00\x126\n" +
 	"2IDLE_STOP_NOT_APPLICABLE_REASON_OPERATION_CONFLICT\x10\x01\x123\n" +
 	"/IDLE_STOP_NOT_APPLICABLE_REASON_ALREADY_STOPPED\x10\x02\x125\n" +
-	"1IDLE_STOP_NOT_APPLICABLE_REASON_STATE_UNAVAILABLE\x10\x03*\xc5\x02\n" +
+	"1IDLE_STOP_NOT_APPLICABLE_REASON_STATE_UNAVAILABLE\x10\x03*\x8d\x02\n" +
 	"\x16RuntimeReconcileAction\x12(\n" +
 	"$RUNTIME_RECONCILE_ACTION_UNSPECIFIED\x10\x00\x122\n" +
-	".RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME\x10\x01\x126\n" +
-	"2RUNTIME_RECONCILE_ACTION_REPORT_RUNTIME_TRANSITION\x10\x02\x12.\n" +
-	"*RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION\x10\x03\x12/\n" +
-	"+RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME\x10\x04\x124\n" +
-	"0RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT\x10\x05B7Z5gitea.dev/codespace-proto-go/codespace/v1;codespacev1b\x06proto3"
+	".RUNTIME_RECONCILE_ACTION_CLEANUP_LOCAL_RUNTIME\x10\x01\x12.\n" +
+	"*RUNTIME_RECONCILE_ACTION_REFETCH_OPERATION\x10\x02\x12/\n" +
+	"+RUNTIME_RECONCILE_ACTION_STOP_LOCAL_RUNTIME\x10\x03\x124\n" +
+	"0RUNTIME_RECONCILE_ACTION_CLEAR_OPERATION_CONTEXT\x10\x04B7Z5gitea.dev/codespace-proto-go/codespace/v1;codespacev1b\x06proto3"
 
 var (
 	file_codespace_v1_types_proto_rawDescOnce sync.Once
@@ -5163,7 +5054,7 @@ func file_codespace_v1_types_proto_rawDescGZIP() []byte {
 }
 
 var file_codespace_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 70)
+var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 68)
 var file_codespace_v1_types_proto_goTypes = []any{
 	(ManagerRuntimeState)(0),                  // 0: codespace.v1.ManagerRuntimeState
 	(AcceptedOperationType)(0),                // 1: codespace.v1.AcceptedOperationType
@@ -5234,16 +5125,14 @@ var file_codespace_v1_types_proto_goTypes = []any{
 	(*RuntimeInstanceRef)(nil),                // 66: codespace.v1.RuntimeInstanceRef
 	(*ReportInstancesResponse)(nil),           // 67: codespace.v1.ReportInstancesResponse
 	(*RuntimeInstanceResult)(nil),             // 68: codespace.v1.RuntimeInstanceResult
-	(*ReportRuntimeTransitionRequest)(nil),    // 69: codespace.v1.ReportRuntimeTransitionRequest
-	(*ReportRuntimeTransitionResponse)(nil),   // 70: codespace.v1.ReportRuntimeTransitionResponse
-	(*RevalidateGatewaySessionRequest)(nil),   // 71: codespace.v1.RevalidateGatewaySessionRequest
-	(*EndpointSessionBinding)(nil),            // 72: codespace.v1.EndpointSessionBinding
-	(*SSHSessionBinding)(nil),                 // 73: codespace.v1.SSHSessionBinding
-	(*RevalidateGatewaySessionResponse)(nil),  // 74: codespace.v1.RevalidateGatewaySessionResponse
-	(*SessionAllowed)(nil),                    // 75: codespace.v1.SessionAllowed
-	(*FailureDetail)(nil),                     // 76: codespace.v1.FailureDetail
-	(*StaleGenerationDetail)(nil),             // 77: codespace.v1.StaleGenerationDetail
-	(*LogOffsetDetail)(nil),                   // 78: codespace.v1.LogOffsetDetail
+	(*RevalidateGatewaySessionRequest)(nil),   // 69: codespace.v1.RevalidateGatewaySessionRequest
+	(*EndpointSessionBinding)(nil),            // 70: codespace.v1.EndpointSessionBinding
+	(*SSHSessionBinding)(nil),                 // 71: codespace.v1.SSHSessionBinding
+	(*RevalidateGatewaySessionResponse)(nil),  // 72: codespace.v1.RevalidateGatewaySessionResponse
+	(*SessionAllowed)(nil),                    // 73: codespace.v1.SessionAllowed
+	(*FailureDetail)(nil),                     // 74: codespace.v1.FailureDetail
+	(*StaleGenerationDetail)(nil),             // 75: codespace.v1.StaleGenerationDetail
+	(*LogOffsetDetail)(nil),                   // 76: codespace.v1.LogOffsetDetail
 }
 var file_codespace_v1_types_proto_depIdxs = []int32{
 	9,  // 0: codespace.v1.DeclareManagerRequest.environments:type_name -> codespace.v1.EnvironmentTag
@@ -5286,26 +5175,25 @@ var file_codespace_v1_types_proto_depIdxs = []int32{
 	50, // 37: codespace.v1.IdleStopObservationChanged.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
 	7,  // 38: codespace.v1.IdleStopNotApplicable.reason:type_name -> codespace.v1.IdleStopNotApplicableReason
 	58, // 39: codespace.v1.ValidateOpenTokenResponse.allowed:type_name -> codespace.v1.OpenTokenBinding
-	76, // 40: codespace.v1.ValidateOpenTokenResponse.denied:type_name -> codespace.v1.FailureDetail
+	74, // 40: codespace.v1.ValidateOpenTokenResponse.denied:type_name -> codespace.v1.FailureDetail
 	61, // 41: codespace.v1.ValidatePublicEndpointResponse.allowed:type_name -> codespace.v1.PublicEndpointAllowed
-	76, // 42: codespace.v1.ValidatePublicEndpointResponse.denied:type_name -> codespace.v1.FailureDetail
+	74, // 42: codespace.v1.ValidatePublicEndpointResponse.denied:type_name -> codespace.v1.FailureDetail
 	64, // 43: codespace.v1.VerifySSHPublicKeyResponse.allowed:type_name -> codespace.v1.SSHAuthBinding
-	76, // 44: codespace.v1.VerifySSHPublicKeyResponse.denied:type_name -> codespace.v1.FailureDetail
+	74, // 44: codespace.v1.VerifySSHPublicKeyResponse.denied:type_name -> codespace.v1.FailureDetail
 	66, // 45: codespace.v1.ReportInstancesRequest.instances:type_name -> codespace.v1.RuntimeInstanceRef
 	5,  // 46: codespace.v1.RuntimeInstanceRef.runtime_state:type_name -> codespace.v1.RuntimeState
 	68, // 47: codespace.v1.ReportInstancesResponse.results:type_name -> codespace.v1.RuntimeInstanceResult
 	50, // 48: codespace.v1.RuntimeInstanceResult.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
 	8,  // 49: codespace.v1.RuntimeInstanceResult.action:type_name -> codespace.v1.RuntimeReconcileAction
-	5,  // 50: codespace.v1.ReportRuntimeTransitionRequest.runtime_state:type_name -> codespace.v1.RuntimeState
-	72, // 51: codespace.v1.RevalidateGatewaySessionRequest.endpoint:type_name -> codespace.v1.EndpointSessionBinding
-	73, // 52: codespace.v1.RevalidateGatewaySessionRequest.ssh:type_name -> codespace.v1.SSHSessionBinding
-	75, // 53: codespace.v1.RevalidateGatewaySessionResponse.allowed:type_name -> codespace.v1.SessionAllowed
-	76, // 54: codespace.v1.RevalidateGatewaySessionResponse.denied:type_name -> codespace.v1.FailureDetail
-	55, // [55:55] is the sub-list for method output_type
-	55, // [55:55] is the sub-list for method input_type
-	55, // [55:55] is the sub-list for extension type_name
-	55, // [55:55] is the sub-list for extension extendee
-	0,  // [0:55] is the sub-list for field type_name
+	70, // 50: codespace.v1.RevalidateGatewaySessionRequest.endpoint:type_name -> codespace.v1.EndpointSessionBinding
+	71, // 51: codespace.v1.RevalidateGatewaySessionRequest.ssh:type_name -> codespace.v1.SSHSessionBinding
+	73, // 52: codespace.v1.RevalidateGatewaySessionResponse.allowed:type_name -> codespace.v1.SessionAllowed
+	74, // 53: codespace.v1.RevalidateGatewaySessionResponse.denied:type_name -> codespace.v1.FailureDetail
+	54, // [54:54] is the sub-list for method output_type
+	54, // [54:54] is the sub-list for method input_type
+	54, // [54:54] is the sub-list for extension type_name
+	54, // [54:54] is the sub-list for extension extendee
+	0,  // [0:54] is the sub-list for field type_name
 }
 
 func init() { file_codespace_v1_types_proto_init() }
@@ -5342,11 +5230,11 @@ func file_codespace_v1_types_proto_init() {
 		(*VerifySSHPublicKeyResponse_Allowed)(nil),
 		(*VerifySSHPublicKeyResponse_Denied)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[62].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[60].OneofWrappers = []any{
 		(*RevalidateGatewaySessionRequest_Endpoint)(nil),
 		(*RevalidateGatewaySessionRequest_Ssh)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[65].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[63].OneofWrappers = []any{
 		(*RevalidateGatewaySessionResponse_Allowed)(nil),
 		(*RevalidateGatewaySessionResponse_Denied)(nil),
 	}
@@ -5356,7 +5244,7 @@ func file_codespace_v1_types_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_codespace_v1_types_proto_rawDesc), len(file_codespace_v1_types_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   70,
+			NumMessages:   68,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

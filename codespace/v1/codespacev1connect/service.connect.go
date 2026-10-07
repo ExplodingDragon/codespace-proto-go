@@ -72,9 +72,6 @@ const (
 	// ManagerServiceReportInstancesProcedure is the fully-qualified name of the ManagerService's
 	// ReportInstances RPC.
 	ManagerServiceReportInstancesProcedure = "/codespace.v1.ManagerService/ReportInstances"
-	// ManagerServiceReportRuntimeTransitionProcedure is the fully-qualified name of the
-	// ManagerService's ReportRuntimeTransition RPC.
-	ManagerServiceReportRuntimeTransitionProcedure = "/codespace.v1.ManagerService/ReportRuntimeTransition"
 	// ManagerServiceRevalidateGatewaySessionProcedure is the fully-qualified name of the
 	// ManagerService's RevalidateGatewaySession RPC.
 	ManagerServiceRevalidateGatewaySessionProcedure = "/codespace.v1.ManagerService/RevalidateGatewaySession"
@@ -108,8 +105,6 @@ type ManagerServiceClient interface {
 	VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error)
 	// ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
 	ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error)
-	// ReportRuntimeTransition reports a Manager-initiated stopped or failed fact.
-	ReportRuntimeTransition(context.Context, *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error)
 	// RevalidateGatewaySession checks an existing Endpoint or SSH session.
 	RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error)
 }
@@ -203,12 +198,6 @@ func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(managerServiceMethods.ByName("ReportInstances")),
 			connect.WithClientOptions(opts...),
 		),
-		reportRuntimeTransition: connect.NewClient[v1.ReportRuntimeTransitionRequest, v1.ReportRuntimeTransitionResponse](
-			httpClient,
-			baseURL+ManagerServiceReportRuntimeTransitionProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeTransition")),
-			connect.WithClientOptions(opts...),
-		),
 		revalidateGatewaySession: connect.NewClient[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse](
 			httpClient,
 			baseURL+ManagerServiceRevalidateGatewaySessionProcedure,
@@ -233,7 +222,6 @@ type managerServiceClient struct {
 	validatePublicEndpoint   *connect.Client[v1.ValidatePublicEndpointRequest, v1.ValidatePublicEndpointResponse]
 	verifySSHPublicKey       *connect.Client[v1.VerifySSHPublicKeyRequest, v1.VerifySSHPublicKeyResponse]
 	reportInstances          *connect.Client[v1.ReportInstancesRequest, v1.ReportInstancesResponse]
-	reportRuntimeTransition  *connect.Client[v1.ReportRuntimeTransitionRequest, v1.ReportRuntimeTransitionResponse]
 	revalidateGatewaySession *connect.Client[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse]
 }
 
@@ -302,11 +290,6 @@ func (c *managerServiceClient) ReportInstances(ctx context.Context, req *connect
 	return c.reportInstances.CallUnary(ctx, req)
 }
 
-// ReportRuntimeTransition calls codespace.v1.ManagerService.ReportRuntimeTransition.
-func (c *managerServiceClient) ReportRuntimeTransition(ctx context.Context, req *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error) {
-	return c.reportRuntimeTransition.CallUnary(ctx, req)
-}
-
 // RevalidateGatewaySession calls codespace.v1.ManagerService.RevalidateGatewaySession.
 func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error) {
 	return c.revalidateGatewaySession.CallUnary(ctx, req)
@@ -340,8 +323,6 @@ type ManagerServiceHandler interface {
 	VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error)
 	// ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
 	ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error)
-	// ReportRuntimeTransition reports a Manager-initiated stopped or failed fact.
-	ReportRuntimeTransition(context.Context, *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error)
 	// RevalidateGatewaySession checks an existing Endpoint or SSH session.
 	RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error)
 }
@@ -431,12 +412,6 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 		connect.WithSchema(managerServiceMethods.ByName("ReportInstances")),
 		connect.WithHandlerOptions(opts...),
 	)
-	managerServiceReportRuntimeTransitionHandler := connect.NewUnaryHandler(
-		ManagerServiceReportRuntimeTransitionProcedure,
-		svc.ReportRuntimeTransition,
-		connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeTransition")),
-		connect.WithHandlerOptions(opts...),
-	)
 	managerServiceRevalidateGatewaySessionHandler := connect.NewUnaryHandler(
 		ManagerServiceRevalidateGatewaySessionProcedure,
 		svc.RevalidateGatewaySession,
@@ -471,8 +446,6 @@ func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.Handler
 			managerServiceVerifySSHPublicKeyHandler.ServeHTTP(w, r)
 		case ManagerServiceReportInstancesProcedure:
 			managerServiceReportInstancesHandler.ServeHTTP(w, r)
-		case ManagerServiceReportRuntimeTransitionProcedure:
-			managerServiceReportRuntimeTransitionHandler.ServeHTTP(w, r)
 		case ManagerServiceRevalidateGatewaySessionProcedure:
 			managerServiceRevalidateGatewaySessionHandler.ServeHTTP(w, r)
 		default:
@@ -534,10 +507,6 @@ func (UnimplementedManagerServiceHandler) VerifySSHPublicKey(context.Context, *c
 
 func (UnimplementedManagerServiceHandler) ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportInstances is not implemented"))
-}
-
-func (UnimplementedManagerServiceHandler) ReportRuntimeTransition(context.Context, *connect.Request[v1.ReportRuntimeTransitionRequest]) (*connect.Response[v1.ReportRuntimeTransitionResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportRuntimeTransition is not implemented"))
 }
 
 func (UnimplementedManagerServiceHandler) RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error) {

@@ -1,78 +1,55 @@
 # Gitea Codespace Protocol for Go
 
-This repository contains the Protocol Buffer definitions and generated Go
-bindings shared by Gitea and the Gitea Codespace manager. Keeping the source
-protocol and generated packages in one Go module makes each protocol change
-reviewable and consumable as a single revision.
+This module contains the Protocol Buffer sources and generated Go bindings
+shared by Gitea Codespace. Protocol changes and generated packages are reviewed
+and released together so every consumer can depend on one module revision.
 
-## Repository layout
+## Packages
 
-- [`proto/codespace/v1`](proto/codespace/v1) contains the source Protocol Buffer
-  definitions.
-- [`codespace/v1`](codespace/v1) contains the generated protobuf messages and
-  protocol checks.
-- [`codespace/v1/codespacev1connect`](codespace/v1/codespacev1connect) contains
-  the generated Connect RPC client and server bindings.
+| Package | Boundary |
+| --- | --- |
+| `codespace/v1` | Gitea and Manager lifecycle control |
+| `component/v1` | Manager, Gateway, and Cache control |
+| `agent/v1` | Manager, Runtime Agent, and Gateway streams |
 
-Application behavior does not belong in this module. Gitea implements the
-control plane, while the Codespace manager and gateway consume these types to
-implement runtime operations.
+The matching sources live below `proto/`. Generated Connect clients and servers
+are in each package's `*connect` directory. This module defines wire contracts;
+authorization, persistence, and runtime behavior remain in Gitea or the
+Codespace implementation.
 
-## Requirements
+## Toolchain
 
-- Go 1.26.4 or later.
-- `buf`, `protoc-gen-go`, and `protoc-gen-connect-go` for linting or regenerating
-  bindings.
+Use the Go version declared in [`go.mod`](go.mod). Install the pinned Protocol
+Buffer tools with:
 
-Install the pinned generator toolchain with:
-
-```bash
+```sh
 make install
 ```
 
-The tools are installed in the standard Go binary directory selected by
-`go env GOBIN` or `go env GOPATH`.
+The command uses the standard Go binary directory selected by `go env GOBIN`
+or `go env GOPATH`.
 
-## Generate bindings
+## Generate and validate
 
-After changing a file under `proto/`, format and regenerate the checked-in Go
+After changing a file below `proto/`, format and regenerate the checked-in Go
 bindings:
 
-```bash
+```sh
 make format
 make generate
 ```
 
-Generation writes directly to `codespace/v1` because the protobuf `go_package`
-is `gitea.dev/codespace-proto-go/codespace/v1`. There is no separate generated
-repository or intermediate `gen` directory.
+Validate source style, generated contracts, and the module tests with:
 
-## Validation
-
-Check protocol style and formatting:
-
-```bash
+```sh
 make lint
-```
-
-Run the Go tests that verify the generated service names and protocol field
-contracts:
-
-```bash
 make test
 ```
 
-Run the complete protocol workflow before submitting a change:
-
-```bash
-make build
-```
-
-`make build` runs linting, regeneration, and tests in that order. Generated
-changes must be committed together with their source `.proto` changes so both
-consumers use the same contract.
+`make build` runs linting, generation, and tests as the complete protocol
+workflow. Commit generated changes with their `.proto` sources, then update the
+published dependency in Gitea and Codespace.
 
 ## License
 
-This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for the
-full text.
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE).

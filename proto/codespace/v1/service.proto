@@ -47,9 +47,6 @@ service ManagerService {
   // ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
   rpc ReportInstances(ReportInstancesRequest) returns (ReportInstancesResponse);
 
-  // ReportRuntimeTransition reports a Manager-initiated stopped or failed fact.
-  rpc ReportRuntimeTransition(ReportRuntimeTransitionRequest) returns (ReportRuntimeTransitionResponse);
-
   // RevalidateGatewaySession checks an existing Endpoint or SSH session.
   rpc RevalidateGatewaySession(RevalidateGatewaySessionRequest) returns (RevalidateGatewaySessionResponse);
 }

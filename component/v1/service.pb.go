@@ -7,6 +7,7 @@
 package componentv1
 
 import (
+	v1 "gitea.dev/codespace-proto-go/agent/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -21,27 +22,30 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetGatewayConfigRequest struct {
+type GatewayControlRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	SessionId       string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	Sequence        uint64                 `protobuf:"varint,3,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	ActiveSessions  map[string]int64       `protobuf:"bytes,4,rep,name=active_sessions,json=activeSessions,proto3" json:"active_sessions,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *GetGatewayConfigRequest) Reset() {
-	*x = GetGatewayConfigRequest{}
+func (x *GatewayControlRequest) Reset() {
+	*x = GatewayControlRequest{}
 	mi := &file_component_v1_service_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetGatewayConfigRequest) String() string {
+func (x *GatewayControlRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetGatewayConfigRequest) ProtoMessage() {}
+func (*GatewayControlRequest) ProtoMessage() {}
 
-func (x *GetGatewayConfigRequest) ProtoReflect() protoreflect.Message {
+func (x *GatewayControlRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_component_v1_service_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,42 +57,66 @@ func (x *GetGatewayConfigRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetGatewayConfigRequest.ProtoReflect.Descriptor instead.
-func (*GetGatewayConfigRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GatewayControlRequest.ProtoReflect.Descriptor instead.
+func (*GatewayControlRequest) Descriptor() ([]byte, []int) {
 	return file_component_v1_service_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetGatewayConfigRequest) GetProtocolVersion() uint32 {
+func (x *GatewayControlRequest) GetProtocolVersion() uint32 {
 	if x != nil {
 		return x.ProtocolVersion
 	}
 	return 0
 }
 
-type GetGatewayConfigResponse struct {
-	state         protoimpl.MessageState    `protogen:"open.v1"`
-	Revision      uint64                    `protobuf:"varint,1,opt,name=revision,proto3" json:"revision,omitempty"`
-	Config        *GatewayConfiguration     `protobuf:"bytes,2,opt,name=config,proto3" json:"config,omitempty"`
-	Placements    []*RuntimeBinding         `protobuf:"bytes,3,rep,name=placements,proto3" json:"placements,omitempty"`
-	Runtimes      []*GatewayRuntimeSnapshot `protobuf:"bytes,4,rep,name=runtimes,proto3" json:"runtimes,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *GatewayControlRequest) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
 }
 
-func (x *GetGatewayConfigResponse) Reset() {
-	*x = GetGatewayConfigResponse{}
+func (x *GatewayControlRequest) GetSequence() uint64 {
+	if x != nil {
+		return x.Sequence
+	}
+	return 0
+}
+
+func (x *GatewayControlRequest) GetActiveSessions() map[string]int64 {
+	if x != nil {
+		return x.ActiveSessions
+	}
+	return nil
+}
+
+type GatewayControlResponse struct {
+	state                      protoimpl.MessageState        `protogen:"open.v1"`
+	ProtocolVersion            uint32                        `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	Sequence                   uint64                        `protobuf:"varint,2,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	PermitValidForMilliseconds int64                         `protobuf:"varint,3,opt,name=permit_valid_for_milliseconds,json=permitValidForMilliseconds,proto3" json:"permit_valid_for_milliseconds,omitempty"`
+	Cursor                     string                        `protobuf:"bytes,4,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	Snapshot                   bool                          `protobuf:"varint,5,opt,name=snapshot,proto3" json:"snapshot,omitempty"`
+	Config                     *GatewayConfigurationSnapshot `protobuf:"bytes,6,opt,name=config,proto3" json:"config,omitempty"`
+	Runtimes                   []*GatewayRuntimeRoute        `protobuf:"bytes,7,rep,name=runtimes,proto3" json:"runtimes,omitempty"`
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
+}
+
+func (x *GatewayControlResponse) Reset() {
+	*x = GatewayControlResponse{}
 	mi := &file_component_v1_service_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetGatewayConfigResponse) String() string {
+func (x *GatewayControlResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetGatewayConfigResponse) ProtoMessage() {}
+func (*GatewayControlResponse) ProtoMessage() {}
 
-func (x *GetGatewayConfigResponse) ProtoReflect() protoreflect.Message {
+func (x *GatewayControlResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_component_v1_service_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -100,61 +128,92 @@ func (x *GetGatewayConfigResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetGatewayConfigResponse.ProtoReflect.Descriptor instead.
-func (*GetGatewayConfigResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GatewayControlResponse.ProtoReflect.Descriptor instead.
+func (*GatewayControlResponse) Descriptor() ([]byte, []int) {
 	return file_component_v1_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetGatewayConfigResponse) GetRevision() uint64 {
+func (x *GatewayControlResponse) GetProtocolVersion() uint32 {
 	if x != nil {
-		return x.Revision
+		return x.ProtocolVersion
 	}
 	return 0
 }
 
-func (x *GetGatewayConfigResponse) GetConfig() *GatewayConfiguration {
+func (x *GatewayControlResponse) GetSequence() uint64 {
+	if x != nil {
+		return x.Sequence
+	}
+	return 0
+}
+
+func (x *GatewayControlResponse) GetPermitValidForMilliseconds() int64 {
+	if x != nil {
+		return x.PermitValidForMilliseconds
+	}
+	return 0
+}
+
+func (x *GatewayControlResponse) GetCursor() string {
+	if x != nil {
+		return x.Cursor
+	}
+	return ""
+}
+
+func (x *GatewayControlResponse) GetSnapshot() bool {
+	if x != nil {
+		return x.Snapshot
+	}
+	return false
+}
+
+func (x *GatewayControlResponse) GetConfig() *GatewayConfigurationSnapshot {
 	if x != nil {
 		return x.Config
 	}
 	return nil
 }
 
-func (x *GetGatewayConfigResponse) GetPlacements() []*RuntimeBinding {
-	if x != nil {
-		return x.Placements
-	}
-	return nil
-}
-
-func (x *GetGatewayConfigResponse) GetRuntimes() []*GatewayRuntimeSnapshot {
+func (x *GatewayControlResponse) GetRuntimes() []*GatewayRuntimeRoute {
 	if x != nil {
 		return x.Runtimes
 	}
 	return nil
 }
 
-type WatchGatewayConfigRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	Revision        uint64                 `protobuf:"varint,2,opt,name=revision,proto3" json:"revision,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+type GatewayConfigurationSnapshot struct {
+	state                          protoimpl.MessageState `protogen:"open.v1"`
+	HttpListen                     string                 `protobuf:"bytes,1,opt,name=http_listen,json=httpListen,proto3" json:"http_listen,omitempty"`
+	PublicUrl                      string                 `protobuf:"bytes,2,opt,name=public_url,json=publicUrl,proto3" json:"public_url,omitempty"`
+	SshListen                      string                 `protobuf:"bytes,3,opt,name=ssh_listen,json=sshListen,proto3" json:"ssh_listen,omitempty"`
+	SshPublicAddress               string                 `protobuf:"bytes,4,opt,name=ssh_public_address,json=sshPublicAddress,proto3" json:"ssh_public_address,omitempty"`
+	SessionTtlMilliseconds         int64                  `protobuf:"varint,5,opt,name=session_ttl_milliseconds,json=sessionTtlMilliseconds,proto3" json:"session_ttl_milliseconds,omitempty"`
+	SessionIdleTimeoutMilliseconds int64                  `protobuf:"varint,6,opt,name=session_idle_timeout_milliseconds,json=sessionIdleTimeoutMilliseconds,proto3" json:"session_idle_timeout_milliseconds,omitempty"`
+	RevalidateIntervalMilliseconds int64                  `protobuf:"varint,7,opt,name=revalidate_interval_milliseconds,json=revalidateIntervalMilliseconds,proto3" json:"revalidate_interval_milliseconds,omitempty"`
+	MaxSessionsPerCodespace        int32                  `protobuf:"varint,8,opt,name=max_sessions_per_codespace,json=maxSessionsPerCodespace,proto3" json:"max_sessions_per_codespace,omitempty"`
+	MaxSessionsPerUser             int32                  `protobuf:"varint,9,opt,name=max_sessions_per_user,json=maxSessionsPerUser,proto3" json:"max_sessions_per_user,omitempty"`
+	MaxInflight                    int32                  `protobuf:"varint,10,opt,name=max_inflight,json=maxInflight,proto3" json:"max_inflight,omitempty"`
+	MaxInflightPerSession          int32                  `protobuf:"varint,11,opt,name=max_inflight_per_session,json=maxInflightPerSession,proto3" json:"max_inflight_per_session,omitempty"`
+	MaxChannelsPerSshConnection    int32                  `protobuf:"varint,12,opt,name=max_channels_per_ssh_connection,json=maxChannelsPerSshConnection,proto3" json:"max_channels_per_ssh_connection,omitempty"`
+	unknownFields                  protoimpl.UnknownFields
+	sizeCache                      protoimpl.SizeCache
 }
 
-func (x *WatchGatewayConfigRequest) Reset() {
-	*x = WatchGatewayConfigRequest{}
+func (x *GatewayConfigurationSnapshot) Reset() {
+	*x = GatewayConfigurationSnapshot{}
 	mi := &file_component_v1_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *WatchGatewayConfigRequest) String() string {
+func (x *GatewayConfigurationSnapshot) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WatchGatewayConfigRequest) ProtoMessage() {}
+func (*GatewayConfigurationSnapshot) ProtoMessage() {}
 
-func (x *WatchGatewayConfigRequest) ProtoReflect() protoreflect.Message {
+func (x *GatewayConfigurationSnapshot) ProtoReflect() protoreflect.Message {
 	mi := &file_component_v1_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -166,791 +225,124 @@ func (x *WatchGatewayConfigRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use WatchGatewayConfigRequest.ProtoReflect.Descriptor instead.
-func (*WatchGatewayConfigRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GatewayConfigurationSnapshot.ProtoReflect.Descriptor instead.
+func (*GatewayConfigurationSnapshot) Descriptor() ([]byte, []int) {
 	return file_component_v1_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *WatchGatewayConfigRequest) GetProtocolVersion() uint32 {
+func (x *GatewayConfigurationSnapshot) GetHttpListen() string {
 	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *WatchGatewayConfigRequest) GetRevision() uint64 {
-	if x != nil {
-		return x.Revision
-	}
-	return 0
-}
-
-type WatchGatewayConfigResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Revision      uint64                 `protobuf:"varint,1,opt,name=revision,proto3" json:"revision,omitempty"`
-	Reset_        bool                   `protobuf:"varint,2,opt,name=reset,proto3" json:"reset,omitempty"`
-	Config        *GatewayConfiguration  `protobuf:"bytes,3,opt,name=config,proto3" json:"config,omitempty"`
-	RuntimeEvents []*GatewayRuntimeEvent `protobuf:"bytes,4,rep,name=runtime_events,json=runtimeEvents,proto3" json:"runtime_events,omitempty"`
-	BindingEvents []*RuntimeBindingEvent `protobuf:"bytes,5,rep,name=binding_events,json=bindingEvents,proto3" json:"binding_events,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *WatchGatewayConfigResponse) Reset() {
-	*x = WatchGatewayConfigResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *WatchGatewayConfigResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*WatchGatewayConfigResponse) ProtoMessage() {}
-
-func (x *WatchGatewayConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use WatchGatewayConfigResponse.ProtoReflect.Descriptor instead.
-func (*WatchGatewayConfigResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *WatchGatewayConfigResponse) GetRevision() uint64 {
-	if x != nil {
-		return x.Revision
-	}
-	return 0
-}
-
-func (x *WatchGatewayConfigResponse) GetReset_() bool {
-	if x != nil {
-		return x.Reset_
-	}
-	return false
-}
-
-func (x *WatchGatewayConfigResponse) GetConfig() *GatewayConfiguration {
-	if x != nil {
-		return x.Config
-	}
-	return nil
-}
-
-func (x *WatchGatewayConfigResponse) GetRuntimeEvents() []*GatewayRuntimeEvent {
-	if x != nil {
-		return x.RuntimeEvents
-	}
-	return nil
-}
-
-func (x *WatchGatewayConfigResponse) GetBindingEvents() []*RuntimeBindingEvent {
-	if x != nil {
-		return x.BindingEvents
-	}
-	return nil
-}
-
-type ReportGatewayActivityRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	InstanceId      string                 `protobuf:"bytes,2,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	Counts          map[string]int64       `protobuf:"bytes,3,rep,name=counts,proto3" json:"counts,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	Release         bool                   `protobuf:"varint,4,opt,name=release,proto3" json:"release,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *ReportGatewayActivityRequest) Reset() {
-	*x = ReportGatewayActivityRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReportGatewayActivityRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReportGatewayActivityRequest) ProtoMessage() {}
-
-func (x *ReportGatewayActivityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReportGatewayActivityRequest.ProtoReflect.Descriptor instead.
-func (*ReportGatewayActivityRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ReportGatewayActivityRequest) GetProtocolVersion() uint32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *ReportGatewayActivityRequest) GetInstanceId() string {
-	if x != nil {
-		return x.InstanceId
+		return x.HttpListen
 	}
 	return ""
 }
 
-func (x *ReportGatewayActivityRequest) GetCounts() map[string]int64 {
-	if x != nil {
-		return x.Counts
-	}
-	return nil
-}
-
-func (x *ReportGatewayActivityRequest) GetRelease() bool {
-	if x != nil {
-		return x.Release
-	}
-	return false
-}
-
-type ReportGatewayActivityResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReportGatewayActivityResponse) Reset() {
-	*x = ReportGatewayActivityResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReportGatewayActivityResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReportGatewayActivityResponse) ProtoMessage() {}
-
-func (x *ReportGatewayActivityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReportGatewayActivityResponse.ProtoReflect.Descriptor instead.
-func (*ReportGatewayActivityResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{5}
-}
-
-type GatewayConfiguration struct {
-	state                    protoimpl.MessageState     `protogen:"open.v1"`
-	Node                     *NodeConfiguration         `protobuf:"bytes,1,opt,name=node,proto3" json:"node,omitempty"`
-	Gateway                  *GatewayConfigurationValue `protobuf:"bytes,2,opt,name=gateway,proto3" json:"gateway,omitempty"`
-	Sites                    []*ComponentSite           `protobuf:"bytes,3,rep,name=sites,proto3" json:"sites,omitempty"`
-	Backends                 []*ComponentBackend        `protobuf:"bytes,4,rep,name=backends,proto3" json:"backends,omitempty"`
-	SshPrivateKey            []byte                     `protobuf:"bytes,5,opt,name=ssh_private_key,json=sshPrivateKey,proto3" json:"ssh_private_key,omitempty"`
-	SshPrivateKeyUpdatedUnix int64                      `protobuf:"varint,6,opt,name=ssh_private_key_updated_unix,json=sshPrivateKeyUpdatedUnix,proto3" json:"ssh_private_key_updated_unix,omitempty"`
-	unknownFields            protoimpl.UnknownFields
-	sizeCache                protoimpl.SizeCache
-}
-
-func (x *GatewayConfiguration) Reset() {
-	*x = GatewayConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewayConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewayConfiguration) ProtoMessage() {}
-
-func (x *GatewayConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewayConfiguration.ProtoReflect.Descriptor instead.
-func (*GatewayConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *GatewayConfiguration) GetNode() *NodeConfiguration {
-	if x != nil {
-		return x.Node
-	}
-	return nil
-}
-
-func (x *GatewayConfiguration) GetGateway() *GatewayConfigurationValue {
-	if x != nil {
-		return x.Gateway
-	}
-	return nil
-}
-
-func (x *GatewayConfiguration) GetSites() []*ComponentSite {
-	if x != nil {
-		return x.Sites
-	}
-	return nil
-}
-
-func (x *GatewayConfiguration) GetBackends() []*ComponentBackend {
-	if x != nil {
-		return x.Backends
-	}
-	return nil
-}
-
-func (x *GatewayConfiguration) GetSshPrivateKey() []byte {
-	if x != nil {
-		return x.SshPrivateKey
-	}
-	return nil
-}
-
-func (x *GatewayConfiguration) GetSshPrivateKeyUpdatedUnix() int64 {
-	if x != nil {
-		return x.SshPrivateKeyUpdatedUnix
-	}
-	return 0
-}
-
-type NodeConfiguration struct {
-	state                       protoimpl.MessageState `protogen:"open.v1"`
-	HttpTimeoutMilliseconds     int64                  `protobuf:"varint,1,opt,name=http_timeout_milliseconds,json=httpTimeoutMilliseconds,proto3" json:"http_timeout_milliseconds,omitempty"`
-	ShutdownTimeoutMilliseconds int64                  `protobuf:"varint,2,opt,name=shutdown_timeout_milliseconds,json=shutdownTimeoutMilliseconds,proto3" json:"shutdown_timeout_milliseconds,omitempty"`
-	unknownFields               protoimpl.UnknownFields
-	sizeCache                   protoimpl.SizeCache
-}
-
-func (x *NodeConfiguration) Reset() {
-	*x = NodeConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NodeConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NodeConfiguration) ProtoMessage() {}
-
-func (x *NodeConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NodeConfiguration.ProtoReflect.Descriptor instead.
-func (*NodeConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *NodeConfiguration) GetHttpTimeoutMilliseconds() int64 {
-	if x != nil {
-		return x.HttpTimeoutMilliseconds
-	}
-	return 0
-}
-
-func (x *NodeConfiguration) GetShutdownTimeoutMilliseconds() int64 {
-	if x != nil {
-		return x.ShutdownTimeoutMilliseconds
-	}
-	return 0
-}
-
-type GatewayConfigurationValue struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Http          *GatewayHTTPConfiguration    `protobuf:"bytes,1,opt,name=http,proto3" json:"http,omitempty"`
-	Ssh           *GatewaySSHConfiguration     `protobuf:"bytes,2,opt,name=ssh,proto3" json:"ssh,omitempty"`
-	Sessions      *GatewaySessionConfiguration `protobuf:"bytes,3,opt,name=sessions,proto3" json:"sessions,omitempty"`
-	Limits        *GatewayLimitsConfiguration  `protobuf:"bytes,4,opt,name=limits,proto3" json:"limits,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GatewayConfigurationValue) Reset() {
-	*x = GatewayConfigurationValue{}
-	mi := &file_component_v1_service_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewayConfigurationValue) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewayConfigurationValue) ProtoMessage() {}
-
-func (x *GatewayConfigurationValue) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewayConfigurationValue.ProtoReflect.Descriptor instead.
-func (*GatewayConfigurationValue) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *GatewayConfigurationValue) GetHttp() *GatewayHTTPConfiguration {
-	if x != nil {
-		return x.Http
-	}
-	return nil
-}
-
-func (x *GatewayConfigurationValue) GetSsh() *GatewaySSHConfiguration {
-	if x != nil {
-		return x.Ssh
-	}
-	return nil
-}
-
-func (x *GatewayConfigurationValue) GetSessions() *GatewaySessionConfiguration {
-	if x != nil {
-		return x.Sessions
-	}
-	return nil
-}
-
-func (x *GatewayConfigurationValue) GetLimits() *GatewayLimitsConfiguration {
-	if x != nil {
-		return x.Limits
-	}
-	return nil
-}
-
-type GatewayHTTPConfiguration struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Listen        string                 `protobuf:"bytes,1,opt,name=listen,proto3" json:"listen,omitempty"`
-	PublicUrl     string                 `protobuf:"bytes,2,opt,name=public_url,json=publicUrl,proto3" json:"public_url,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GatewayHTTPConfiguration) Reset() {
-	*x = GatewayHTTPConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewayHTTPConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewayHTTPConfiguration) ProtoMessage() {}
-
-func (x *GatewayHTTPConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewayHTTPConfiguration.ProtoReflect.Descriptor instead.
-func (*GatewayHTTPConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *GatewayHTTPConfiguration) GetListen() string {
-	if x != nil {
-		return x.Listen
-	}
-	return ""
-}
-
-func (x *GatewayHTTPConfiguration) GetPublicUrl() string {
+func (x *GatewayConfigurationSnapshot) GetPublicUrl() string {
 	if x != nil {
 		return x.PublicUrl
 	}
 	return ""
 }
 
-type GatewaySSHConfiguration struct {
-	state                        protoimpl.MessageState       `protogen:"open.v1"`
-	Listen                       string                       `protobuf:"bytes,1,opt,name=listen,proto3" json:"listen,omitempty"`
-	PublicAddr                   string                       `protobuf:"bytes,2,opt,name=public_addr,json=publicAddr,proto3" json:"public_addr,omitempty"`
-	HandshakeTimeoutMilliseconds int64                        `protobuf:"varint,3,opt,name=handshake_timeout_milliseconds,json=handshakeTimeoutMilliseconds,proto3" json:"handshake_timeout_milliseconds,omitempty"`
-	MaxChannelsPerConnection     int32                        `protobuf:"varint,4,opt,name=max_channels_per_connection,json=maxChannelsPerConnection,proto3" json:"max_channels_per_connection,omitempty"`
-	Auth                         *GatewaySSHAuthConfiguration `protobuf:"bytes,5,opt,name=auth,proto3" json:"auth,omitempty"`
-	unknownFields                protoimpl.UnknownFields
-	sizeCache                    protoimpl.SizeCache
-}
-
-func (x *GatewaySSHConfiguration) Reset() {
-	*x = GatewaySSHConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewaySSHConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewaySSHConfiguration) ProtoMessage() {}
-
-func (x *GatewaySSHConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[10]
+func (x *GatewayConfigurationSnapshot) GetSshListen() string {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewaySSHConfiguration.ProtoReflect.Descriptor instead.
-func (*GatewaySSHConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *GatewaySSHConfiguration) GetListen() string {
-	if x != nil {
-		return x.Listen
+		return x.SshListen
 	}
 	return ""
 }
 
-func (x *GatewaySSHConfiguration) GetPublicAddr() string {
+func (x *GatewayConfigurationSnapshot) GetSshPublicAddress() string {
 	if x != nil {
-		return x.PublicAddr
+		return x.SshPublicAddress
 	}
 	return ""
 }
 
-func (x *GatewaySSHConfiguration) GetHandshakeTimeoutMilliseconds() int64 {
+func (x *GatewayConfigurationSnapshot) GetSessionTtlMilliseconds() int64 {
 	if x != nil {
-		return x.HandshakeTimeoutMilliseconds
+		return x.SessionTtlMilliseconds
 	}
 	return 0
 }
 
-func (x *GatewaySSHConfiguration) GetMaxChannelsPerConnection() int32 {
+func (x *GatewayConfigurationSnapshot) GetSessionIdleTimeoutMilliseconds() int64 {
 	if x != nil {
-		return x.MaxChannelsPerConnection
+		return x.SessionIdleTimeoutMilliseconds
 	}
 	return 0
 }
 
-func (x *GatewaySSHConfiguration) GetAuth() *GatewaySSHAuthConfiguration {
-	if x != nil {
-		return x.Auth
-	}
-	return nil
-}
-
-type GatewaySSHAuthConfiguration struct {
-	state                     protoimpl.MessageState `protogen:"open.v1"`
-	MaxAttemptsPerIp          int32                  `protobuf:"varint,1,opt,name=max_attempts_per_ip,json=maxAttemptsPerIp,proto3" json:"max_attempts_per_ip,omitempty"`
-	MaxAttemptsPerCodespace   int32                  `protobuf:"varint,2,opt,name=max_attempts_per_codespace,json=maxAttemptsPerCodespace,proto3" json:"max_attempts_per_codespace,omitempty"`
-	MaxAttemptsPerIpCodespace int32                  `protobuf:"varint,3,opt,name=max_attempts_per_ip_codespace,json=maxAttemptsPerIpCodespace,proto3" json:"max_attempts_per_ip_codespace,omitempty"`
-	MaxAttemptsPerPublicKey   int32                  `protobuf:"varint,4,opt,name=max_attempts_per_public_key,json=maxAttemptsPerPublicKey,proto3" json:"max_attempts_per_public_key,omitempty"`
-	FailureWindowMilliseconds int64                  `protobuf:"varint,5,opt,name=failure_window_milliseconds,json=failureWindowMilliseconds,proto3" json:"failure_window_milliseconds,omitempty"`
-	unknownFields             protoimpl.UnknownFields
-	sizeCache                 protoimpl.SizeCache
-}
-
-func (x *GatewaySSHAuthConfiguration) Reset() {
-	*x = GatewaySSHAuthConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewaySSHAuthConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewaySSHAuthConfiguration) ProtoMessage() {}
-
-func (x *GatewaySSHAuthConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewaySSHAuthConfiguration.ProtoReflect.Descriptor instead.
-func (*GatewaySSHAuthConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *GatewaySSHAuthConfiguration) GetMaxAttemptsPerIp() int32 {
-	if x != nil {
-		return x.MaxAttemptsPerIp
-	}
-	return 0
-}
-
-func (x *GatewaySSHAuthConfiguration) GetMaxAttemptsPerCodespace() int32 {
-	if x != nil {
-		return x.MaxAttemptsPerCodespace
-	}
-	return 0
-}
-
-func (x *GatewaySSHAuthConfiguration) GetMaxAttemptsPerIpCodespace() int32 {
-	if x != nil {
-		return x.MaxAttemptsPerIpCodespace
-	}
-	return 0
-}
-
-func (x *GatewaySSHAuthConfiguration) GetMaxAttemptsPerPublicKey() int32 {
-	if x != nil {
-		return x.MaxAttemptsPerPublicKey
-	}
-	return 0
-}
-
-func (x *GatewaySSHAuthConfiguration) GetFailureWindowMilliseconds() int64 {
-	if x != nil {
-		return x.FailureWindowMilliseconds
-	}
-	return 0
-}
-
-type GatewaySessionConfiguration struct {
-	state                          protoimpl.MessageState `protogen:"open.v1"`
-	TtlMilliseconds                int64                  `protobuf:"varint,1,opt,name=ttl_milliseconds,json=ttlMilliseconds,proto3" json:"ttl_milliseconds,omitempty"`
-	IdleTimeoutMilliseconds        int64                  `protobuf:"varint,2,opt,name=idle_timeout_milliseconds,json=idleTimeoutMilliseconds,proto3" json:"idle_timeout_milliseconds,omitempty"`
-	RevalidateIntervalMilliseconds int64                  `protobuf:"varint,3,opt,name=revalidate_interval_milliseconds,json=revalidateIntervalMilliseconds,proto3" json:"revalidate_interval_milliseconds,omitempty"`
-	MaxPerCodespace                int32                  `protobuf:"varint,4,opt,name=max_per_codespace,json=maxPerCodespace,proto3" json:"max_per_codespace,omitempty"`
-	MaxPerUser                     int32                  `protobuf:"varint,5,opt,name=max_per_user,json=maxPerUser,proto3" json:"max_per_user,omitempty"`
-	unknownFields                  protoimpl.UnknownFields
-	sizeCache                      protoimpl.SizeCache
-}
-
-func (x *GatewaySessionConfiguration) Reset() {
-	*x = GatewaySessionConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewaySessionConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewaySessionConfiguration) ProtoMessage() {}
-
-func (x *GatewaySessionConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewaySessionConfiguration.ProtoReflect.Descriptor instead.
-func (*GatewaySessionConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *GatewaySessionConfiguration) GetTtlMilliseconds() int64 {
-	if x != nil {
-		return x.TtlMilliseconds
-	}
-	return 0
-}
-
-func (x *GatewaySessionConfiguration) GetIdleTimeoutMilliseconds() int64 {
-	if x != nil {
-		return x.IdleTimeoutMilliseconds
-	}
-	return 0
-}
-
-func (x *GatewaySessionConfiguration) GetRevalidateIntervalMilliseconds() int64 {
+func (x *GatewayConfigurationSnapshot) GetRevalidateIntervalMilliseconds() int64 {
 	if x != nil {
 		return x.RevalidateIntervalMilliseconds
 	}
 	return 0
 }
 
-func (x *GatewaySessionConfiguration) GetMaxPerCodespace() int32 {
+func (x *GatewayConfigurationSnapshot) GetMaxSessionsPerCodespace() int32 {
 	if x != nil {
-		return x.MaxPerCodespace
+		return x.MaxSessionsPerCodespace
 	}
 	return 0
 }
 
-func (x *GatewaySessionConfiguration) GetMaxPerUser() int32 {
+func (x *GatewayConfigurationSnapshot) GetMaxSessionsPerUser() int32 {
 	if x != nil {
-		return x.MaxPerUser
+		return x.MaxSessionsPerUser
 	}
 	return 0
 }
 
-type GatewayLimitsConfiguration struct {
-	state                           protoimpl.MessageState `protogen:"open.v1"`
-	MaxInflightTotal                int32                  `protobuf:"varint,1,opt,name=max_inflight_total,json=maxInflightTotal,proto3" json:"max_inflight_total,omitempty"`
-	MaxInflightPerSession           int32                  `protobuf:"varint,2,opt,name=max_inflight_per_session,json=maxInflightPerSession,proto3" json:"max_inflight_per_session,omitempty"`
-	PublicMaxConnectionsPerEndpoint int32                  `protobuf:"varint,3,opt,name=public_max_connections_per_endpoint,json=publicMaxConnectionsPerEndpoint,proto3" json:"public_max_connections_per_endpoint,omitempty"`
-	PublicMaxConnectionsPerIp       int32                  `protobuf:"varint,4,opt,name=public_max_connections_per_ip,json=publicMaxConnectionsPerIp,proto3" json:"public_max_connections_per_ip,omitempty"`
-	ValidationMaxInflight           int32                  `protobuf:"varint,5,opt,name=validation_max_inflight,json=validationMaxInflight,proto3" json:"validation_max_inflight,omitempty"`
-	unknownFields                   protoimpl.UnknownFields
-	sizeCache                       protoimpl.SizeCache
-}
-
-func (x *GatewayLimitsConfiguration) Reset() {
-	*x = GatewayLimitsConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewayLimitsConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewayLimitsConfiguration) ProtoMessage() {}
-
-func (x *GatewayLimitsConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[13]
+func (x *GatewayConfigurationSnapshot) GetMaxInflight() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewayLimitsConfiguration.ProtoReflect.Descriptor instead.
-func (*GatewayLimitsConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *GatewayLimitsConfiguration) GetMaxInflightTotal() int32 {
-	if x != nil {
-		return x.MaxInflightTotal
+		return x.MaxInflight
 	}
 	return 0
 }
 
-func (x *GatewayLimitsConfiguration) GetMaxInflightPerSession() int32 {
+func (x *GatewayConfigurationSnapshot) GetMaxInflightPerSession() int32 {
 	if x != nil {
 		return x.MaxInflightPerSession
 	}
 	return 0
 }
 
-func (x *GatewayLimitsConfiguration) GetPublicMaxConnectionsPerEndpoint() int32 {
+func (x *GatewayConfigurationSnapshot) GetMaxChannelsPerSshConnection() int32 {
 	if x != nil {
-		return x.PublicMaxConnectionsPerEndpoint
+		return x.MaxChannelsPerSshConnection
 	}
 	return 0
 }
 
-func (x *GatewayLimitsConfiguration) GetPublicMaxConnectionsPerIp() int32 {
-	if x != nil {
-		return x.PublicMaxConnectionsPerIp
-	}
-	return 0
-}
-
-func (x *GatewayLimitsConfiguration) GetValidationMaxInflight() int32 {
-	if x != nil {
-		return x.ValidationMaxInflight
-	}
-	return 0
-}
-
-type ComponentSite struct {
+type GatewayRuntimeRoute struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	GiteaUrl      string                 `protobuf:"bytes,2,opt,name=gitea_url,json=giteaUrl,proto3" json:"gitea_url,omitempty"`
-	ManagerId     int64                  `protobuf:"varint,3,opt,name=manager_id,json=managerId,proto3" json:"manager_id,omitempty"`
-	ManagerSecret []byte                 `protobuf:"bytes,4,opt,name=manager_secret,json=managerSecret,proto3" json:"manager_secret,omitempty"`
-	Enabled       bool                   `protobuf:"varint,5,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	SiteUid       string                 `protobuf:"bytes,1,opt,name=site_uid,json=siteUid,proto3" json:"site_uid,omitempty"`
+	ResourceUid   string                 `protobuf:"bytes,2,opt,name=resource_uid,json=resourceUid,proto3" json:"resource_uid,omitempty"`
+	RuntimeUuid   string                 `protobuf:"bytes,3,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	PodUid        string                 `protobuf:"bytes,4,opt,name=pod_uid,json=podUid,proto3" json:"pod_uid,omitempty"`
+	AgentAddress  string                 `protobuf:"bytes,5,opt,name=agent_address,json=agentAddress,proto3" json:"agent_address,omitempty"`
+	TargetVersion int64                  `protobuf:"varint,6,opt,name=target_version,json=targetVersion,proto3" json:"target_version,omitempty"`
+	Endpoints     []*GatewayEndpoint     `protobuf:"bytes,7,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
+	GiteaWebUrl   string                 `protobuf:"bytes,8,opt,name=gitea_web_url,json=giteaWebUrl,proto3" json:"gitea_web_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ComponentSite) Reset() {
-	*x = ComponentSite{}
-	mi := &file_component_v1_service_proto_msgTypes[14]
+func (x *GatewayRuntimeRoute) Reset() {
+	*x = GatewayRuntimeRoute{}
+	mi := &file_component_v1_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ComponentSite) String() string {
+func (x *GatewayRuntimeRoute) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ComponentSite) ProtoMessage() {}
+func (*GatewayRuntimeRoute) ProtoMessage() {}
 
-func (x *ComponentSite) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[14]
+func (x *GatewayRuntimeRoute) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -961,391 +353,91 @@ func (x *ComponentSite) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ComponentSite.ProtoReflect.Descriptor instead.
-func (*ComponentSite) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{14}
+// Deprecated: Use GatewayRuntimeRoute.ProtoReflect.Descriptor instead.
+func (*GatewayRuntimeRoute) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ComponentSite) GetId() int64 {
+func (x *GatewayRuntimeRoute) GetSiteUid() string {
 	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *ComponentSite) GetGiteaUrl() string {
-	if x != nil {
-		return x.GiteaUrl
+		return x.SiteUid
 	}
 	return ""
 }
 
-func (x *ComponentSite) GetManagerId() int64 {
+func (x *GatewayRuntimeRoute) GetResourceUid() string {
 	if x != nil {
-		return x.ManagerId
-	}
-	return 0
-}
-
-func (x *ComponentSite) GetManagerSecret() []byte {
-	if x != nil {
-		return x.ManagerSecret
-	}
-	return nil
-}
-
-func (x *ComponentSite) GetEnabled() bool {
-	if x != nil {
-		return x.Enabled
-	}
-	return false
-}
-
-type ComponentBackend struct {
-	state         protoimpl.MessageState       `protogen:"open.v1"`
-	Id            string                       `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Enabled       bool                         `protobuf:"varint,2,opt,name=enabled,proto3" json:"enabled,omitempty"`
-	Incus         *ComponentIncusConfiguration `protobuf:"bytes,3,opt,name=incus,proto3" json:"incus,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ComponentBackend) Reset() {
-	*x = ComponentBackend{}
-	mi := &file_component_v1_service_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ComponentBackend) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ComponentBackend) ProtoMessage() {}
-
-func (x *ComponentBackend) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ComponentBackend.ProtoReflect.Descriptor instead.
-func (*ComponentBackend) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *ComponentBackend) GetId() string {
-	if x != nil {
-		return x.Id
+		return x.ResourceUid
 	}
 	return ""
 }
 
-func (x *ComponentBackend) GetEnabled() bool {
-	if x != nil {
-		return x.Enabled
-	}
-	return false
-}
-
-func (x *ComponentBackend) GetIncus() *ComponentIncusConfiguration {
-	if x != nil {
-		return x.Incus
-	}
-	return nil
-}
-
-type ComponentIncusConfiguration struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	Endpoint          string                 `protobuf:"bytes,1,opt,name=endpoint,proto3" json:"endpoint,omitempty"`
-	ClientCertificate []byte                 `protobuf:"bytes,2,opt,name=client_certificate,json=clientCertificate,proto3" json:"client_certificate,omitempty"`
-	ClientKey         []byte                 `protobuf:"bytes,3,opt,name=client_key,json=clientKey,proto3" json:"client_key,omitempty"`
-	ServerCertificate []byte                 `protobuf:"bytes,4,opt,name=server_certificate,json=serverCertificate,proto3" json:"server_certificate,omitempty"`
-	ProjectName       string                 `protobuf:"bytes,5,opt,name=project_name,json=projectName,proto3" json:"project_name,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
-}
-
-func (x *ComponentIncusConfiguration) Reset() {
-	*x = ComponentIncusConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ComponentIncusConfiguration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ComponentIncusConfiguration) ProtoMessage() {}
-
-func (x *ComponentIncusConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ComponentIncusConfiguration.ProtoReflect.Descriptor instead.
-func (*ComponentIncusConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *ComponentIncusConfiguration) GetEndpoint() string {
-	if x != nil {
-		return x.Endpoint
-	}
-	return ""
-}
-
-func (x *ComponentIncusConfiguration) GetClientCertificate() []byte {
-	if x != nil {
-		return x.ClientCertificate
-	}
-	return nil
-}
-
-func (x *ComponentIncusConfiguration) GetClientKey() []byte {
-	if x != nil {
-		return x.ClientKey
-	}
-	return nil
-}
-
-func (x *ComponentIncusConfiguration) GetServerCertificate() []byte {
-	if x != nil {
-		return x.ServerCertificate
-	}
-	return nil
-}
-
-func (x *ComponentIncusConfiguration) GetProjectName() string {
-	if x != nil {
-		return x.ProjectName
-	}
-	return ""
-}
-
-type RuntimeBinding struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RuntimeUuid   string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
-	SiteId        int64                  `protobuf:"varint,2,opt,name=site_id,json=siteId,proto3" json:"site_id,omitempty"`
-	BackendId     string                 `protobuf:"bytes,3,opt,name=backend_id,json=backendId,proto3" json:"backend_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RuntimeBinding) Reset() {
-	*x = RuntimeBinding{}
-	mi := &file_component_v1_service_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RuntimeBinding) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RuntimeBinding) ProtoMessage() {}
-
-func (x *RuntimeBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RuntimeBinding.ProtoReflect.Descriptor instead.
-func (*RuntimeBinding) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *RuntimeBinding) GetRuntimeUuid() string {
+func (x *GatewayRuntimeRoute) GetRuntimeUuid() string {
 	if x != nil {
 		return x.RuntimeUuid
 	}
 	return ""
 }
 
-func (x *RuntimeBinding) GetSiteId() int64 {
+func (x *GatewayRuntimeRoute) GetPodUid() string {
 	if x != nil {
-		return x.SiteId
+		return x.PodUid
+	}
+	return ""
+}
+
+func (x *GatewayRuntimeRoute) GetAgentAddress() string {
+	if x != nil {
+		return x.AgentAddress
+	}
+	return ""
+}
+
+func (x *GatewayRuntimeRoute) GetTargetVersion() int64 {
+	if x != nil {
+		return x.TargetVersion
 	}
 	return 0
 }
 
-func (x *RuntimeBinding) GetBackendId() string {
-	if x != nil {
-		return x.BackendId
-	}
-	return ""
-}
-
-type GatewayRuntimeSnapshot struct {
-	state            protoimpl.MessageState     `protogen:"open.v1"`
-	RuntimeUuid      string                     `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
-	SiteId           int64                      `protobuf:"varint,2,opt,name=site_id,json=siteId,proto3" json:"site_id,omitempty"`
-	InstanceName     string                     `protobuf:"bytes,3,opt,name=instance_name,json=instanceName,proto3" json:"instance_name,omitempty"`
-	Workdir          string                     `protobuf:"bytes,4,opt,name=workdir,proto3" json:"workdir,omitempty"`
-	Uid              uint32                     `protobuf:"varint,5,opt,name=uid,proto3" json:"uid,omitempty"`
-	Gid              uint32                     `protobuf:"varint,6,opt,name=gid,proto3" json:"gid,omitempty"`
-	ContainerId      string                     `protobuf:"bytes,7,opt,name=container_id,json=containerId,proto3" json:"container_id,omitempty"`
-	ContainerUser    string                     `protobuf:"bytes,8,opt,name=container_user,json=containerUser,proto3" json:"container_user,omitempty"`
-	ContainerWorkdir string                     `protobuf:"bytes,9,opt,name=container_workdir,json=containerWorkdir,proto3" json:"container_workdir,omitempty"`
-	EditorPort       uint32                     `protobuf:"varint,10,opt,name=editor_port,json=editorPort,proto3" json:"editor_port,omitempty"`
-	Endpoints        []*GatewayEndpointSnapshot `protobuf:"bytes,11,rep,name=endpoints,proto3" json:"endpoints,omitempty"`
-	unknownFields    protoimpl.UnknownFields
-	sizeCache        protoimpl.SizeCache
-}
-
-func (x *GatewayRuntimeSnapshot) Reset() {
-	*x = GatewayRuntimeSnapshot{}
-	mi := &file_component_v1_service_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewayRuntimeSnapshot) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewayRuntimeSnapshot) ProtoMessage() {}
-
-func (x *GatewayRuntimeSnapshot) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewayRuntimeSnapshot.ProtoReflect.Descriptor instead.
-func (*GatewayRuntimeSnapshot) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *GatewayRuntimeSnapshot) GetRuntimeUuid() string {
-	if x != nil {
-		return x.RuntimeUuid
-	}
-	return ""
-}
-
-func (x *GatewayRuntimeSnapshot) GetSiteId() int64 {
-	if x != nil {
-		return x.SiteId
-	}
-	return 0
-}
-
-func (x *GatewayRuntimeSnapshot) GetInstanceName() string {
-	if x != nil {
-		return x.InstanceName
-	}
-	return ""
-}
-
-func (x *GatewayRuntimeSnapshot) GetWorkdir() string {
-	if x != nil {
-		return x.Workdir
-	}
-	return ""
-}
-
-func (x *GatewayRuntimeSnapshot) GetUid() uint32 {
-	if x != nil {
-		return x.Uid
-	}
-	return 0
-}
-
-func (x *GatewayRuntimeSnapshot) GetGid() uint32 {
-	if x != nil {
-		return x.Gid
-	}
-	return 0
-}
-
-func (x *GatewayRuntimeSnapshot) GetContainerId() string {
-	if x != nil {
-		return x.ContainerId
-	}
-	return ""
-}
-
-func (x *GatewayRuntimeSnapshot) GetContainerUser() string {
-	if x != nil {
-		return x.ContainerUser
-	}
-	return ""
-}
-
-func (x *GatewayRuntimeSnapshot) GetContainerWorkdir() string {
-	if x != nil {
-		return x.ContainerWorkdir
-	}
-	return ""
-}
-
-func (x *GatewayRuntimeSnapshot) GetEditorPort() uint32 {
-	if x != nil {
-		return x.EditorPort
-	}
-	return 0
-}
-
-func (x *GatewayRuntimeSnapshot) GetEndpoints() []*GatewayEndpointSnapshot {
+func (x *GatewayRuntimeRoute) GetEndpoints() []*GatewayEndpoint {
 	if x != nil {
 		return x.Endpoints
 	}
 	return nil
 }
 
-type GatewayEndpointSnapshot struct {
+func (x *GatewayRuntimeRoute) GetGiteaWebUrl() string {
+	if x != nil {
+		return x.GiteaWebUrl
+	}
+	return ""
+}
+
+type GatewayEndpoint struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	EndpointId    string                 `protobuf:"bytes,1,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
 	Label         string                 `protobuf:"bytes,2,opt,name=label,proto3" json:"label,omitempty"`
-	UpstreamPort  uint32                 `protobuf:"varint,3,opt,name=upstream_port,json=upstreamPort,proto3" json:"upstream_port,omitempty"`
-	Public        bool                   `protobuf:"varint,4,opt,name=public,proto3" json:"public,omitempty"`
+	Public        bool                   `protobuf:"varint,3,opt,name=public,proto3" json:"public,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GatewayEndpointSnapshot) Reset() {
-	*x = GatewayEndpointSnapshot{}
-	mi := &file_component_v1_service_proto_msgTypes[19]
+func (x *GatewayEndpoint) Reset() {
+	*x = GatewayEndpoint{}
+	mi := &file_component_v1_service_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GatewayEndpointSnapshot) String() string {
+func (x *GatewayEndpoint) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GatewayEndpointSnapshot) ProtoMessage() {}
+func (*GatewayEndpoint) ProtoMessage() {}
 
-func (x *GatewayEndpointSnapshot) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[19]
+func (x *GatewayEndpoint) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1356,270 +448,62 @@ func (x *GatewayEndpointSnapshot) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GatewayEndpointSnapshot.ProtoReflect.Descriptor instead.
-func (*GatewayEndpointSnapshot) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{19}
+// Deprecated: Use GatewayEndpoint.ProtoReflect.Descriptor instead.
+func (*GatewayEndpoint) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GatewayEndpointSnapshot) GetEndpointId() string {
+func (x *GatewayEndpoint) GetEndpointId() string {
 	if x != nil {
 		return x.EndpointId
 	}
 	return ""
 }
 
-func (x *GatewayEndpointSnapshot) GetLabel() string {
+func (x *GatewayEndpoint) GetLabel() string {
 	if x != nil {
 		return x.Label
 	}
 	return ""
 }
 
-func (x *GatewayEndpointSnapshot) GetUpstreamPort() uint32 {
-	if x != nil {
-		return x.UpstreamPort
-	}
-	return 0
-}
-
-func (x *GatewayEndpointSnapshot) GetPublic() bool {
+func (x *GatewayEndpoint) GetPublic() bool {
 	if x != nil {
 		return x.Public
 	}
 	return false
 }
 
-type GatewayRuntimeEvent struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Event:
-	//
-	//	*GatewayRuntimeEvent_Upsert
-	//	*GatewayRuntimeEvent_Delete
-	Event         isGatewayRuntimeEvent_Event `protobuf_oneof:"event"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GatewayRuntimeEvent) Reset() {
-	*x = GatewayRuntimeEvent{}
-	mi := &file_component_v1_service_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GatewayRuntimeEvent) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GatewayRuntimeEvent) ProtoMessage() {}
-
-func (x *GatewayRuntimeEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GatewayRuntimeEvent.ProtoReflect.Descriptor instead.
-func (*GatewayRuntimeEvent) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *GatewayRuntimeEvent) GetEvent() isGatewayRuntimeEvent_Event {
-	if x != nil {
-		return x.Event
-	}
-	return nil
-}
-
-func (x *GatewayRuntimeEvent) GetUpsert() *GatewayRuntimeSnapshot {
-	if x != nil {
-		if x, ok := x.Event.(*GatewayRuntimeEvent_Upsert); ok {
-			return x.Upsert
-		}
-	}
-	return nil
-}
-
-func (x *GatewayRuntimeEvent) GetDelete() *RuntimeDelete {
-	if x != nil {
-		if x, ok := x.Event.(*GatewayRuntimeEvent_Delete); ok {
-			return x.Delete
-		}
-	}
-	return nil
-}
-
-type isGatewayRuntimeEvent_Event interface {
-	isGatewayRuntimeEvent_Event()
-}
-
-type GatewayRuntimeEvent_Upsert struct {
-	Upsert *GatewayRuntimeSnapshot `protobuf:"bytes,1,opt,name=upsert,proto3,oneof"`
-}
-
-type GatewayRuntimeEvent_Delete struct {
-	Delete *RuntimeDelete `protobuf:"bytes,2,opt,name=delete,proto3,oneof"`
-}
-
-func (*GatewayRuntimeEvent_Upsert) isGatewayRuntimeEvent_Event() {}
-
-func (*GatewayRuntimeEvent_Delete) isGatewayRuntimeEvent_Event() {}
-
-type RuntimeBindingEvent struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Event:
-	//
-	//	*RuntimeBindingEvent_Upsert
-	//	*RuntimeBindingEvent_Delete
-	Event         isRuntimeBindingEvent_Event `protobuf_oneof:"event"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RuntimeBindingEvent) Reset() {
-	*x = RuntimeBindingEvent{}
-	mi := &file_component_v1_service_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RuntimeBindingEvent) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RuntimeBindingEvent) ProtoMessage() {}
-
-func (x *RuntimeBindingEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RuntimeBindingEvent.ProtoReflect.Descriptor instead.
-func (*RuntimeBindingEvent) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *RuntimeBindingEvent) GetEvent() isRuntimeBindingEvent_Event {
-	if x != nil {
-		return x.Event
-	}
-	return nil
-}
-
-func (x *RuntimeBindingEvent) GetUpsert() *RuntimeBinding {
-	if x != nil {
-		if x, ok := x.Event.(*RuntimeBindingEvent_Upsert); ok {
-			return x.Upsert
-		}
-	}
-	return nil
-}
-
-func (x *RuntimeBindingEvent) GetDelete() *RuntimeDelete {
-	if x != nil {
-		if x, ok := x.Event.(*RuntimeBindingEvent_Delete); ok {
-			return x.Delete
-		}
-	}
-	return nil
-}
-
-type isRuntimeBindingEvent_Event interface {
-	isRuntimeBindingEvent_Event()
-}
-
-type RuntimeBindingEvent_Upsert struct {
-	Upsert *RuntimeBinding `protobuf:"bytes,1,opt,name=upsert,proto3,oneof"`
-}
-
-type RuntimeBindingEvent_Delete struct {
-	Delete *RuntimeDelete `protobuf:"bytes,2,opt,name=delete,proto3,oneof"`
-}
-
-func (*RuntimeBindingEvent_Upsert) isRuntimeBindingEvent_Event() {}
-
-func (*RuntimeBindingEvent_Delete) isRuntimeBindingEvent_Event() {}
-
-type RuntimeDelete struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	RuntimeUuid   string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RuntimeDelete) Reset() {
-	*x = RuntimeDelete{}
-	mi := &file_component_v1_service_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RuntimeDelete) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RuntimeDelete) ProtoMessage() {}
-
-func (x *RuntimeDelete) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RuntimeDelete.ProtoReflect.Descriptor instead.
-func (*RuntimeDelete) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *RuntimeDelete) GetRuntimeUuid() string {
-	if x != nil {
-		return x.RuntimeUuid
-	}
-	return ""
-}
-
-type GetCacheRequest struct {
+type AuthorizeGatewayRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CacheId         string                 `protobuf:"bytes,2,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	// Types that are valid to be assigned to Request:
+	//
+	//	*AuthorizeGatewayRequest_OpenCode
+	//	*AuthorizeGatewayRequest_PublicEndpoint
+	//	*AuthorizeGatewayRequest_SshPublicKey
+	//	*AuthorizeGatewayRequest_EndpointSession
+	//	*AuthorizeGatewayRequest_SshSession
+	Request       isAuthorizeGatewayRequest_Request `protobuf_oneof:"request"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetCacheRequest) Reset() {
-	*x = GetCacheRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[23]
+func (x *AuthorizeGatewayRequest) Reset() {
+	*x = AuthorizeGatewayRequest{}
+	mi := &file_component_v1_service_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCacheRequest) String() string {
+func (x *AuthorizeGatewayRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCacheRequest) ProtoMessage() {}
+func (*AuthorizeGatewayRequest) ProtoMessage() {}
 
-func (x *GetCacheRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[23]
+func (x *AuthorizeGatewayRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1630,50 +514,130 @@ func (x *GetCacheRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCacheRequest.ProtoReflect.Descriptor instead.
-func (*GetCacheRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{23}
+// Deprecated: Use AuthorizeGatewayRequest.ProtoReflect.Descriptor instead.
+func (*AuthorizeGatewayRequest) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetCacheRequest) GetProtocolVersion() uint32 {
+func (x *AuthorizeGatewayRequest) GetProtocolVersion() uint32 {
 	if x != nil {
 		return x.ProtocolVersion
 	}
 	return 0
 }
 
-func (x *GetCacheRequest) GetCacheId() string {
+func (x *AuthorizeGatewayRequest) GetRequest() isAuthorizeGatewayRequest_Request {
 	if x != nil {
-		return x.CacheId
+		return x.Request
 	}
-	return ""
+	return nil
 }
 
-type GetCacheResponse struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Config          *CacheConfiguration    `protobuf:"bytes,1,opt,name=config,proto3" json:"config,omitempty"`
-	RegistryKey     []byte                 `protobuf:"bytes,2,opt,name=registry_key,json=registryKey,proto3" json:"registry_key,omitempty"`
-	CleanupRevision int64                  `protobuf:"varint,3,opt,name=cleanup_revision,json=cleanupRevision,proto3" json:"cleanup_revision,omitempty"`
-	ActiveBuilds    bool                   `protobuf:"varint,4,opt,name=active_builds,json=activeBuilds,proto3" json:"active_builds,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+func (x *AuthorizeGatewayRequest) GetOpenCode() *OpenCodeAuthorization {
+	if x != nil {
+		if x, ok := x.Request.(*AuthorizeGatewayRequest_OpenCode); ok {
+			return x.OpenCode
+		}
+	}
+	return nil
 }
 
-func (x *GetCacheResponse) Reset() {
-	*x = GetCacheResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[24]
+func (x *AuthorizeGatewayRequest) GetPublicEndpoint() *PublicEndpointAuthorization {
+	if x != nil {
+		if x, ok := x.Request.(*AuthorizeGatewayRequest_PublicEndpoint); ok {
+			return x.PublicEndpoint
+		}
+	}
+	return nil
+}
+
+func (x *AuthorizeGatewayRequest) GetSshPublicKey() *SSHPublicKeyAuthorization {
+	if x != nil {
+		if x, ok := x.Request.(*AuthorizeGatewayRequest_SshPublicKey); ok {
+			return x.SshPublicKey
+		}
+	}
+	return nil
+}
+
+func (x *AuthorizeGatewayRequest) GetEndpointSession() *EndpointSessionAuthorization {
+	if x != nil {
+		if x, ok := x.Request.(*AuthorizeGatewayRequest_EndpointSession); ok {
+			return x.EndpointSession
+		}
+	}
+	return nil
+}
+
+func (x *AuthorizeGatewayRequest) GetSshSession() *SSHSessionAuthorization {
+	if x != nil {
+		if x, ok := x.Request.(*AuthorizeGatewayRequest_SshSession); ok {
+			return x.SshSession
+		}
+	}
+	return nil
+}
+
+type isAuthorizeGatewayRequest_Request interface {
+	isAuthorizeGatewayRequest_Request()
+}
+
+type AuthorizeGatewayRequest_OpenCode struct {
+	OpenCode *OpenCodeAuthorization `protobuf:"bytes,2,opt,name=open_code,json=openCode,proto3,oneof"`
+}
+
+type AuthorizeGatewayRequest_PublicEndpoint struct {
+	PublicEndpoint *PublicEndpointAuthorization `protobuf:"bytes,3,opt,name=public_endpoint,json=publicEndpoint,proto3,oneof"`
+}
+
+type AuthorizeGatewayRequest_SshPublicKey struct {
+	SshPublicKey *SSHPublicKeyAuthorization `protobuf:"bytes,4,opt,name=ssh_public_key,json=sshPublicKey,proto3,oneof"`
+}
+
+type AuthorizeGatewayRequest_EndpointSession struct {
+	EndpointSession *EndpointSessionAuthorization `protobuf:"bytes,5,opt,name=endpoint_session,json=endpointSession,proto3,oneof"`
+}
+
+type AuthorizeGatewayRequest_SshSession struct {
+	SshSession *SSHSessionAuthorization `protobuf:"bytes,6,opt,name=ssh_session,json=sshSession,proto3,oneof"`
+}
+
+func (*AuthorizeGatewayRequest_OpenCode) isAuthorizeGatewayRequest_Request() {}
+
+func (*AuthorizeGatewayRequest_PublicEndpoint) isAuthorizeGatewayRequest_Request() {}
+
+func (*AuthorizeGatewayRequest_SshPublicKey) isAuthorizeGatewayRequest_Request() {}
+
+func (*AuthorizeGatewayRequest_EndpointSession) isAuthorizeGatewayRequest_Request() {}
+
+func (*AuthorizeGatewayRequest_SshSession) isAuthorizeGatewayRequest_Request() {}
+
+type OpenCodeAuthorization struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// code is the one-time authorization code issued by Gitea.
+	Code string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	// runtime_uuid and endpoint_id are parsed from the canonical Gateway host.
+	RuntimeUuid   string `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	EndpointId    string `protobuf:"bytes,3,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OpenCodeAuthorization) Reset() {
+	*x = OpenCodeAuthorization{}
+	mi := &file_component_v1_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCacheResponse) String() string {
+func (x *OpenCodeAuthorization) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCacheResponse) ProtoMessage() {}
+func (*OpenCodeAuthorization) ProtoMessage() {}
 
-func (x *GetCacheResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[24]
+func (x *OpenCodeAuthorization) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1684,37 +648,640 @@ func (x *GetCacheResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCacheResponse.ProtoReflect.Descriptor instead.
-func (*GetCacheResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{24}
+// Deprecated: Use OpenCodeAuthorization.ProtoReflect.Descriptor instead.
+func (*OpenCodeAuthorization) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetCacheResponse) GetConfig() *CacheConfiguration {
+func (x *OpenCodeAuthorization) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *OpenCodeAuthorization) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+func (x *OpenCodeAuthorization) GetEndpointId() string {
+	if x != nil {
+		return x.EndpointId
+	}
+	return ""
+}
+
+type PublicEndpointAuthorization struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RuntimeUuid   string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	EndpointId    string                 `protobuf:"bytes,2,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PublicEndpointAuthorization) Reset() {
+	*x = PublicEndpointAuthorization{}
+	mi := &file_component_v1_service_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PublicEndpointAuthorization) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PublicEndpointAuthorization) ProtoMessage() {}
+
+func (x *PublicEndpointAuthorization) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PublicEndpointAuthorization.ProtoReflect.Descriptor instead.
+func (*PublicEndpointAuthorization) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *PublicEndpointAuthorization) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+func (x *PublicEndpointAuthorization) GetEndpointId() string {
+	if x != nil {
+		return x.EndpointId
+	}
+	return ""
+}
+
+type SSHPublicKeyAuthorization struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RuntimeUuid   string                 `protobuf:"bytes,1,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	PublicKey     []byte                 `protobuf:"bytes,2,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SSHPublicKeyAuthorization) Reset() {
+	*x = SSHPublicKeyAuthorization{}
+	mi := &file_component_v1_service_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SSHPublicKeyAuthorization) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SSHPublicKeyAuthorization) ProtoMessage() {}
+
+func (x *SSHPublicKeyAuthorization) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SSHPublicKeyAuthorization.ProtoReflect.Descriptor instead.
+func (*SSHPublicKeyAuthorization) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *SSHPublicKeyAuthorization) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+func (x *SSHPublicKeyAuthorization) GetPublicKey() []byte {
+	if x != nil {
+		return x.PublicKey
+	}
+	return nil
+}
+
+type EndpointSessionAuthorization struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	RuntimeUuid   string                 `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	EndpointId    string                 `protobuf:"bytes,3,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EndpointSessionAuthorization) Reset() {
+	*x = EndpointSessionAuthorization{}
+	mi := &file_component_v1_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EndpointSessionAuthorization) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EndpointSessionAuthorization) ProtoMessage() {}
+
+func (x *EndpointSessionAuthorization) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EndpointSessionAuthorization.ProtoReflect.Descriptor instead.
+func (*EndpointSessionAuthorization) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *EndpointSessionAuthorization) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *EndpointSessionAuthorization) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+func (x *EndpointSessionAuthorization) GetEndpointId() string {
+	if x != nil {
+		return x.EndpointId
+	}
+	return ""
+}
+
+type SSHSessionAuthorization struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	RuntimeUuid   string                 `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SSHSessionAuthorization) Reset() {
+	*x = SSHSessionAuthorization{}
+	mi := &file_component_v1_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SSHSessionAuthorization) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SSHSessionAuthorization) ProtoMessage() {}
+
+func (x *SSHSessionAuthorization) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SSHSessionAuthorization.ProtoReflect.Descriptor instead.
+func (*SSHSessionAuthorization) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SSHSessionAuthorization) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *SSHSessionAuthorization) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+type AuthorizeGatewayResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Allowed        bool                   `protobuf:"varint,1,opt,name=allowed,proto3" json:"allowed,omitempty"`
+	DeniedCategory string                 `protobuf:"bytes,2,opt,name=denied_category,json=deniedCategory,proto3" json:"denied_category,omitempty"`
+	UserId         int64                  `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	RuntimeUuid    string                 `protobuf:"bytes,4,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	EndpointId     string                 `protobuf:"bytes,5,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *AuthorizeGatewayResponse) Reset() {
+	*x = AuthorizeGatewayResponse{}
+	mi := &file_component_v1_service_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AuthorizeGatewayResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AuthorizeGatewayResponse) ProtoMessage() {}
+
+func (x *AuthorizeGatewayResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AuthorizeGatewayResponse.ProtoReflect.Descriptor instead.
+func (*AuthorizeGatewayResponse) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *AuthorizeGatewayResponse) GetAllowed() bool {
+	if x != nil {
+		return x.Allowed
+	}
+	return false
+}
+
+func (x *AuthorizeGatewayResponse) GetDeniedCategory() string {
+	if x != nil {
+		return x.DeniedCategory
+	}
+	return ""
+}
+
+func (x *AuthorizeGatewayResponse) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *AuthorizeGatewayResponse) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+func (x *AuthorizeGatewayResponse) GetEndpointId() string {
+	if x != nil {
+		return x.EndpointId
+	}
+	return ""
+}
+
+type IssueAgentAccessRequest struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	RuntimeUuid     string                 `protobuf:"bytes,2,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
+	Capability      v1.AccessCapability    `protobuf:"varint,3,opt,name=capability,proto3,enum=agent.v1.AccessCapability" json:"capability,omitempty"`
+	EndpointId      string                 `protobuf:"bytes,4,opt,name=endpoint_id,json=endpointId,proto3" json:"endpoint_id,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *IssueAgentAccessRequest) Reset() {
+	*x = IssueAgentAccessRequest{}
+	mi := &file_component_v1_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IssueAgentAccessRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IssueAgentAccessRequest) ProtoMessage() {}
+
+func (x *IssueAgentAccessRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IssueAgentAccessRequest.ProtoReflect.Descriptor instead.
+func (*IssueAgentAccessRequest) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *IssueAgentAccessRequest) GetProtocolVersion() uint32 {
+	if x != nil {
+		return x.ProtocolVersion
+	}
+	return 0
+}
+
+func (x *IssueAgentAccessRequest) GetRuntimeUuid() string {
+	if x != nil {
+		return x.RuntimeUuid
+	}
+	return ""
+}
+
+func (x *IssueAgentAccessRequest) GetCapability() v1.AccessCapability {
+	if x != nil {
+		return x.Capability
+	}
+	return v1.AccessCapability(0)
+}
+
+func (x *IssueAgentAccessRequest) GetEndpointId() string {
+	if x != nil {
+		return x.EndpointId
+	}
+	return ""
+}
+
+type IssueAgentAccessResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Runtime       *GatewayRuntimeRoute   `protobuf:"bytes,1,opt,name=runtime,proto3" json:"runtime,omitempty"`
+	Ticket        string                 `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IssueAgentAccessResponse) Reset() {
+	*x = IssueAgentAccessResponse{}
+	mi := &file_component_v1_service_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IssueAgentAccessResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IssueAgentAccessResponse) ProtoMessage() {}
+
+func (x *IssueAgentAccessResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IssueAgentAccessResponse.ProtoReflect.Descriptor instead.
+func (*IssueAgentAccessResponse) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *IssueAgentAccessResponse) GetRuntime() *GatewayRuntimeRoute {
+	if x != nil {
+		return x.Runtime
+	}
+	return nil
+}
+
+func (x *IssueAgentAccessResponse) GetTicket() string {
+	if x != nil {
+		return x.Ticket
+	}
+	return ""
+}
+
+type CacheControlRequest struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	CacheId         string                 `protobuf:"bytes,2,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
+	SessionId       string                 `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	Sequence        uint64                 `protobuf:"varint,4,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	Status          *CacheStatus           `protobuf:"bytes,5,opt,name=status,proto3" json:"status,omitempty"`
+	// Types that are valid to be assigned to Maintenance:
+	//
+	//	*CacheControlRequest_BeginGc
+	//	*CacheControlRequest_CompleteGc
+	Maintenance   isCacheControlRequest_Maintenance `protobuf_oneof:"maintenance"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CacheControlRequest) Reset() {
+	*x = CacheControlRequest{}
+	mi := &file_component_v1_service_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CacheControlRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CacheControlRequest) ProtoMessage() {}
+
+func (x *CacheControlRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CacheControlRequest.ProtoReflect.Descriptor instead.
+func (*CacheControlRequest) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *CacheControlRequest) GetProtocolVersion() uint32 {
+	if x != nil {
+		return x.ProtocolVersion
+	}
+	return 0
+}
+
+func (x *CacheControlRequest) GetCacheId() string {
+	if x != nil {
+		return x.CacheId
+	}
+	return ""
+}
+
+func (x *CacheControlRequest) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *CacheControlRequest) GetSequence() uint64 {
+	if x != nil {
+		return x.Sequence
+	}
+	return 0
+}
+
+func (x *CacheControlRequest) GetStatus() *CacheStatus {
+	if x != nil {
+		return x.Status
+	}
+	return nil
+}
+
+func (x *CacheControlRequest) GetMaintenance() isCacheControlRequest_Maintenance {
+	if x != nil {
+		return x.Maintenance
+	}
+	return nil
+}
+
+func (x *CacheControlRequest) GetBeginGc() *CacheGCRequest {
+	if x != nil {
+		if x, ok := x.Maintenance.(*CacheControlRequest_BeginGc); ok {
+			return x.BeginGc
+		}
+	}
+	return nil
+}
+
+func (x *CacheControlRequest) GetCompleteGc() *CacheGCComplete {
+	if x != nil {
+		if x, ok := x.Maintenance.(*CacheControlRequest_CompleteGc); ok {
+			return x.CompleteGc
+		}
+	}
+	return nil
+}
+
+type isCacheControlRequest_Maintenance interface {
+	isCacheControlRequest_Maintenance()
+}
+
+type CacheControlRequest_BeginGc struct {
+	BeginGc *CacheGCRequest `protobuf:"bytes,6,opt,name=begin_gc,json=beginGc,proto3,oneof"`
+}
+
+type CacheControlRequest_CompleteGc struct {
+	CompleteGc *CacheGCComplete `protobuf:"bytes,7,opt,name=complete_gc,json=completeGc,proto3,oneof"`
+}
+
+func (*CacheControlRequest_BeginGc) isCacheControlRequest_Maintenance() {}
+
+func (*CacheControlRequest_CompleteGc) isCacheControlRequest_Maintenance() {}
+
+type CacheControlResponse struct {
+	state                      protoimpl.MessageState `protogen:"open.v1"`
+	ProtocolVersion            uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	Sequence                   uint64                 `protobuf:"varint,2,opt,name=sequence,proto3" json:"sequence,omitempty"`
+	PermitValidForMilliseconds int64                  `protobuf:"varint,3,opt,name=permit_valid_for_milliseconds,json=permitValidForMilliseconds,proto3" json:"permit_valid_for_milliseconds,omitempty"`
+	Config                     *CacheConfiguration    `protobuf:"bytes,4,opt,name=config,proto3" json:"config,omitempty"`
+	GcGrant                    *CacheGCGrant          `protobuf:"bytes,5,opt,name=gc_grant,json=gcGrant,proto3" json:"gc_grant,omitempty"`
+	unknownFields              protoimpl.UnknownFields
+	sizeCache                  protoimpl.SizeCache
+}
+
+func (x *CacheControlResponse) Reset() {
+	*x = CacheControlResponse{}
+	mi := &file_component_v1_service_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CacheControlResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CacheControlResponse) ProtoMessage() {}
+
+func (x *CacheControlResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CacheControlResponse.ProtoReflect.Descriptor instead.
+func (*CacheControlResponse) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *CacheControlResponse) GetProtocolVersion() uint32 {
+	if x != nil {
+		return x.ProtocolVersion
+	}
+	return 0
+}
+
+func (x *CacheControlResponse) GetSequence() uint64 {
+	if x != nil {
+		return x.Sequence
+	}
+	return 0
+}
+
+func (x *CacheControlResponse) GetPermitValidForMilliseconds() int64 {
+	if x != nil {
+		return x.PermitValidForMilliseconds
+	}
+	return 0
+}
+
+func (x *CacheControlResponse) GetConfig() *CacheConfiguration {
 	if x != nil {
 		return x.Config
 	}
 	return nil
 }
 
-func (x *GetCacheResponse) GetRegistryKey() []byte {
+func (x *CacheControlResponse) GetGcGrant() *CacheGCGrant {
 	if x != nil {
-		return x.RegistryKey
+		return x.GcGrant
 	}
 	return nil
-}
-
-func (x *GetCacheResponse) GetCleanupRevision() int64 {
-	if x != nil {
-		return x.CleanupRevision
-	}
-	return 0
-}
-
-func (x *GetCacheResponse) GetActiveBuilds() bool {
-	if x != nil {
-		return x.ActiveBuilds
-	}
-	return false
 }
 
 type CacheConfiguration struct {
@@ -1736,7 +1303,7 @@ type CacheConfiguration struct {
 
 func (x *CacheConfiguration) Reset() {
 	*x = CacheConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[25]
+	mi := &file_component_v1_service_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1748,7 +1315,7 @@ func (x *CacheConfiguration) String() string {
 func (*CacheConfiguration) ProtoMessage() {}
 
 func (x *CacheConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[25]
+	mi := &file_component_v1_service_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1761,7 +1328,7 @@ func (x *CacheConfiguration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CacheConfiguration.ProtoReflect.Descriptor instead.
 func (*CacheConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{25}
+	return file_component_v1_service_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *CacheConfiguration) GetId() string {
@@ -1853,7 +1420,7 @@ type CacheStorageConfiguration struct {
 
 func (x *CacheStorageConfiguration) Reset() {
 	*x = CacheStorageConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[26]
+	mi := &file_component_v1_service_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1865,7 +1432,7 @@ func (x *CacheStorageConfiguration) String() string {
 func (*CacheStorageConfiguration) ProtoMessage() {}
 
 func (x *CacheStorageConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[26]
+	mi := &file_component_v1_service_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1878,7 +1445,7 @@ func (x *CacheStorageConfiguration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CacheStorageConfiguration.ProtoReflect.Descriptor instead.
 func (*CacheStorageConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{26}
+	return file_component_v1_service_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *CacheStorageConfiguration) GetDriver() string {
@@ -1916,15 +1483,13 @@ type CacheS3Configuration struct {
 	Bucket         string                 `protobuf:"bytes,3,opt,name=bucket,proto3" json:"bucket,omitempty"`
 	Prefix         string                 `protobuf:"bytes,4,opt,name=prefix,proto3" json:"prefix,omitempty"`
 	ForcePathStyle bool                   `protobuf:"varint,5,opt,name=force_path_style,json=forcePathStyle,proto3" json:"force_path_style,omitempty"`
-	AccessKey      []byte                 `protobuf:"bytes,6,opt,name=access_key,json=accessKey,proto3" json:"access_key,omitempty"`
-	SecretKey      []byte                 `protobuf:"bytes,7,opt,name=secret_key,json=secretKey,proto3" json:"secret_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *CacheS3Configuration) Reset() {
 	*x = CacheS3Configuration{}
-	mi := &file_component_v1_service_proto_msgTypes[27]
+	mi := &file_component_v1_service_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1936,7 +1501,7 @@ func (x *CacheS3Configuration) String() string {
 func (*CacheS3Configuration) ProtoMessage() {}
 
 func (x *CacheS3Configuration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[27]
+	mi := &file_component_v1_service_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1949,7 +1514,7 @@ func (x *CacheS3Configuration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CacheS3Configuration.ProtoReflect.Descriptor instead.
 func (*CacheS3Configuration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{27}
+	return file_component_v1_service_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *CacheS3Configuration) GetEndpoint() string {
@@ -1987,20 +1552,6 @@ func (x *CacheS3Configuration) GetForcePathStyle() bool {
 	return false
 }
 
-func (x *CacheS3Configuration) GetAccessKey() []byte {
-	if x != nil {
-		return x.AccessKey
-	}
-	return nil
-}
-
-func (x *CacheS3Configuration) GetSecretKey() []byte {
-	if x != nil {
-		return x.SecretKey
-	}
-	return nil
-}
-
 type CacheUpstreamConfiguration struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Allow         []string               `protobuf:"bytes,1,rep,name=allow,proto3" json:"allow,omitempty"`
@@ -2010,7 +1561,7 @@ type CacheUpstreamConfiguration struct {
 
 func (x *CacheUpstreamConfiguration) Reset() {
 	*x = CacheUpstreamConfiguration{}
-	mi := &file_component_v1_service_proto_msgTypes[28]
+	mi := &file_component_v1_service_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2022,7 +1573,7 @@ func (x *CacheUpstreamConfiguration) String() string {
 func (*CacheUpstreamConfiguration) ProtoMessage() {}
 
 func (x *CacheUpstreamConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[28]
+	mi := &file_component_v1_service_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2035,7 +1586,7 @@ func (x *CacheUpstreamConfiguration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CacheUpstreamConfiguration.ProtoReflect.Descriptor instead.
 func (*CacheUpstreamConfiguration) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{28}
+	return file_component_v1_service_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *CacheUpstreamConfiguration) GetAllow() []string {
@@ -2043,74 +1594,6 @@ func (x *CacheUpstreamConfiguration) GetAllow() []string {
 		return x.Allow
 	}
 	return nil
-}
-
-type CacheOwner struct {
-	state                     protoimpl.MessageState `protogen:"open.v1"`
-	CacheId                   string                 `protobuf:"bytes,1,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
-	Id                        string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
-	ConfigRevision            int64                  `protobuf:"varint,3,opt,name=config_revision,json=configRevision,proto3" json:"config_revision,omitempty"`
-	ExpiresAtUnixMilliseconds int64                  `protobuf:"varint,4,opt,name=expires_at_unix_milliseconds,json=expiresAtUnixMilliseconds,proto3" json:"expires_at_unix_milliseconds,omitempty"`
-	unknownFields             protoimpl.UnknownFields
-	sizeCache                 protoimpl.SizeCache
-}
-
-func (x *CacheOwner) Reset() {
-	*x = CacheOwner{}
-	mi := &file_component_v1_service_proto_msgTypes[29]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CacheOwner) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CacheOwner) ProtoMessage() {}
-
-func (x *CacheOwner) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[29]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CacheOwner.ProtoReflect.Descriptor instead.
-func (*CacheOwner) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{29}
-}
-
-func (x *CacheOwner) GetCacheId() string {
-	if x != nil {
-		return x.CacheId
-	}
-	return ""
-}
-
-func (x *CacheOwner) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-func (x *CacheOwner) GetConfigRevision() int64 {
-	if x != nil {
-		return x.ConfigRevision
-	}
-	return 0
-}
-
-func (x *CacheOwner) GetExpiresAtUnixMilliseconds() int64 {
-	if x != nil {
-		return x.ExpiresAtUnixMilliseconds
-	}
-	return 0
 }
 
 type CacheStatus struct {
@@ -2128,7 +1611,7 @@ type CacheStatus struct {
 
 func (x *CacheStatus) Reset() {
 	*x = CacheStatus{}
-	mi := &file_component_v1_service_proto_msgTypes[30]
+	mi := &file_component_v1_service_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2140,7 +1623,7 @@ func (x *CacheStatus) String() string {
 func (*CacheStatus) ProtoMessage() {}
 
 func (x *CacheStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[30]
+	mi := &file_component_v1_service_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2153,7 +1636,7 @@ func (x *CacheStatus) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CacheStatus.ProtoReflect.Descriptor instead.
 func (*CacheStatus) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{30}
+	return file_component_v1_service_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *CacheStatus) GetPublicUrl() string {
@@ -2205,74 +1688,6 @@ func (x *CacheStatus) GetCleanupResult() string {
 	return ""
 }
 
-type CacheSession struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CacheId       string                 `protobuf:"bytes,1,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
-	Namespace     string                 `protobuf:"bytes,2,opt,name=namespace,proto3" json:"namespace,omitempty"`
-	Public        bool                   `protobuf:"varint,3,opt,name=public,proto3" json:"public,omitempty"`
-	Build         bool                   `protobuf:"varint,4,opt,name=build,proto3" json:"build,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CacheSession) Reset() {
-	*x = CacheSession{}
-	mi := &file_component_v1_service_proto_msgTypes[31]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CacheSession) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CacheSession) ProtoMessage() {}
-
-func (x *CacheSession) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[31]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CacheSession.ProtoReflect.Descriptor instead.
-func (*CacheSession) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{31}
-}
-
-func (x *CacheSession) GetCacheId() string {
-	if x != nil {
-		return x.CacheId
-	}
-	return ""
-}
-
-func (x *CacheSession) GetNamespace() string {
-	if x != nil {
-		return x.Namespace
-	}
-	return ""
-}
-
-func (x *CacheSession) GetPublic() bool {
-	if x != nil {
-		return x.Public
-	}
-	return false
-}
-
-func (x *CacheSession) GetBuild() bool {
-	if x != nil {
-		return x.Build
-	}
-	return false
-}
-
 type CacheGCGrant struct {
 	state                     protoimpl.MessageState `protogen:"open.v1"`
 	CacheId                   string                 `protobuf:"bytes,1,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
@@ -2285,7 +1700,7 @@ type CacheGCGrant struct {
 
 func (x *CacheGCGrant) Reset() {
 	*x = CacheGCGrant{}
-	mi := &file_component_v1_service_proto_msgTypes[32]
+	mi := &file_component_v1_service_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2297,7 +1712,7 @@ func (x *CacheGCGrant) String() string {
 func (*CacheGCGrant) ProtoMessage() {}
 
 func (x *CacheGCGrant) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[32]
+	mi := &file_component_v1_service_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2310,7 +1725,7 @@ func (x *CacheGCGrant) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CacheGCGrant.ProtoReflect.Descriptor instead.
 func (*CacheGCGrant) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{32}
+	return file_component_v1_service_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *CacheGCGrant) GetCacheId() string {
@@ -2341,30 +1756,27 @@ func (x *CacheGCGrant) GetExpiresAtUnixMilliseconds() int64 {
 	return 0
 }
 
-type ClaimCacheRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CacheId         string                 `protobuf:"bytes,2,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
-	InstanceId      string                 `protobuf:"bytes,3,opt,name=instance_id,json=instanceId,proto3" json:"instance_id,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+type CacheGCRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ClaimCacheRequest) Reset() {
-	*x = ClaimCacheRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[33]
+func (x *CacheGCRequest) Reset() {
+	*x = CacheGCRequest{}
+	mi := &file_component_v1_service_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ClaimCacheRequest) String() string {
+func (x *CacheGCRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ClaimCacheRequest) ProtoMessage() {}
+func (*CacheGCRequest) ProtoMessage() {}
 
-func (x *ClaimCacheRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[33]
+func (x *CacheGCRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2375,703 +1787,173 @@ func (x *ClaimCacheRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ClaimCacheRequest.ProtoReflect.Descriptor instead.
-func (*ClaimCacheRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{33}
+// Deprecated: Use CacheGCRequest.ProtoReflect.Descriptor instead.
+func (*CacheGCRequest) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *ClaimCacheRequest) GetProtocolVersion() uint32 {
+type CacheGCComplete struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GrantId       string                 `protobuf:"bytes,1,opt,name=grant_id,json=grantId,proto3" json:"grant_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CacheGCComplete) Reset() {
+	*x = CacheGCComplete{}
+	mi := &file_component_v1_service_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CacheGCComplete) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CacheGCComplete) ProtoMessage() {}
+
+func (x *CacheGCComplete) ProtoReflect() protoreflect.Message {
+	mi := &file_component_v1_service_proto_msgTypes[23]
 	if x != nil {
-		return x.ProtocolVersion
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
 	}
-	return 0
+	return mi.MessageOf(x)
 }
 
-func (x *ClaimCacheRequest) GetCacheId() string {
+// Deprecated: Use CacheGCComplete.ProtoReflect.Descriptor instead.
+func (*CacheGCComplete) Descriptor() ([]byte, []int) {
+	return file_component_v1_service_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *CacheGCComplete) GetGrantId() string {
 	if x != nil {
-		return x.CacheId
+		return x.GrantId
 	}
 	return ""
-}
-
-func (x *ClaimCacheRequest) GetInstanceId() string {
-	if x != nil {
-		return x.InstanceId
-	}
-	return ""
-}
-
-type ClaimCacheResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Owner         *CacheOwner            `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ClaimCacheResponse) Reset() {
-	*x = ClaimCacheResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[34]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ClaimCacheResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ClaimCacheResponse) ProtoMessage() {}
-
-func (x *ClaimCacheResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[34]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ClaimCacheResponse.ProtoReflect.Descriptor instead.
-func (*ClaimCacheResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{34}
-}
-
-func (x *ClaimCacheResponse) GetOwner() *CacheOwner {
-	if x != nil {
-		return x.Owner
-	}
-	return nil
-}
-
-type HeartbeatCacheRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	Owner           *CacheOwner            `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
-	Status          *CacheStatus           `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *HeartbeatCacheRequest) Reset() {
-	*x = HeartbeatCacheRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[35]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *HeartbeatCacheRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*HeartbeatCacheRequest) ProtoMessage() {}
-
-func (x *HeartbeatCacheRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[35]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use HeartbeatCacheRequest.ProtoReflect.Descriptor instead.
-func (*HeartbeatCacheRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{35}
-}
-
-func (x *HeartbeatCacheRequest) GetProtocolVersion() uint32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *HeartbeatCacheRequest) GetOwner() *CacheOwner {
-	if x != nil {
-		return x.Owner
-	}
-	return nil
-}
-
-func (x *HeartbeatCacheRequest) GetStatus() *CacheStatus {
-	if x != nil {
-		return x.Status
-	}
-	return nil
-}
-
-type HeartbeatCacheResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *HeartbeatCacheResponse) Reset() {
-	*x = HeartbeatCacheResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[36]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *HeartbeatCacheResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*HeartbeatCacheResponse) ProtoMessage() {}
-
-func (x *HeartbeatCacheResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[36]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use HeartbeatCacheResponse.ProtoReflect.Descriptor instead.
-func (*HeartbeatCacheResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{36}
-}
-
-type ReleaseCacheRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	Owner           *CacheOwner            `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *ReleaseCacheRequest) Reset() {
-	*x = ReleaseCacheRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[37]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReleaseCacheRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReleaseCacheRequest) ProtoMessage() {}
-
-func (x *ReleaseCacheRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[37]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReleaseCacheRequest.ProtoReflect.Descriptor instead.
-func (*ReleaseCacheRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{37}
-}
-
-func (x *ReleaseCacheRequest) GetProtocolVersion() uint32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *ReleaseCacheRequest) GetOwner() *CacheOwner {
-	if x != nil {
-		return x.Owner
-	}
-	return nil
-}
-
-type ReleaseCacheResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ReleaseCacheResponse) Reset() {
-	*x = ReleaseCacheResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[38]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ReleaseCacheResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ReleaseCacheResponse) ProtoMessage() {}
-
-func (x *ReleaseCacheResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[38]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ReleaseCacheResponse.ProtoReflect.Descriptor instead.
-func (*ReleaseCacheResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{38}
-}
-
-type VerifyCacheTokenRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	CacheId         string                 `protobuf:"bytes,2,opt,name=cache_id,json=cacheId,proto3" json:"cache_id,omitempty"`
-	Token           string                 `protobuf:"bytes,3,opt,name=token,proto3" json:"token,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *VerifyCacheTokenRequest) Reset() {
-	*x = VerifyCacheTokenRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[39]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *VerifyCacheTokenRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*VerifyCacheTokenRequest) ProtoMessage() {}
-
-func (x *VerifyCacheTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[39]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use VerifyCacheTokenRequest.ProtoReflect.Descriptor instead.
-func (*VerifyCacheTokenRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{39}
-}
-
-func (x *VerifyCacheTokenRequest) GetProtocolVersion() uint32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *VerifyCacheTokenRequest) GetCacheId() string {
-	if x != nil {
-		return x.CacheId
-	}
-	return ""
-}
-
-func (x *VerifyCacheTokenRequest) GetToken() string {
-	if x != nil {
-		return x.Token
-	}
-	return ""
-}
-
-type VerifyCacheTokenResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Session       *CacheSession          `protobuf:"bytes,1,opt,name=session,proto3" json:"session,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *VerifyCacheTokenResponse) Reset() {
-	*x = VerifyCacheTokenResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[40]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *VerifyCacheTokenResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*VerifyCacheTokenResponse) ProtoMessage() {}
-
-func (x *VerifyCacheTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[40]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use VerifyCacheTokenResponse.ProtoReflect.Descriptor instead.
-func (*VerifyCacheTokenResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{40}
-}
-
-func (x *VerifyCacheTokenResponse) GetSession() *CacheSession {
-	if x != nil {
-		return x.Session
-	}
-	return nil
-}
-
-type BeginCacheGCRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	Owner           *CacheOwner            `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
-	CleanupRevision int64                  `protobuf:"varint,3,opt,name=cleanup_revision,json=cleanupRevision,proto3" json:"cleanup_revision,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *BeginCacheGCRequest) Reset() {
-	*x = BeginCacheGCRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[41]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BeginCacheGCRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BeginCacheGCRequest) ProtoMessage() {}
-
-func (x *BeginCacheGCRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[41]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BeginCacheGCRequest.ProtoReflect.Descriptor instead.
-func (*BeginCacheGCRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{41}
-}
-
-func (x *BeginCacheGCRequest) GetProtocolVersion() uint32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *BeginCacheGCRequest) GetOwner() *CacheOwner {
-	if x != nil {
-		return x.Owner
-	}
-	return nil
-}
-
-func (x *BeginCacheGCRequest) GetCleanupRevision() int64 {
-	if x != nil {
-		return x.CleanupRevision
-	}
-	return 0
-}
-
-type BeginCacheGCResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Grant         *CacheGCGrant          `protobuf:"bytes,1,opt,name=grant,proto3" json:"grant,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *BeginCacheGCResponse) Reset() {
-	*x = BeginCacheGCResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[42]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *BeginCacheGCResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*BeginCacheGCResponse) ProtoMessage() {}
-
-func (x *BeginCacheGCResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[42]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use BeginCacheGCResponse.ProtoReflect.Descriptor instead.
-func (*BeginCacheGCResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{42}
-}
-
-func (x *BeginCacheGCResponse) GetGrant() *CacheGCGrant {
-	if x != nil {
-		return x.Grant
-	}
-	return nil
-}
-
-type CompleteCacheGCRequest struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	ProtocolVersion uint32                 `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
-	Grant           *CacheGCGrant          `protobuf:"bytes,2,opt,name=grant,proto3" json:"grant,omitempty"`
-	Result          string                 `protobuf:"bytes,3,opt,name=result,proto3" json:"result,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
-}
-
-func (x *CompleteCacheGCRequest) Reset() {
-	*x = CompleteCacheGCRequest{}
-	mi := &file_component_v1_service_proto_msgTypes[43]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CompleteCacheGCRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CompleteCacheGCRequest) ProtoMessage() {}
-
-func (x *CompleteCacheGCRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[43]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CompleteCacheGCRequest.ProtoReflect.Descriptor instead.
-func (*CompleteCacheGCRequest) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{43}
-}
-
-func (x *CompleteCacheGCRequest) GetProtocolVersion() uint32 {
-	if x != nil {
-		return x.ProtocolVersion
-	}
-	return 0
-}
-
-func (x *CompleteCacheGCRequest) GetGrant() *CacheGCGrant {
-	if x != nil {
-		return x.Grant
-	}
-	return nil
-}
-
-func (x *CompleteCacheGCRequest) GetResult() string {
-	if x != nil {
-		return x.Result
-	}
-	return ""
-}
-
-type CompleteCacheGCResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CompleteCacheGCResponse) Reset() {
-	*x = CompleteCacheGCResponse{}
-	mi := &file_component_v1_service_proto_msgTypes[44]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CompleteCacheGCResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CompleteCacheGCResponse) ProtoMessage() {}
-
-func (x *CompleteCacheGCResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_component_v1_service_proto_msgTypes[44]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CompleteCacheGCResponse.ProtoReflect.Descriptor instead.
-func (*CompleteCacheGCResponse) Descriptor() ([]byte, []int) {
-	return file_component_v1_service_proto_rawDescGZIP(), []int{44}
 }
 
 var File_component_v1_service_proto protoreflect.FileDescriptor
 
 const file_component_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1acomponent/v1/service.proto\x12\fcomponent.v1\"D\n" +
-	"\x17GetGatewayConfigRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\"\xf2\x01\n" +
-	"\x18GetGatewayConfigResponse\x12\x1a\n" +
-	"\brevision\x18\x01 \x01(\x04R\brevision\x12:\n" +
-	"\x06config\x18\x02 \x01(\v2\".component.v1.GatewayConfigurationR\x06config\x12<\n" +
+	"\x1acomponent/v1/service.proto\x12\fcomponent.v1\x1a\x16agent/v1/service.proto\"\xa2\x02\n" +
+	"\x15GatewayControlRequest\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x1d\n" +
 	"\n" +
-	"placements\x18\x03 \x03(\v2\x1c.component.v1.RuntimeBindingR\n" +
-	"placements\x12@\n" +
-	"\bruntimes\x18\x04 \x03(\v2$.component.v1.GatewayRuntimeSnapshotR\bruntimes\"b\n" +
-	"\x19WatchGatewayConfigRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x1a\n" +
-	"\brevision\x18\x02 \x01(\x04R\brevision\"\x9e\x02\n" +
-	"\x1aWatchGatewayConfigResponse\x12\x1a\n" +
-	"\brevision\x18\x01 \x01(\x04R\brevision\x12\x14\n" +
-	"\x05reset\x18\x02 \x01(\bR\x05reset\x12:\n" +
-	"\x06config\x18\x03 \x01(\v2\".component.v1.GatewayConfigurationR\x06config\x12H\n" +
-	"\x0eruntime_events\x18\x04 \x03(\v2!.component.v1.GatewayRuntimeEventR\rruntimeEvents\x12H\n" +
-	"\x0ebinding_events\x18\x05 \x03(\v2!.component.v1.RuntimeBindingEventR\rbindingEvents\"\x8f\x02\n" +
-	"\x1cReportGatewayActivityRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x1f\n" +
-	"\vinstance_id\x18\x02 \x01(\tR\n" +
-	"instanceId\x12N\n" +
-	"\x06counts\x18\x03 \x03(\v26.component.v1.ReportGatewayActivityRequest.CountsEntryR\x06counts\x12\x18\n" +
-	"\arelease\x18\x04 \x01(\bR\arelease\x1a9\n" +
-	"\vCountsEntry\x12\x10\n" +
+	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x1a\n" +
+	"\bsequence\x18\x03 \x01(\x04R\bsequence\x12`\n" +
+	"\x0factive_sessions\x18\x04 \x03(\v27.component.v1.GatewayControlRequest.ActiveSessionsEntryR\x0eactiveSessions\x1aA\n" +
+	"\x13ActiveSessionsEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"\x1f\n" +
-	"\x1dReportGatewayActivityResponse\"\xe5\x02\n" +
-	"\x14GatewayConfiguration\x123\n" +
-	"\x04node\x18\x01 \x01(\v2\x1f.component.v1.NodeConfigurationR\x04node\x12A\n" +
-	"\agateway\x18\x02 \x01(\v2'.component.v1.GatewayConfigurationValueR\agateway\x121\n" +
-	"\x05sites\x18\x03 \x03(\v2\x1b.component.v1.ComponentSiteR\x05sites\x12:\n" +
-	"\bbackends\x18\x04 \x03(\v2\x1e.component.v1.ComponentBackendR\bbackends\x12&\n" +
-	"\x0fssh_private_key\x18\x05 \x01(\fR\rsshPrivateKey\x12>\n" +
-	"\x1cssh_private_key_updated_unix\x18\x06 \x01(\x03R\x18sshPrivateKeyUpdatedUnix\"\x93\x01\n" +
-	"\x11NodeConfiguration\x12:\n" +
-	"\x19http_timeout_milliseconds\x18\x01 \x01(\x03R\x17httpTimeoutMilliseconds\x12B\n" +
-	"\x1dshutdown_timeout_milliseconds\x18\x02 \x01(\x03R\x1bshutdownTimeoutMilliseconds\"\x99\x02\n" +
-	"\x19GatewayConfigurationValue\x12:\n" +
-	"\x04http\x18\x01 \x01(\v2&.component.v1.GatewayHTTPConfigurationR\x04http\x127\n" +
-	"\x03ssh\x18\x02 \x01(\v2%.component.v1.GatewaySSHConfigurationR\x03ssh\x12E\n" +
-	"\bsessions\x18\x03 \x01(\v2).component.v1.GatewaySessionConfigurationR\bsessions\x12@\n" +
-	"\x06limits\x18\x04 \x01(\v2(.component.v1.GatewayLimitsConfigurationR\x06limits\"Q\n" +
-	"\x18GatewayHTTPConfiguration\x12\x16\n" +
-	"\x06listen\x18\x01 \x01(\tR\x06listen\x12\x1d\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\"\xd9\x02\n" +
+	"\x16GatewayControlResponse\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x1a\n" +
+	"\bsequence\x18\x02 \x01(\x04R\bsequence\x12A\n" +
+	"\x1dpermit_valid_for_milliseconds\x18\x03 \x01(\x03R\x1apermitValidForMilliseconds\x12\x16\n" +
+	"\x06cursor\x18\x04 \x01(\tR\x06cursor\x12\x1a\n" +
+	"\bsnapshot\x18\x05 \x01(\bR\bsnapshot\x12B\n" +
+	"\x06config\x18\x06 \x01(\v2*.component.v1.GatewayConfigurationSnapshotR\x06config\x12=\n" +
+	"\bruntimes\x18\a \x03(\v2!.component.v1.GatewayRuntimeRouteR\bruntimes\"\x8c\x05\n" +
+	"\x1cGatewayConfigurationSnapshot\x12\x1f\n" +
+	"\vhttp_listen\x18\x01 \x01(\tR\n" +
+	"httpListen\x12\x1d\n" +
 	"\n" +
-	"public_url\x18\x02 \x01(\tR\tpublicUrl\"\x96\x02\n" +
-	"\x17GatewaySSHConfiguration\x12\x16\n" +
-	"\x06listen\x18\x01 \x01(\tR\x06listen\x12\x1f\n" +
-	"\vpublic_addr\x18\x02 \x01(\tR\n" +
-	"publicAddr\x12D\n" +
-	"\x1ehandshake_timeout_milliseconds\x18\x03 \x01(\x03R\x1chandshakeTimeoutMilliseconds\x12=\n" +
-	"\x1bmax_channels_per_connection\x18\x04 \x01(\x05R\x18maxChannelsPerConnection\x12=\n" +
-	"\x04auth\x18\x05 \x01(\v2).component.v1.GatewaySSHAuthConfigurationR\x04auth\"\xc9\x02\n" +
-	"\x1bGatewaySSHAuthConfiguration\x12-\n" +
-	"\x13max_attempts_per_ip\x18\x01 \x01(\x05R\x10maxAttemptsPerIp\x12;\n" +
-	"\x1amax_attempts_per_codespace\x18\x02 \x01(\x05R\x17maxAttemptsPerCodespace\x12@\n" +
-	"\x1dmax_attempts_per_ip_codespace\x18\x03 \x01(\x05R\x19maxAttemptsPerIpCodespace\x12<\n" +
-	"\x1bmax_attempts_per_public_key\x18\x04 \x01(\x05R\x17maxAttemptsPerPublicKey\x12>\n" +
-	"\x1bfailure_window_milliseconds\x18\x05 \x01(\x03R\x19failureWindowMilliseconds\"\x9c\x02\n" +
-	"\x1bGatewaySessionConfiguration\x12)\n" +
-	"\x10ttl_milliseconds\x18\x01 \x01(\x03R\x0fttlMilliseconds\x12:\n" +
-	"\x19idle_timeout_milliseconds\x18\x02 \x01(\x03R\x17idleTimeoutMilliseconds\x12H\n" +
-	" revalidate_interval_milliseconds\x18\x03 \x01(\x03R\x1erevalidateIntervalMilliseconds\x12*\n" +
-	"\x11max_per_codespace\x18\x04 \x01(\x05R\x0fmaxPerCodespace\x12 \n" +
-	"\fmax_per_user\x18\x05 \x01(\x05R\n" +
-	"maxPerUser\"\xcb\x02\n" +
-	"\x1aGatewayLimitsConfiguration\x12,\n" +
-	"\x12max_inflight_total\x18\x01 \x01(\x05R\x10maxInflightTotal\x127\n" +
-	"\x18max_inflight_per_session\x18\x02 \x01(\x05R\x15maxInflightPerSession\x12L\n" +
-	"#public_max_connections_per_endpoint\x18\x03 \x01(\x05R\x1fpublicMaxConnectionsPerEndpoint\x12@\n" +
-	"\x1dpublic_max_connections_per_ip\x18\x04 \x01(\x05R\x19publicMaxConnectionsPerIp\x126\n" +
-	"\x17validation_max_inflight\x18\x05 \x01(\x05R\x15validationMaxInflight\"\x9c\x01\n" +
-	"\rComponentSite\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
-	"\tgitea_url\x18\x02 \x01(\tR\bgiteaUrl\x12\x1d\n" +
+	"public_url\x18\x02 \x01(\tR\tpublicUrl\x12\x1d\n" +
 	"\n" +
-	"manager_id\x18\x03 \x01(\x03R\tmanagerId\x12%\n" +
-	"\x0emanager_secret\x18\x04 \x01(\fR\rmanagerSecret\x12\x18\n" +
-	"\aenabled\x18\x05 \x01(\bR\aenabled\"}\n" +
-	"\x10ComponentBackend\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\aenabled\x18\x02 \x01(\bR\aenabled\x12?\n" +
-	"\x05incus\x18\x03 \x01(\v2).component.v1.ComponentIncusConfigurationR\x05incus\"\xd9\x01\n" +
-	"\x1bComponentIncusConfiguration\x12\x1a\n" +
-	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12-\n" +
-	"\x12client_certificate\x18\x02 \x01(\fR\x11clientCertificate\x12\x1d\n" +
-	"\n" +
-	"client_key\x18\x03 \x01(\fR\tclientKey\x12-\n" +
-	"\x12server_certificate\x18\x04 \x01(\fR\x11serverCertificate\x12!\n" +
-	"\fproject_name\x18\x05 \x01(\tR\vprojectName\"k\n" +
-	"\x0eRuntimeBinding\x12!\n" +
-	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12\x17\n" +
-	"\asite_id\x18\x02 \x01(\x03R\x06siteId\x12\x1d\n" +
-	"\n" +
-	"backend_id\x18\x03 \x01(\tR\tbackendId\"\x94\x03\n" +
-	"\x16GatewayRuntimeSnapshot\x12!\n" +
-	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12\x17\n" +
-	"\asite_id\x18\x02 \x01(\x03R\x06siteId\x12#\n" +
-	"\rinstance_name\x18\x03 \x01(\tR\finstanceName\x12\x18\n" +
-	"\aworkdir\x18\x04 \x01(\tR\aworkdir\x12\x10\n" +
-	"\x03uid\x18\x05 \x01(\rR\x03uid\x12\x10\n" +
-	"\x03gid\x18\x06 \x01(\rR\x03gid\x12!\n" +
-	"\fcontainer_id\x18\a \x01(\tR\vcontainerId\x12%\n" +
-	"\x0econtainer_user\x18\b \x01(\tR\rcontainerUser\x12+\n" +
-	"\x11container_workdir\x18\t \x01(\tR\x10containerWorkdir\x12\x1f\n" +
-	"\veditor_port\x18\n" +
-	" \x01(\rR\n" +
-	"editorPort\x12C\n" +
-	"\tendpoints\x18\v \x03(\v2%.component.v1.GatewayEndpointSnapshotR\tendpoints\"\x8d\x01\n" +
-	"\x17GatewayEndpointSnapshot\x12\x1f\n" +
+	"ssh_listen\x18\x03 \x01(\tR\tsshListen\x12,\n" +
+	"\x12ssh_public_address\x18\x04 \x01(\tR\x10sshPublicAddress\x128\n" +
+	"\x18session_ttl_milliseconds\x18\x05 \x01(\x03R\x16sessionTtlMilliseconds\x12I\n" +
+	"!session_idle_timeout_milliseconds\x18\x06 \x01(\x03R\x1esessionIdleTimeoutMilliseconds\x12H\n" +
+	" revalidate_interval_milliseconds\x18\a \x01(\x03R\x1erevalidateIntervalMilliseconds\x12;\n" +
+	"\x1amax_sessions_per_codespace\x18\b \x01(\x05R\x17maxSessionsPerCodespace\x121\n" +
+	"\x15max_sessions_per_user\x18\t \x01(\x05R\x12maxSessionsPerUser\x12!\n" +
+	"\fmax_inflight\x18\n" +
+	" \x01(\x05R\vmaxInflight\x127\n" +
+	"\x18max_inflight_per_session\x18\v \x01(\x05R\x15maxInflightPerSession\x12D\n" +
+	"\x1fmax_channels_per_ssh_connection\x18\f \x01(\x05R\x1bmaxChannelsPerSshConnection\"\xbc\x02\n" +
+	"\x13GatewayRuntimeRoute\x12\x19\n" +
+	"\bsite_uid\x18\x01 \x01(\tR\asiteUid\x12!\n" +
+	"\fresource_uid\x18\x02 \x01(\tR\vresourceUid\x12!\n" +
+	"\fruntime_uuid\x18\x03 \x01(\tR\vruntimeUuid\x12\x17\n" +
+	"\apod_uid\x18\x04 \x01(\tR\x06podUid\x12#\n" +
+	"\ragent_address\x18\x05 \x01(\tR\fagentAddress\x12%\n" +
+	"\x0etarget_version\x18\x06 \x01(\x03R\rtargetVersion\x12;\n" +
+	"\tendpoints\x18\a \x03(\v2\x1d.component.v1.GatewayEndpointR\tendpoints\x12\"\n" +
+	"\rgitea_web_url\x18\b \x01(\tR\vgiteaWebUrl\"`\n" +
+	"\x0fGatewayEndpoint\x12\x1f\n" +
 	"\vendpoint_id\x18\x01 \x01(\tR\n" +
 	"endpointId\x12\x14\n" +
-	"\x05label\x18\x02 \x01(\tR\x05label\x12#\n" +
-	"\rupstream_port\x18\x03 \x01(\rR\fupstreamPort\x12\x16\n" +
-	"\x06public\x18\x04 \x01(\bR\x06public\"\x95\x01\n" +
-	"\x13GatewayRuntimeEvent\x12>\n" +
-	"\x06upsert\x18\x01 \x01(\v2$.component.v1.GatewayRuntimeSnapshotH\x00R\x06upsert\x125\n" +
-	"\x06delete\x18\x02 \x01(\v2\x1b.component.v1.RuntimeDeleteH\x00R\x06deleteB\a\n" +
-	"\x05event\"\x8d\x01\n" +
-	"\x13RuntimeBindingEvent\x126\n" +
-	"\x06upsert\x18\x01 \x01(\v2\x1c.component.v1.RuntimeBindingH\x00R\x06upsert\x125\n" +
-	"\x06delete\x18\x02 \x01(\v2\x1b.component.v1.RuntimeDeleteH\x00R\x06deleteB\a\n" +
-	"\x05event\"2\n" +
-	"\rRuntimeDelete\x12!\n" +
-	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\"W\n" +
-	"\x0fGetCacheRequest\x12)\n" +
+	"\x05label\x18\x02 \x01(\tR\x05label\x12\x16\n" +
+	"\x06public\x18\x03 \x01(\bR\x06public\"\xdd\x03\n" +
+	"\x17AuthorizeGatewayRequest\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12B\n" +
+	"\topen_code\x18\x02 \x01(\v2#.component.v1.OpenCodeAuthorizationH\x00R\bopenCode\x12T\n" +
+	"\x0fpublic_endpoint\x18\x03 \x01(\v2).component.v1.PublicEndpointAuthorizationH\x00R\x0epublicEndpoint\x12O\n" +
+	"\x0essh_public_key\x18\x04 \x01(\v2'.component.v1.SSHPublicKeyAuthorizationH\x00R\fsshPublicKey\x12W\n" +
+	"\x10endpoint_session\x18\x05 \x01(\v2*.component.v1.EndpointSessionAuthorizationH\x00R\x0fendpointSession\x12H\n" +
+	"\vssh_session\x18\x06 \x01(\v2%.component.v1.SSHSessionAuthorizationH\x00R\n" +
+	"sshSessionB\t\n" +
+	"\arequest\"o\n" +
+	"\x15OpenCodeAuthorization\x12\x12\n" +
+	"\x04code\x18\x01 \x01(\tR\x04code\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\x1f\n" +
+	"\vendpoint_id\x18\x03 \x01(\tR\n" +
+	"endpointId\"a\n" +
+	"\x1bPublicEndpointAuthorization\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12\x1f\n" +
+	"\vendpoint_id\x18\x02 \x01(\tR\n" +
+	"endpointId\"]\n" +
+	"\x19SSHPublicKeyAuthorization\x12!\n" +
+	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12\x1d\n" +
+	"\n" +
+	"public_key\x18\x02 \x01(\fR\tpublicKey\"{\n" +
+	"\x1cEndpointSessionAuthorization\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12\x1f\n" +
+	"\vendpoint_id\x18\x03 \x01(\tR\n" +
+	"endpointId\"U\n" +
+	"\x17SSHSessionAuthorization\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\"\xba\x01\n" +
+	"\x18AuthorizeGatewayResponse\x12\x18\n" +
+	"\aallowed\x18\x01 \x01(\bR\aallowed\x12'\n" +
+	"\x0fdenied_category\x18\x02 \x01(\tR\x0edeniedCategory\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\x03R\x06userId\x12!\n" +
+	"\fruntime_uuid\x18\x04 \x01(\tR\vruntimeUuid\x12\x1f\n" +
+	"\vendpoint_id\x18\x05 \x01(\tR\n" +
+	"endpointId\"\xc4\x01\n" +
+	"\x17IssueAgentAccessRequest\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12!\n" +
+	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12:\n" +
+	"\n" +
+	"capability\x18\x03 \x01(\x0e2\x1a.agent.v1.AccessCapabilityR\n" +
+	"capability\x12\x1f\n" +
+	"\vendpoint_id\x18\x04 \x01(\tR\n" +
+	"endpointId\"o\n" +
+	"\x18IssueAgentAccessResponse\x12;\n" +
+	"\aruntime\x18\x01 \x01(\v2!.component.v1.GatewayRuntimeRouteR\aruntime\x12\x16\n" +
+	"\x06ticket\x18\x02 \x01(\tR\x06ticket\"\xd5\x02\n" +
+	"\x13CacheControlRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x19\n" +
-	"\bcache_id\x18\x02 \x01(\tR\acacheId\"\xbf\x01\n" +
-	"\x10GetCacheResponse\x128\n" +
-	"\x06config\x18\x01 \x01(\v2 .component.v1.CacheConfigurationR\x06config\x12!\n" +
-	"\fregistry_key\x18\x02 \x01(\fR\vregistryKey\x12)\n" +
-	"\x10cleanup_revision\x18\x03 \x01(\x03R\x0fcleanupRevision\x12#\n" +
-	"\ractive_builds\x18\x04 \x01(\bR\factiveBuilds\"\xa6\x04\n" +
+	"\bcache_id\x18\x02 \x01(\tR\acacheId\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x03 \x01(\tR\tsessionId\x12\x1a\n" +
+	"\bsequence\x18\x04 \x01(\x04R\bsequence\x121\n" +
+	"\x06status\x18\x05 \x01(\v2\x19.component.v1.CacheStatusR\x06status\x129\n" +
+	"\bbegin_gc\x18\x06 \x01(\v2\x1c.component.v1.CacheGCRequestH\x00R\abeginGc\x12@\n" +
+	"\vcomplete_gc\x18\a \x01(\v2\x1d.component.v1.CacheGCCompleteH\x00R\n" +
+	"completeGcB\r\n" +
+	"\vmaintenance\"\x91\x02\n" +
+	"\x14CacheControlResponse\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x1a\n" +
+	"\bsequence\x18\x02 \x01(\x04R\bsequence\x12A\n" +
+	"\x1dpermit_valid_for_milliseconds\x18\x03 \x01(\x03R\x1apermitValidForMilliseconds\x128\n" +
+	"\x06config\x18\x04 \x01(\v2 .component.v1.CacheConfigurationR\x06config\x125\n" +
+	"\bgc_grant\x18\x05 \x01(\v2\x1a.component.v1.CacheGCGrantR\agcGrant\"\xa6\x04\n" +
 	"\x12CacheConfiguration\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1a\n" +
@@ -3093,25 +1975,15 @@ const file_component_v1_service_proto_rawDesc = "" +
 	"\x06driver\x18\x01 \x01(\tR\x06driver\x12\x12\n" +
 	"\x04path\x18\x02 \x01(\tR\x04path\x12$\n" +
 	"\x0emin_free_space\x18\x03 \x01(\tR\fminFreeSpace\x122\n" +
-	"\x02s3\x18\x04 \x01(\v2\".component.v1.CacheS3ConfigurationR\x02s3\"\xe2\x01\n" +
+	"\x02s3\x18\x04 \x01(\v2\".component.v1.CacheS3ConfigurationR\x02s3\"\xa4\x01\n" +
 	"\x14CacheS3Configuration\x12\x1a\n" +
 	"\bendpoint\x18\x01 \x01(\tR\bendpoint\x12\x16\n" +
 	"\x06region\x18\x02 \x01(\tR\x06region\x12\x16\n" +
 	"\x06bucket\x18\x03 \x01(\tR\x06bucket\x12\x16\n" +
 	"\x06prefix\x18\x04 \x01(\tR\x06prefix\x12(\n" +
-	"\x10force_path_style\x18\x05 \x01(\bR\x0eforcePathStyle\x12\x1d\n" +
-	"\n" +
-	"access_key\x18\x06 \x01(\fR\taccessKey\x12\x1d\n" +
-	"\n" +
-	"secret_key\x18\a \x01(\fR\tsecretKey\"2\n" +
+	"\x10force_path_style\x18\x05 \x01(\bR\x0eforcePathStyle\"2\n" +
 	"\x1aCacheUpstreamConfiguration\x12\x14\n" +
-	"\x05allow\x18\x01 \x03(\tR\x05allow\"\xa1\x01\n" +
-	"\n" +
-	"CacheOwner\x12\x19\n" +
-	"\bcache_id\x18\x01 \x01(\tR\acacheId\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id\x12'\n" +
-	"\x0fconfig_revision\x18\x03 \x01(\x03R\x0econfigRevision\x12?\n" +
-	"\x1cexpires_at_unix_milliseconds\x18\x04 \x01(\x03R\x19expiresAtUnixMilliseconds\"\xc6\x02\n" +
+	"\x05allow\x18\x01 \x03(\tR\x05allow\"\xc6\x02\n" +
 	"\vCacheStatus\x12\x1d\n" +
 	"\n" +
 	"public_url\x18\x01 \x01(\tR\tpublicUrl\x12'\n" +
@@ -3121,62 +1993,20 @@ const file_component_v1_service_proto_rawDesc = "" +
 	"\fmirror_bytes\x18\x04 \x01(\x03R\vmirrorBytes\x12?\n" +
 	"\x1cscanned_at_unix_milliseconds\x18\x05 \x01(\x03R\x19scannedAtUnixMilliseconds\x12C\n" +
 	"\x1elast_cleanup_unix_milliseconds\x18\x06 \x01(\x03R\x1blastCleanupUnixMilliseconds\x12%\n" +
-	"\x0ecleanup_result\x18\a \x01(\tR\rcleanupResult\"u\n" +
-	"\fCacheSession\x12\x19\n" +
-	"\bcache_id\x18\x01 \x01(\tR\acacheId\x12\x1c\n" +
-	"\tnamespace\x18\x02 \x01(\tR\tnamespace\x12\x16\n" +
-	"\x06public\x18\x03 \x01(\bR\x06public\x12\x14\n" +
-	"\x05build\x18\x04 \x01(\bR\x05build\"\xa3\x01\n" +
+	"\x0ecleanup_result\x18\a \x01(\tR\rcleanupResult\"\xa3\x01\n" +
 	"\fCacheGCGrant\x12\x19\n" +
 	"\bcache_id\x18\x01 \x01(\tR\acacheId\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\tR\x02id\x12'\n" +
 	"\x0fconfig_revision\x18\x03 \x01(\x03R\x0econfigRevision\x12?\n" +
-	"\x1cexpires_at_unix_milliseconds\x18\x04 \x01(\x03R\x19expiresAtUnixMilliseconds\"z\n" +
-	"\x11ClaimCacheRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x19\n" +
-	"\bcache_id\x18\x02 \x01(\tR\acacheId\x12\x1f\n" +
-	"\vinstance_id\x18\x03 \x01(\tR\n" +
-	"instanceId\"D\n" +
-	"\x12ClaimCacheResponse\x12.\n" +
-	"\x05owner\x18\x01 \x01(\v2\x18.component.v1.CacheOwnerR\x05owner\"\xa5\x01\n" +
-	"\x15HeartbeatCacheRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12.\n" +
-	"\x05owner\x18\x02 \x01(\v2\x18.component.v1.CacheOwnerR\x05owner\x121\n" +
-	"\x06status\x18\x03 \x01(\v2\x19.component.v1.CacheStatusR\x06status\"\x18\n" +
-	"\x16HeartbeatCacheResponse\"p\n" +
-	"\x13ReleaseCacheRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12.\n" +
-	"\x05owner\x18\x02 \x01(\v2\x18.component.v1.CacheOwnerR\x05owner\"\x16\n" +
-	"\x14ReleaseCacheResponse\"u\n" +
-	"\x17VerifyCacheTokenRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12\x19\n" +
-	"\bcache_id\x18\x02 \x01(\tR\acacheId\x12\x14\n" +
-	"\x05token\x18\x03 \x01(\tR\x05token\"P\n" +
-	"\x18VerifyCacheTokenResponse\x124\n" +
-	"\asession\x18\x01 \x01(\v2\x1a.component.v1.CacheSessionR\asession\"\x9b\x01\n" +
-	"\x13BeginCacheGCRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x12.\n" +
-	"\x05owner\x18\x02 \x01(\v2\x18.component.v1.CacheOwnerR\x05owner\x12)\n" +
-	"\x10cleanup_revision\x18\x03 \x01(\x03R\x0fcleanupRevision\"H\n" +
-	"\x14BeginCacheGCResponse\x120\n" +
-	"\x05grant\x18\x01 \x01(\v2\x1a.component.v1.CacheGCGrantR\x05grant\"\x8d\x01\n" +
-	"\x16CompleteCacheGCRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\rR\x0fprotocolVersion\x120\n" +
-	"\x05grant\x18\x02 \x01(\v2\x1a.component.v1.CacheGCGrantR\x05grant\x12\x16\n" +
-	"\x06result\x18\x03 \x01(\tR\x06result\"\x19\n" +
-	"\x17CompleteCacheGCResponse2\xba\a\n" +
-	"\x10ComponentService\x12a\n" +
-	"\x10GetGatewayConfig\x12%.component.v1.GetGatewayConfigRequest\x1a&.component.v1.GetGatewayConfigResponse\x12g\n" +
-	"\x12WatchGatewayConfig\x12'.component.v1.WatchGatewayConfigRequest\x1a(.component.v1.WatchGatewayConfigResponse\x12p\n" +
-	"\x15ReportGatewayActivity\x12*.component.v1.ReportGatewayActivityRequest\x1a+.component.v1.ReportGatewayActivityResponse\x12I\n" +
-	"\bGetCache\x12\x1d.component.v1.GetCacheRequest\x1a\x1e.component.v1.GetCacheResponse\x12O\n" +
-	"\n" +
-	"ClaimCache\x12\x1f.component.v1.ClaimCacheRequest\x1a .component.v1.ClaimCacheResponse\x12[\n" +
-	"\x0eHeartbeatCache\x12#.component.v1.HeartbeatCacheRequest\x1a$.component.v1.HeartbeatCacheResponse\x12U\n" +
-	"\fReleaseCache\x12!.component.v1.ReleaseCacheRequest\x1a\".component.v1.ReleaseCacheResponse\x12a\n" +
-	"\x10VerifyCacheToken\x12%.component.v1.VerifyCacheTokenRequest\x1a&.component.v1.VerifyCacheTokenResponse\x12U\n" +
-	"\fBeginCacheGC\x12!.component.v1.BeginCacheGCRequest\x1a\".component.v1.BeginCacheGCResponse\x12^\n" +
-	"\x0fCompleteCacheGC\x12$.component.v1.CompleteCacheGCRequest\x1a%.component.v1.CompleteCacheGCResponseB7Z5gitea.dev/codespace-proto-go/component/v1;componentv1b\x06proto3"
+	"\x1cexpires_at_unix_milliseconds\x18\x04 \x01(\x03R\x19expiresAtUnixMilliseconds\"\x10\n" +
+	"\x0eCacheGCRequest\",\n" +
+	"\x0fCacheGCComplete\x12\x19\n" +
+	"\bgrant_id\x18\x01 \x01(\tR\agrantId2\x94\x03\n" +
+	"\x10ComponentService\x12_\n" +
+	"\x0eGatewayControl\x12#.component.v1.GatewayControlRequest\x1a$.component.v1.GatewayControlResponse(\x010\x01\x12a\n" +
+	"\x10AuthorizeGateway\x12%.component.v1.AuthorizeGatewayRequest\x1a&.component.v1.AuthorizeGatewayResponse\x12a\n" +
+	"\x10IssueAgentAccess\x12%.component.v1.IssueAgentAccessRequest\x1a&.component.v1.IssueAgentAccessResponse\x12Y\n" +
+	"\fCacheControl\x12!.component.v1.CacheControlRequest\x1a\".component.v1.CacheControlResponse(\x010\x01B7Z5gitea.dev/codespace-proto-go/component/v1;componentv1b\x06proto3"
 
 var (
 	file_component_v1_service_proto_rawDescOnce sync.Once
@@ -3190,117 +2020,70 @@ func file_component_v1_service_proto_rawDescGZIP() []byte {
 	return file_component_v1_service_proto_rawDescData
 }
 
-var file_component_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 47)
+var file_component_v1_service_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_component_v1_service_proto_goTypes = []any{
-	(*GetGatewayConfigRequest)(nil),       // 0: component.v1.GetGatewayConfigRequest
-	(*GetGatewayConfigResponse)(nil),      // 1: component.v1.GetGatewayConfigResponse
-	(*WatchGatewayConfigRequest)(nil),     // 2: component.v1.WatchGatewayConfigRequest
-	(*WatchGatewayConfigResponse)(nil),    // 3: component.v1.WatchGatewayConfigResponse
-	(*ReportGatewayActivityRequest)(nil),  // 4: component.v1.ReportGatewayActivityRequest
-	(*ReportGatewayActivityResponse)(nil), // 5: component.v1.ReportGatewayActivityResponse
-	(*GatewayConfiguration)(nil),          // 6: component.v1.GatewayConfiguration
-	(*NodeConfiguration)(nil),             // 7: component.v1.NodeConfiguration
-	(*GatewayConfigurationValue)(nil),     // 8: component.v1.GatewayConfigurationValue
-	(*GatewayHTTPConfiguration)(nil),      // 9: component.v1.GatewayHTTPConfiguration
-	(*GatewaySSHConfiguration)(nil),       // 10: component.v1.GatewaySSHConfiguration
-	(*GatewaySSHAuthConfiguration)(nil),   // 11: component.v1.GatewaySSHAuthConfiguration
-	(*GatewaySessionConfiguration)(nil),   // 12: component.v1.GatewaySessionConfiguration
-	(*GatewayLimitsConfiguration)(nil),    // 13: component.v1.GatewayLimitsConfiguration
-	(*ComponentSite)(nil),                 // 14: component.v1.ComponentSite
-	(*ComponentBackend)(nil),              // 15: component.v1.ComponentBackend
-	(*ComponentIncusConfiguration)(nil),   // 16: component.v1.ComponentIncusConfiguration
-	(*RuntimeBinding)(nil),                // 17: component.v1.RuntimeBinding
-	(*GatewayRuntimeSnapshot)(nil),        // 18: component.v1.GatewayRuntimeSnapshot
-	(*GatewayEndpointSnapshot)(nil),       // 19: component.v1.GatewayEndpointSnapshot
-	(*GatewayRuntimeEvent)(nil),           // 20: component.v1.GatewayRuntimeEvent
-	(*RuntimeBindingEvent)(nil),           // 21: component.v1.RuntimeBindingEvent
-	(*RuntimeDelete)(nil),                 // 22: component.v1.RuntimeDelete
-	(*GetCacheRequest)(nil),               // 23: component.v1.GetCacheRequest
-	(*GetCacheResponse)(nil),              // 24: component.v1.GetCacheResponse
-	(*CacheConfiguration)(nil),            // 25: component.v1.CacheConfiguration
-	(*CacheStorageConfiguration)(nil),     // 26: component.v1.CacheStorageConfiguration
-	(*CacheS3Configuration)(nil),          // 27: component.v1.CacheS3Configuration
-	(*CacheUpstreamConfiguration)(nil),    // 28: component.v1.CacheUpstreamConfiguration
-	(*CacheOwner)(nil),                    // 29: component.v1.CacheOwner
-	(*CacheStatus)(nil),                   // 30: component.v1.CacheStatus
-	(*CacheSession)(nil),                  // 31: component.v1.CacheSession
-	(*CacheGCGrant)(nil),                  // 32: component.v1.CacheGCGrant
-	(*ClaimCacheRequest)(nil),             // 33: component.v1.ClaimCacheRequest
-	(*ClaimCacheResponse)(nil),            // 34: component.v1.ClaimCacheResponse
-	(*HeartbeatCacheRequest)(nil),         // 35: component.v1.HeartbeatCacheRequest
-	(*HeartbeatCacheResponse)(nil),        // 36: component.v1.HeartbeatCacheResponse
-	(*ReleaseCacheRequest)(nil),           // 37: component.v1.ReleaseCacheRequest
-	(*ReleaseCacheResponse)(nil),          // 38: component.v1.ReleaseCacheResponse
-	(*VerifyCacheTokenRequest)(nil),       // 39: component.v1.VerifyCacheTokenRequest
-	(*VerifyCacheTokenResponse)(nil),      // 40: component.v1.VerifyCacheTokenResponse
-	(*BeginCacheGCRequest)(nil),           // 41: component.v1.BeginCacheGCRequest
-	(*BeginCacheGCResponse)(nil),          // 42: component.v1.BeginCacheGCResponse
-	(*CompleteCacheGCRequest)(nil),        // 43: component.v1.CompleteCacheGCRequest
-	(*CompleteCacheGCResponse)(nil),       // 44: component.v1.CompleteCacheGCResponse
-	nil,                                   // 45: component.v1.ReportGatewayActivityRequest.CountsEntry
-	nil,                                   // 46: component.v1.CacheConfiguration.UpstreamsEntry
+	(*GatewayControlRequest)(nil),        // 0: component.v1.GatewayControlRequest
+	(*GatewayControlResponse)(nil),       // 1: component.v1.GatewayControlResponse
+	(*GatewayConfigurationSnapshot)(nil), // 2: component.v1.GatewayConfigurationSnapshot
+	(*GatewayRuntimeRoute)(nil),          // 3: component.v1.GatewayRuntimeRoute
+	(*GatewayEndpoint)(nil),              // 4: component.v1.GatewayEndpoint
+	(*AuthorizeGatewayRequest)(nil),      // 5: component.v1.AuthorizeGatewayRequest
+	(*OpenCodeAuthorization)(nil),        // 6: component.v1.OpenCodeAuthorization
+	(*PublicEndpointAuthorization)(nil),  // 7: component.v1.PublicEndpointAuthorization
+	(*SSHPublicKeyAuthorization)(nil),    // 8: component.v1.SSHPublicKeyAuthorization
+	(*EndpointSessionAuthorization)(nil), // 9: component.v1.EndpointSessionAuthorization
+	(*SSHSessionAuthorization)(nil),      // 10: component.v1.SSHSessionAuthorization
+	(*AuthorizeGatewayResponse)(nil),     // 11: component.v1.AuthorizeGatewayResponse
+	(*IssueAgentAccessRequest)(nil),      // 12: component.v1.IssueAgentAccessRequest
+	(*IssueAgentAccessResponse)(nil),     // 13: component.v1.IssueAgentAccessResponse
+	(*CacheControlRequest)(nil),          // 14: component.v1.CacheControlRequest
+	(*CacheControlResponse)(nil),         // 15: component.v1.CacheControlResponse
+	(*CacheConfiguration)(nil),           // 16: component.v1.CacheConfiguration
+	(*CacheStorageConfiguration)(nil),    // 17: component.v1.CacheStorageConfiguration
+	(*CacheS3Configuration)(nil),         // 18: component.v1.CacheS3Configuration
+	(*CacheUpstreamConfiguration)(nil),   // 19: component.v1.CacheUpstreamConfiguration
+	(*CacheStatus)(nil),                  // 20: component.v1.CacheStatus
+	(*CacheGCGrant)(nil),                 // 21: component.v1.CacheGCGrant
+	(*CacheGCRequest)(nil),               // 22: component.v1.CacheGCRequest
+	(*CacheGCComplete)(nil),              // 23: component.v1.CacheGCComplete
+	nil,                                  // 24: component.v1.GatewayControlRequest.ActiveSessionsEntry
+	nil,                                  // 25: component.v1.CacheConfiguration.UpstreamsEntry
+	(v1.AccessCapability)(0),             // 26: agent.v1.AccessCapability
 }
 var file_component_v1_service_proto_depIdxs = []int32{
-	6,  // 0: component.v1.GetGatewayConfigResponse.config:type_name -> component.v1.GatewayConfiguration
-	17, // 1: component.v1.GetGatewayConfigResponse.placements:type_name -> component.v1.RuntimeBinding
-	18, // 2: component.v1.GetGatewayConfigResponse.runtimes:type_name -> component.v1.GatewayRuntimeSnapshot
-	6,  // 3: component.v1.WatchGatewayConfigResponse.config:type_name -> component.v1.GatewayConfiguration
-	20, // 4: component.v1.WatchGatewayConfigResponse.runtime_events:type_name -> component.v1.GatewayRuntimeEvent
-	21, // 5: component.v1.WatchGatewayConfigResponse.binding_events:type_name -> component.v1.RuntimeBindingEvent
-	45, // 6: component.v1.ReportGatewayActivityRequest.counts:type_name -> component.v1.ReportGatewayActivityRequest.CountsEntry
-	7,  // 7: component.v1.GatewayConfiguration.node:type_name -> component.v1.NodeConfiguration
-	8,  // 8: component.v1.GatewayConfiguration.gateway:type_name -> component.v1.GatewayConfigurationValue
-	14, // 9: component.v1.GatewayConfiguration.sites:type_name -> component.v1.ComponentSite
-	15, // 10: component.v1.GatewayConfiguration.backends:type_name -> component.v1.ComponentBackend
-	9,  // 11: component.v1.GatewayConfigurationValue.http:type_name -> component.v1.GatewayHTTPConfiguration
-	10, // 12: component.v1.GatewayConfigurationValue.ssh:type_name -> component.v1.GatewaySSHConfiguration
-	12, // 13: component.v1.GatewayConfigurationValue.sessions:type_name -> component.v1.GatewaySessionConfiguration
-	13, // 14: component.v1.GatewayConfigurationValue.limits:type_name -> component.v1.GatewayLimitsConfiguration
-	11, // 15: component.v1.GatewaySSHConfiguration.auth:type_name -> component.v1.GatewaySSHAuthConfiguration
-	16, // 16: component.v1.ComponentBackend.incus:type_name -> component.v1.ComponentIncusConfiguration
-	19, // 17: component.v1.GatewayRuntimeSnapshot.endpoints:type_name -> component.v1.GatewayEndpointSnapshot
-	18, // 18: component.v1.GatewayRuntimeEvent.upsert:type_name -> component.v1.GatewayRuntimeSnapshot
-	22, // 19: component.v1.GatewayRuntimeEvent.delete:type_name -> component.v1.RuntimeDelete
-	17, // 20: component.v1.RuntimeBindingEvent.upsert:type_name -> component.v1.RuntimeBinding
-	22, // 21: component.v1.RuntimeBindingEvent.delete:type_name -> component.v1.RuntimeDelete
-	25, // 22: component.v1.GetCacheResponse.config:type_name -> component.v1.CacheConfiguration
-	26, // 23: component.v1.CacheConfiguration.storage:type_name -> component.v1.CacheStorageConfiguration
-	46, // 24: component.v1.CacheConfiguration.upstreams:type_name -> component.v1.CacheConfiguration.UpstreamsEntry
-	27, // 25: component.v1.CacheStorageConfiguration.s3:type_name -> component.v1.CacheS3Configuration
-	29, // 26: component.v1.ClaimCacheResponse.owner:type_name -> component.v1.CacheOwner
-	29, // 27: component.v1.HeartbeatCacheRequest.owner:type_name -> component.v1.CacheOwner
-	30, // 28: component.v1.HeartbeatCacheRequest.status:type_name -> component.v1.CacheStatus
-	29, // 29: component.v1.ReleaseCacheRequest.owner:type_name -> component.v1.CacheOwner
-	31, // 30: component.v1.VerifyCacheTokenResponse.session:type_name -> component.v1.CacheSession
-	29, // 31: component.v1.BeginCacheGCRequest.owner:type_name -> component.v1.CacheOwner
-	32, // 32: component.v1.BeginCacheGCResponse.grant:type_name -> component.v1.CacheGCGrant
-	32, // 33: component.v1.CompleteCacheGCRequest.grant:type_name -> component.v1.CacheGCGrant
-	28, // 34: component.v1.CacheConfiguration.UpstreamsEntry.value:type_name -> component.v1.CacheUpstreamConfiguration
-	0,  // 35: component.v1.ComponentService.GetGatewayConfig:input_type -> component.v1.GetGatewayConfigRequest
-	2,  // 36: component.v1.ComponentService.WatchGatewayConfig:input_type -> component.v1.WatchGatewayConfigRequest
-	4,  // 37: component.v1.ComponentService.ReportGatewayActivity:input_type -> component.v1.ReportGatewayActivityRequest
-	23, // 38: component.v1.ComponentService.GetCache:input_type -> component.v1.GetCacheRequest
-	33, // 39: component.v1.ComponentService.ClaimCache:input_type -> component.v1.ClaimCacheRequest
-	35, // 40: component.v1.ComponentService.HeartbeatCache:input_type -> component.v1.HeartbeatCacheRequest
-	37, // 41: component.v1.ComponentService.ReleaseCache:input_type -> component.v1.ReleaseCacheRequest
-	39, // 42: component.v1.ComponentService.VerifyCacheToken:input_type -> component.v1.VerifyCacheTokenRequest
-	41, // 43: component.v1.ComponentService.BeginCacheGC:input_type -> component.v1.BeginCacheGCRequest
-	43, // 44: component.v1.ComponentService.CompleteCacheGC:input_type -> component.v1.CompleteCacheGCRequest
-	1,  // 45: component.v1.ComponentService.GetGatewayConfig:output_type -> component.v1.GetGatewayConfigResponse
-	3,  // 46: component.v1.ComponentService.WatchGatewayConfig:output_type -> component.v1.WatchGatewayConfigResponse
-	5,  // 47: component.v1.ComponentService.ReportGatewayActivity:output_type -> component.v1.ReportGatewayActivityResponse
-	24, // 48: component.v1.ComponentService.GetCache:output_type -> component.v1.GetCacheResponse
-	34, // 49: component.v1.ComponentService.ClaimCache:output_type -> component.v1.ClaimCacheResponse
-	36, // 50: component.v1.ComponentService.HeartbeatCache:output_type -> component.v1.HeartbeatCacheResponse
-	38, // 51: component.v1.ComponentService.ReleaseCache:output_type -> component.v1.ReleaseCacheResponse
-	40, // 52: component.v1.ComponentService.VerifyCacheToken:output_type -> component.v1.VerifyCacheTokenResponse
-	42, // 53: component.v1.ComponentService.BeginCacheGC:output_type -> component.v1.BeginCacheGCResponse
-	44, // 54: component.v1.ComponentService.CompleteCacheGC:output_type -> component.v1.CompleteCacheGCResponse
-	45, // [45:55] is the sub-list for method output_type
-	35, // [35:45] is the sub-list for method input_type
-	35, // [35:35] is the sub-list for extension type_name
-	35, // [35:35] is the sub-list for extension extendee
-	0,  // [0:35] is the sub-list for field type_name
+	24, // 0: component.v1.GatewayControlRequest.active_sessions:type_name -> component.v1.GatewayControlRequest.ActiveSessionsEntry
+	2,  // 1: component.v1.GatewayControlResponse.config:type_name -> component.v1.GatewayConfigurationSnapshot
+	3,  // 2: component.v1.GatewayControlResponse.runtimes:type_name -> component.v1.GatewayRuntimeRoute
+	4,  // 3: component.v1.GatewayRuntimeRoute.endpoints:type_name -> component.v1.GatewayEndpoint
+	6,  // 4: component.v1.AuthorizeGatewayRequest.open_code:type_name -> component.v1.OpenCodeAuthorization
+	7,  // 5: component.v1.AuthorizeGatewayRequest.public_endpoint:type_name -> component.v1.PublicEndpointAuthorization
+	8,  // 6: component.v1.AuthorizeGatewayRequest.ssh_public_key:type_name -> component.v1.SSHPublicKeyAuthorization
+	9,  // 7: component.v1.AuthorizeGatewayRequest.endpoint_session:type_name -> component.v1.EndpointSessionAuthorization
+	10, // 8: component.v1.AuthorizeGatewayRequest.ssh_session:type_name -> component.v1.SSHSessionAuthorization
+	26, // 9: component.v1.IssueAgentAccessRequest.capability:type_name -> agent.v1.AccessCapability
+	3,  // 10: component.v1.IssueAgentAccessResponse.runtime:type_name -> component.v1.GatewayRuntimeRoute
+	20, // 11: component.v1.CacheControlRequest.status:type_name -> component.v1.CacheStatus
+	22, // 12: component.v1.CacheControlRequest.begin_gc:type_name -> component.v1.CacheGCRequest
+	23, // 13: component.v1.CacheControlRequest.complete_gc:type_name -> component.v1.CacheGCComplete
+	16, // 14: component.v1.CacheControlResponse.config:type_name -> component.v1.CacheConfiguration
+	21, // 15: component.v1.CacheControlResponse.gc_grant:type_name -> component.v1.CacheGCGrant
+	17, // 16: component.v1.CacheConfiguration.storage:type_name -> component.v1.CacheStorageConfiguration
+	25, // 17: component.v1.CacheConfiguration.upstreams:type_name -> component.v1.CacheConfiguration.UpstreamsEntry
+	18, // 18: component.v1.CacheStorageConfiguration.s3:type_name -> component.v1.CacheS3Configuration
+	19, // 19: component.v1.CacheConfiguration.UpstreamsEntry.value:type_name -> component.v1.CacheUpstreamConfiguration
+	0,  // 20: component.v1.ComponentService.GatewayControl:input_type -> component.v1.GatewayControlRequest
+	5,  // 21: component.v1.ComponentService.AuthorizeGateway:input_type -> component.v1.AuthorizeGatewayRequest
+	12, // 22: component.v1.ComponentService.IssueAgentAccess:input_type -> component.v1.IssueAgentAccessRequest
+	14, // 23: component.v1.ComponentService.CacheControl:input_type -> component.v1.CacheControlRequest
+	1,  // 24: component.v1.ComponentService.GatewayControl:output_type -> component.v1.GatewayControlResponse
+	11, // 25: component.v1.ComponentService.AuthorizeGateway:output_type -> component.v1.AuthorizeGatewayResponse
+	13, // 26: component.v1.ComponentService.IssueAgentAccess:output_type -> component.v1.IssueAgentAccessResponse
+	15, // 27: component.v1.ComponentService.CacheControl:output_type -> component.v1.CacheControlResponse
+	24, // [24:28] is the sub-list for method output_type
+	20, // [20:24] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_component_v1_service_proto_init() }
@@ -3308,13 +2091,16 @@ func file_component_v1_service_proto_init() {
 	if File_component_v1_service_proto != nil {
 		return
 	}
-	file_component_v1_service_proto_msgTypes[20].OneofWrappers = []any{
-		(*GatewayRuntimeEvent_Upsert)(nil),
-		(*GatewayRuntimeEvent_Delete)(nil),
+	file_component_v1_service_proto_msgTypes[5].OneofWrappers = []any{
+		(*AuthorizeGatewayRequest_OpenCode)(nil),
+		(*AuthorizeGatewayRequest_PublicEndpoint)(nil),
+		(*AuthorizeGatewayRequest_SshPublicKey)(nil),
+		(*AuthorizeGatewayRequest_EndpointSession)(nil),
+		(*AuthorizeGatewayRequest_SshSession)(nil),
 	}
-	file_component_v1_service_proto_msgTypes[21].OneofWrappers = []any{
-		(*RuntimeBindingEvent_Upsert)(nil),
-		(*RuntimeBindingEvent_Delete)(nil),
+	file_component_v1_service_proto_msgTypes[14].OneofWrappers = []any{
+		(*CacheControlRequest_BeginGc)(nil),
+		(*CacheControlRequest_CompleteGc)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -3322,7 +2108,7 @@ func file_component_v1_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_component_v1_service_proto_rawDesc), len(file_component_v1_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   47,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

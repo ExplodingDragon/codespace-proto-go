@@ -38,3 +38,5 @@ clean:
 	rm -rf codespace/v1/codespacev1connect
 	rm -f component/v1/*.pb.go
 	rm -rf component/v1/componentv1connect
+	rm -f agent/v1/*.pb.go
+	rm -rf agent/v1/agentv1connect
