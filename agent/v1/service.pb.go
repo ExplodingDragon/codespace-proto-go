@@ -706,11 +706,10 @@ func (x *ControlResponse) GetOperationRversion() int64 {
 }
 
 type RuntimeOptions struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	GitSshKeyType     string                 `protobuf:"bytes,1,opt,name=git_ssh_key_type,json=gitSshKeyType,proto3" json:"git_ssh_key_type,omitempty"`
-	CodeServerVersion string                 `protobuf:"bytes,2,opt,name=code_server_version,json=codeServerVersion,proto3" json:"code_server_version,omitempty"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	GitSshKeyType string                 `protobuf:"bytes,1,opt,name=git_ssh_key_type,json=gitSshKeyType,proto3" json:"git_ssh_key_type,omitempty"`
 	// cache contains one Manager-authorized registry endpoint for this runtime.
-	Cache         *RuntimeCache `protobuf:"bytes,3,opt,name=cache,proto3" json:"cache,omitempty"`
+	Cache         *RuntimeCache `protobuf:"bytes,2,opt,name=cache,proto3" json:"cache,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -748,13 +747,6 @@ func (*RuntimeOptions) Descriptor() ([]byte, []int) {
 func (x *RuntimeOptions) GetGitSshKeyType() string {
 	if x != nil {
 		return x.GitSshKeyType
-	}
-	return ""
-}
-
-func (x *RuntimeOptions) GetCodeServerVersion() string {
-	if x != nil {
-		return x.CodeServerVersion
 	}
 	return ""
 }
@@ -1976,11 +1968,10 @@ const file_agent_v1_service_proto_rawDesc = "" +
 	"\aruntime\x18\b \x01(\v2\x18.agent.v1.RuntimeOptionsR\aruntime\x126\n" +
 	"\x17access_verification_key\x18\t \x01(\fR\x15accessVerificationKey\x12-\n" +
 	"\x12operation_rversion\x18\n" +
-	" \x01(\x03R\x11operationRversion\"\x97\x01\n" +
+	" \x01(\x03R\x11operationRversion\"g\n" +
 	"\x0eRuntimeOptions\x12'\n" +
-	"\x10git_ssh_key_type\x18\x01 \x01(\tR\rgitSshKeyType\x12.\n" +
-	"\x13code_server_version\x18\x02 \x01(\tR\x11codeServerVersion\x12,\n" +
-	"\x05cache\x18\x03 \x01(\v2\x16.agent.v1.RuntimeCacheR\x05cache\"\xfa\x02\n" +
+	"\x10git_ssh_key_type\x18\x01 \x01(\tR\rgitSshKeyType\x12,\n" +
+	"\x05cache\x18\x02 \x01(\v2\x16.agent.v1.RuntimeCacheR\x05cache\"\xfa\x02\n" +
 	"\fRuntimeCache\x12%\n" +
 	"\x0ebuild_registry\x18\x01 \x01(\tR\rbuildRegistry\x12\x1f\n" +
 	"\vbuild_scope\x18\x02 \x01(\tR\n" +

@@ -102,9 +102,8 @@ message ControlResponse {
 
 message RuntimeOptions {
   string git_ssh_key_type = 1;
-  string code_server_version = 2;
   // cache contains one Manager-authorized registry endpoint for this runtime.
-  RuntimeCache cache = 3;
+  RuntimeCache cache = 2;
 }
 
 message RuntimeCache {
