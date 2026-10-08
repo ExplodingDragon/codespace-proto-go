@@ -665,7 +665,6 @@ type DeclareManagerRequest struct {
 	ManagerRuntimeState                ManagerRuntimeState `protobuf:"varint,6,opt,name=manager_runtime_state,json=managerRuntimeState,proto3,enum=codespace.v1.ManagerRuntimeState" json:"manager_runtime_state,omitempty"`
 	GatewaySshHostKeyAlgorithm         string              `protobuf:"bytes,7,opt,name=gateway_ssh_host_key_algorithm,json=gatewaySshHostKeyAlgorithm,proto3" json:"gateway_ssh_host_key_algorithm,omitempty"`
 	GatewaySshHostKeyFingerprintSha256 string              `protobuf:"bytes,8,opt,name=gateway_ssh_host_key_fingerprint_sha256,json=gatewaySshHostKeyFingerprintSha256,proto3" json:"gateway_ssh_host_key_fingerprint_sha256,omitempty"`
-	GatewaySshHostKeyUpdatedUnix       int64               `protobuf:"varint,9,opt,name=gateway_ssh_host_key_updated_unix,json=gatewaySshHostKeyUpdatedUnix,proto3" json:"gateway_ssh_host_key_updated_unix,omitempty"`
 	unknownFields                      protoimpl.UnknownFields
 	sizeCache                          protoimpl.SizeCache
 }
@@ -754,13 +753,6 @@ func (x *DeclareManagerRequest) GetGatewaySshHostKeyFingerprintSha256() string {
 		return x.GatewaySshHostKeyFingerprintSha256
 	}
 	return ""
-}
-
-func (x *DeclareManagerRequest) GetGatewaySshHostKeyUpdatedUnix() int64 {
-	if x != nil {
-		return x.GatewaySshHostKeyUpdatedUnix
-	}
-	return 0
 }
 
 // DeclareManagerResponse returns server-side control-plane limits.
@@ -4731,7 +4723,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\"]\n" +
 	"\x14CheckManagerResponse\x12\"\n" +
 	"\rgitea_web_url\x18\x01 \x01(\tR\vgiteaWebUrl\x12!\n" +
-	"\fmanager_name\x18\x02 \x01(\tR\vmanagerName\"\xa2\x04\n" +
+	"\fmanager_name\x18\x02 \x01(\tR\vmanagerName\"\xd9\x03\n" +
 	"\x15DeclareManagerRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12\x1f\n" +
 	"\vgateway_url\x18\x02 \x01(\tR\n" +
@@ -4741,8 +4733,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\aversion\x18\x05 \x01(\tR\aversion\x12U\n" +
 	"\x15manager_runtime_state\x18\x06 \x01(\x0e2!.codespace.v1.ManagerRuntimeStateR\x13managerRuntimeState\x12B\n" +
 	"\x1egateway_ssh_host_key_algorithm\x18\a \x01(\tR\x1agatewaySshHostKeyAlgorithm\x12S\n" +
-	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256\x12G\n" +
-	"!gateway_ssh_host_key_updated_unix\x18\t \x01(\x03R\x1cgatewaySshHostKeyUpdatedUnix\"\xb7\x02\n" +
+	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256\"\xb7\x02\n" +
 	"\x16DeclareManagerResponse\x12F\n" +
 	"\x1fheartbeat_interval_milliseconds\x18\x01 \x01(\x03R\x1dheartbeatIntervalMilliseconds\x12b\n" +
 	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12M\n" +
