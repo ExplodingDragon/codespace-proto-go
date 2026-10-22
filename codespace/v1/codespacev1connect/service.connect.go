@@ -5,510 +5,602 @@
 package codespacev1connect
 
 import (
-	connect "connectrpc.com/connect"
+	connect "connectrpc.com/connect/v2"
 	context "context"
-	errors "errors"
 	v1 "gitea.dev/codespace-proto-go/codespace/v1"
-	http "net/http"
-	strings "strings"
+	sync "sync"
 )
-
-// This is a compile-time assertion to ensure that this generated file and the connect package are
-// compatible. If you get a compiler error that this constant is not defined, this code was
-// generated with a version of connect newer than the one compiled into your binary. You can fix the
-// problem by either regenerating this code with an older version of connect or updating the connect
-// version compiled into your binary.
-const _ = connect.IsAtLeastVersion1_13_0
 
 const (
 	// ManagerServiceName is the fully-qualified name of the ManagerService service.
 	ManagerServiceName = "codespace.v1.ManagerService"
 )
 
-// These constants are the fully-qualified names of the RPCs defined in this package. They're
-// exposed at runtime as Spec.Procedure and as the final two segments of the HTTP route.
+// These constants are the procedure names of the RPCs defined in this package. They're exposed at
+// runtime as Spec.Procedure and as the final two segments of the HTTP route.
 //
 // Note that these are different from the fully-qualified method names used by
 // google.golang.org/protobuf/reflect/protoreflect. To convert from these constants to
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// ManagerServiceCheckManagerProcedure is the fully-qualified name of the ManagerService's
-	// CheckManager RPC.
+	// ManagerServiceCheckManagerProcedure is the procedure name of the ManagerService's CheckManager
+	// RPC.
 	ManagerServiceCheckManagerProcedure = "/codespace.v1.ManagerService/CheckManager"
-	// ManagerServiceDeclareManagerProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceDeclareManagerProcedure is the procedure name of the ManagerService's
 	// DeclareManager RPC.
 	ManagerServiceDeclareManagerProcedure = "/codespace.v1.ManagerService/DeclareManager"
-	// ManagerServiceFetchOperationsProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceFetchOperationsProcedure is the procedure name of the ManagerService's
 	// FetchOperations RPC.
 	ManagerServiceFetchOperationsProcedure = "/codespace.v1.ManagerService/FetchOperations"
-	// ManagerServiceBindRuntimeIdentityProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceBindRuntimeIdentityProcedure is the procedure name of the ManagerService's
 	// BindRuntimeIdentity RPC.
 	ManagerServiceBindRuntimeIdentityProcedure = "/codespace.v1.ManagerService/BindRuntimeIdentity"
-	// ManagerServiceFinalizeOperationProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceFinalizeOperationProcedure is the procedure name of the ManagerService's
 	// FinalizeOperation RPC.
 	ManagerServiceFinalizeOperationProcedure = "/codespace.v1.ManagerService/FinalizeOperation"
-	// ManagerServiceUpdateLogProcedure is the fully-qualified name of the ManagerService's UpdateLog
-	// RPC.
+	// ManagerServiceUpdateLogProcedure is the procedure name of the ManagerService's UpdateLog RPC.
 	ManagerServiceUpdateLogProcedure = "/codespace.v1.ManagerService/UpdateLog"
-	// ManagerServiceReportRuntimeMetadataProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceReportRuntimeMetadataProcedure is the procedure name of the ManagerService's
 	// ReportRuntimeMetadata RPC.
 	ManagerServiceReportRuntimeMetadataProcedure = "/codespace.v1.ManagerService/ReportRuntimeMetadata"
-	// ManagerServiceRequestRuntimeAccessProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceRequestRuntimeAccessProcedure is the procedure name of the ManagerService's
 	// RequestRuntimeAccess RPC.
 	ManagerServiceRequestRuntimeAccessProcedure = "/codespace.v1.ManagerService/RequestRuntimeAccess"
-	// ManagerServiceRequestIdleStopProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceRequestIdleStopProcedure is the procedure name of the ManagerService's
 	// RequestIdleStop RPC.
 	ManagerServiceRequestIdleStopProcedure = "/codespace.v1.ManagerService/RequestIdleStop"
-	// ManagerServiceValidateOpenTokenProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceValidateOpenTokenProcedure is the procedure name of the ManagerService's
 	// ValidateOpenToken RPC.
 	ManagerServiceValidateOpenTokenProcedure = "/codespace.v1.ManagerService/ValidateOpenToken"
-	// ManagerServiceValidatePublicEndpointProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceValidatePublicEndpointProcedure is the procedure name of the ManagerService's
 	// ValidatePublicEndpoint RPC.
 	ManagerServiceValidatePublicEndpointProcedure = "/codespace.v1.ManagerService/ValidatePublicEndpoint"
-	// ManagerServiceVerifySSHPublicKeyProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceVerifySSHPublicKeyProcedure is the procedure name of the ManagerService's
 	// VerifySSHPublicKey RPC.
 	ManagerServiceVerifySSHPublicKeyProcedure = "/codespace.v1.ManagerService/VerifySSHPublicKey"
-	// ManagerServiceReportInstancesProcedure is the fully-qualified name of the ManagerService's
+	// ManagerServiceReportInstancesProcedure is the procedure name of the ManagerService's
 	// ReportInstances RPC.
 	ManagerServiceReportInstancesProcedure = "/codespace.v1.ManagerService/ReportInstances"
-	// ManagerServiceRevalidateGatewaySessionProcedure is the fully-qualified name of the
-	// ManagerService's RevalidateGatewaySession RPC.
+	// ManagerServiceRevalidateGatewaySessionProcedure is the procedure name of the ManagerService's
+	// RevalidateGatewaySession RPC.
 	ManagerServiceRevalidateGatewaySessionProcedure = "/codespace.v1.ManagerService/RevalidateGatewaySession"
+)
+
+var (
+	managerServiceCheckManagerSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("CheckManager"),
+			Procedure:  ManagerServiceCheckManagerProcedure,
+		}
+	})
+	managerServiceDeclareManagerSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("DeclareManager"),
+			Procedure:  ManagerServiceDeclareManagerProcedure,
+		}
+	})
+	managerServiceFetchOperationsSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("FetchOperations"),
+			Procedure:  ManagerServiceFetchOperationsProcedure,
+		}
+	})
+	managerServiceBindRuntimeIdentitySpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("BindRuntimeIdentity"),
+			Procedure:  ManagerServiceBindRuntimeIdentityProcedure,
+		}
+	})
+	managerServiceFinalizeOperationSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("FinalizeOperation"),
+			Procedure:  ManagerServiceFinalizeOperationProcedure,
+		}
+	})
+	managerServiceUpdateLogSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("UpdateLog"),
+			Procedure:  ManagerServiceUpdateLogProcedure,
+		}
+	})
+	managerServiceReportRuntimeMetadataSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("ReportRuntimeMetadata"),
+			Procedure:  ManagerServiceReportRuntimeMetadataProcedure,
+		}
+	})
+	managerServiceRequestRuntimeAccessSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("RequestRuntimeAccess"),
+			Procedure:  ManagerServiceRequestRuntimeAccessProcedure,
+		}
+	})
+	managerServiceRequestIdleStopSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("RequestIdleStop"),
+			Procedure:  ManagerServiceRequestIdleStopProcedure,
+		}
+	})
+	managerServiceValidateOpenTokenSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("ValidateOpenToken"),
+			Procedure:  ManagerServiceValidateOpenTokenProcedure,
+		}
+	})
+	managerServiceValidatePublicEndpointSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("ValidatePublicEndpoint"),
+			Procedure:  ManagerServiceValidatePublicEndpointProcedure,
+		}
+	})
+	managerServiceVerifySSHPublicKeySpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("VerifySSHPublicKey"),
+			Procedure:  ManagerServiceVerifySSHPublicKeyProcedure,
+		}
+	})
+	managerServiceReportInstancesSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("ReportInstances"),
+			Procedure:  ManagerServiceReportInstancesProcedure,
+		}
+	})
+	managerServiceRevalidateGatewaySessionSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("RevalidateGatewaySession"),
+			Procedure:  ManagerServiceRevalidateGatewaySessionProcedure,
+		}
+	})
 )
 
 // ManagerServiceClient is a client for the codespace.v1.ManagerService service.
 type ManagerServiceClient interface {
 	// CheckManager verifies the configured Manager identity without changing runtime state.
-	CheckManager(context.Context, *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error)
+	CheckManager(context.Context, *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
-	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
+	DeclareManager(context.Context, *v1.DeclareManagerRequest) (*v1.DeclareManagerResponse, error)
 	// FetchOperations returns operations for the Manager to execute.
-	FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error)
+	FetchOperations(context.Context, *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error)
 	// BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
-	BindRuntimeIdentity(context.Context, *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error)
+	BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error)
 	// FinalizeOperation reports the final result of an active operation.
-	FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error)
+	FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error)
 	// UpdateLog appends sanitized log lines at a given offset for an active operation.
-	UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error)
+	UpdateLog(context.Context, *v1.UpdateLogRequest) (*v1.UpdateLogResponse, error)
 	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
-	ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error)
+	ReportRuntimeMetadata(context.Context, *v1.ReportRuntimeMetadataRequest) (*v1.ReportRuntimeMetadataResponse, error)
 	// RequestRuntimeAccess prepares the current token, user secrets, and Git SSH trust for runtime startup or recovery.
-	RequestRuntimeAccess(context.Context, *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error)
+	RequestRuntimeAccess(context.Context, *v1.RequestRuntimeAccessRequest) (*v1.RequestRuntimeAccessResponse, error)
 	// RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
-	RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error)
+	RequestIdleStop(context.Context, *v1.RequestIdleStopRequest) (*v1.RequestIdleStopResponse, error)
 	// ValidateOpenToken validates and consumes a one-time Gateway Open Token.
-	ValidateOpenToken(context.Context, *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error)
+	ValidateOpenToken(context.Context, *v1.ValidateOpenTokenRequest) (*v1.ValidateOpenTokenResponse, error)
 	// ValidatePublicEndpoint authorizes an unauthenticated request to a public Endpoint.
-	ValidatePublicEndpoint(context.Context, *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error)
+	ValidatePublicEndpoint(context.Context, *v1.ValidatePublicEndpointRequest) (*v1.ValidatePublicEndpointResponse, error)
 	// VerifySSHPublicKey authenticates an SSH session via public key.
-	VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error)
+	VerifySSHPublicKey(context.Context, *v1.VerifySSHPublicKeyRequest) (*v1.VerifySSHPublicKeyResponse, error)
 	// ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
-	ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error)
+	ReportInstances(context.Context, *v1.ReportInstancesRequest) (*v1.ReportInstancesResponse, error)
 	// RevalidateGatewaySession checks an existing Endpoint or SSH session.
-	RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error)
+	RevalidateGatewaySession(context.Context, *v1.RevalidateGatewaySessionRequest) (*v1.RevalidateGatewaySessionResponse, error)
 }
 
-// NewManagerServiceClient constructs a client for the codespace.v1.ManagerService service. By
-// default, it uses the Connect protocol with the binary Protobuf Codec, asks for gzipped responses,
-// and sends uncompressed requests. To use the gRPC or gRPC-Web protocols, supply the
-// connect.WithGRPC() or connect.WithGRPCWeb() options.
-//
-// The URL supplied here should be the base URL for the Connect or gRPC server (for example,
-// http://api.acme.com or https://acme.com/grpc).
-func NewManagerServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) ManagerServiceClient {
-	baseURL = strings.TrimRight(baseURL, "/")
-	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
-	return &managerServiceClient{
-		checkManager: connect.NewClient[v1.CheckManagerRequest, v1.CheckManagerResponse](
-			httpClient,
-			baseURL+ManagerServiceCheckManagerProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("CheckManager")),
-			connect.WithClientOptions(opts...),
-		),
-		declareManager: connect.NewClient[v1.DeclareManagerRequest, v1.DeclareManagerResponse](
-			httpClient,
-			baseURL+ManagerServiceDeclareManagerProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("DeclareManager")),
-			connect.WithClientOptions(opts...),
-		),
-		fetchOperations: connect.NewClient[v1.FetchOperationsRequest, v1.FetchOperationsResponse](
-			httpClient,
-			baseURL+ManagerServiceFetchOperationsProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("FetchOperations")),
-			connect.WithClientOptions(opts...),
-		),
-		bindRuntimeIdentity: connect.NewClient[v1.BindRuntimeIdentityRequest, v1.BindRuntimeIdentityResponse](
-			httpClient,
-			baseURL+ManagerServiceBindRuntimeIdentityProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("BindRuntimeIdentity")),
-			connect.WithClientOptions(opts...),
-		),
-		finalizeOperation: connect.NewClient[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse](
-			httpClient,
-			baseURL+ManagerServiceFinalizeOperationProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("FinalizeOperation")),
-			connect.WithClientOptions(opts...),
-		),
-		updateLog: connect.NewClient[v1.UpdateLogRequest, v1.UpdateLogResponse](
-			httpClient,
-			baseURL+ManagerServiceUpdateLogProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("UpdateLog")),
-			connect.WithClientOptions(opts...),
-		),
-		reportRuntimeMetadata: connect.NewClient[v1.ReportRuntimeMetadataRequest, v1.ReportRuntimeMetadataResponse](
-			httpClient,
-			baseURL+ManagerServiceReportRuntimeMetadataProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeMetadata")),
-			connect.WithClientOptions(opts...),
-		),
-		requestRuntimeAccess: connect.NewClient[v1.RequestRuntimeAccessRequest, v1.RequestRuntimeAccessResponse](
-			httpClient,
-			baseURL+ManagerServiceRequestRuntimeAccessProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("RequestRuntimeAccess")),
-			connect.WithClientOptions(opts...),
-		),
-		requestIdleStop: connect.NewClient[v1.RequestIdleStopRequest, v1.RequestIdleStopResponse](
-			httpClient,
-			baseURL+ManagerServiceRequestIdleStopProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("RequestIdleStop")),
-			connect.WithClientOptions(opts...),
-		),
-		validateOpenToken: connect.NewClient[v1.ValidateOpenTokenRequest, v1.ValidateOpenTokenResponse](
-			httpClient,
-			baseURL+ManagerServiceValidateOpenTokenProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("ValidateOpenToken")),
-			connect.WithClientOptions(opts...),
-		),
-		validatePublicEndpoint: connect.NewClient[v1.ValidatePublicEndpointRequest, v1.ValidatePublicEndpointResponse](
-			httpClient,
-			baseURL+ManagerServiceValidatePublicEndpointProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("ValidatePublicEndpoint")),
-			connect.WithClientOptions(opts...),
-		),
-		verifySSHPublicKey: connect.NewClient[v1.VerifySSHPublicKeyRequest, v1.VerifySSHPublicKeyResponse](
-			httpClient,
-			baseURL+ManagerServiceVerifySSHPublicKeyProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("VerifySSHPublicKey")),
-			connect.WithClientOptions(opts...),
-		),
-		reportInstances: connect.NewClient[v1.ReportInstancesRequest, v1.ReportInstancesResponse](
-			httpClient,
-			baseURL+ManagerServiceReportInstancesProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("ReportInstances")),
-			connect.WithClientOptions(opts...),
-		),
-		revalidateGatewaySession: connect.NewClient[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse](
-			httpClient,
-			baseURL+ManagerServiceRevalidateGatewaySessionProcedure,
-			connect.WithSchema(managerServiceMethods.ByName("RevalidateGatewaySession")),
-			connect.WithClientOptions(opts...),
-		),
-	}
-}
-
-// managerServiceClient implements ManagerServiceClient.
-type managerServiceClient struct {
-	checkManager             *connect.Client[v1.CheckManagerRequest, v1.CheckManagerResponse]
-	declareManager           *connect.Client[v1.DeclareManagerRequest, v1.DeclareManagerResponse]
-	fetchOperations          *connect.Client[v1.FetchOperationsRequest, v1.FetchOperationsResponse]
-	bindRuntimeIdentity      *connect.Client[v1.BindRuntimeIdentityRequest, v1.BindRuntimeIdentityResponse]
-	finalizeOperation        *connect.Client[v1.FinalizeOperationRequest, v1.FinalizeOperationResponse]
-	updateLog                *connect.Client[v1.UpdateLogRequest, v1.UpdateLogResponse]
-	reportRuntimeMetadata    *connect.Client[v1.ReportRuntimeMetadataRequest, v1.ReportRuntimeMetadataResponse]
-	requestRuntimeAccess     *connect.Client[v1.RequestRuntimeAccessRequest, v1.RequestRuntimeAccessResponse]
-	requestIdleStop          *connect.Client[v1.RequestIdleStopRequest, v1.RequestIdleStopResponse]
-	validateOpenToken        *connect.Client[v1.ValidateOpenTokenRequest, v1.ValidateOpenTokenResponse]
-	validatePublicEndpoint   *connect.Client[v1.ValidatePublicEndpointRequest, v1.ValidatePublicEndpointResponse]
-	verifySSHPublicKey       *connect.Client[v1.VerifySSHPublicKeyRequest, v1.VerifySSHPublicKeyResponse]
-	reportInstances          *connect.Client[v1.ReportInstancesRequest, v1.ReportInstancesResponse]
-	revalidateGatewaySession *connect.Client[v1.RevalidateGatewaySessionRequest, v1.RevalidateGatewaySessionResponse]
-}
-
-// CheckManager calls codespace.v1.ManagerService.CheckManager.
-func (c *managerServiceClient) CheckManager(ctx context.Context, req *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error) {
-	return c.checkManager.CallUnary(ctx, req)
-}
-
-// DeclareManager calls codespace.v1.ManagerService.DeclareManager.
-func (c *managerServiceClient) DeclareManager(ctx context.Context, req *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
-	return c.declareManager.CallUnary(ctx, req)
-}
-
-// FetchOperations calls codespace.v1.ManagerService.FetchOperations.
-func (c *managerServiceClient) FetchOperations(ctx context.Context, req *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error) {
-	return c.fetchOperations.CallUnary(ctx, req)
-}
-
-// BindRuntimeIdentity calls codespace.v1.ManagerService.BindRuntimeIdentity.
-func (c *managerServiceClient) BindRuntimeIdentity(ctx context.Context, req *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error) {
-	return c.bindRuntimeIdentity.CallUnary(ctx, req)
-}
-
-// FinalizeOperation calls codespace.v1.ManagerService.FinalizeOperation.
-func (c *managerServiceClient) FinalizeOperation(ctx context.Context, req *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error) {
-	return c.finalizeOperation.CallUnary(ctx, req)
-}
-
-// UpdateLog calls codespace.v1.ManagerService.UpdateLog.
-func (c *managerServiceClient) UpdateLog(ctx context.Context, req *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error) {
-	return c.updateLog.CallUnary(ctx, req)
-}
-
-// ReportRuntimeMetadata calls codespace.v1.ManagerService.ReportRuntimeMetadata.
-func (c *managerServiceClient) ReportRuntimeMetadata(ctx context.Context, req *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error) {
-	return c.reportRuntimeMetadata.CallUnary(ctx, req)
-}
-
-// RequestRuntimeAccess calls codespace.v1.ManagerService.RequestRuntimeAccess.
-func (c *managerServiceClient) RequestRuntimeAccess(ctx context.Context, req *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error) {
-	return c.requestRuntimeAccess.CallUnary(ctx, req)
-}
-
-// RequestIdleStop calls codespace.v1.ManagerService.RequestIdleStop.
-func (c *managerServiceClient) RequestIdleStop(ctx context.Context, req *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error) {
-	return c.requestIdleStop.CallUnary(ctx, req)
-}
-
-// ValidateOpenToken calls codespace.v1.ManagerService.ValidateOpenToken.
-func (c *managerServiceClient) ValidateOpenToken(ctx context.Context, req *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error) {
-	return c.validateOpenToken.CallUnary(ctx, req)
-}
-
-// ValidatePublicEndpoint calls codespace.v1.ManagerService.ValidatePublicEndpoint.
-func (c *managerServiceClient) ValidatePublicEndpoint(ctx context.Context, req *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error) {
-	return c.validatePublicEndpoint.CallUnary(ctx, req)
-}
-
-// VerifySSHPublicKey calls codespace.v1.ManagerService.VerifySSHPublicKey.
-func (c *managerServiceClient) VerifySSHPublicKey(ctx context.Context, req *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error) {
-	return c.verifySSHPublicKey.CallUnary(ctx, req)
-}
-
-// ReportInstances calls codespace.v1.ManagerService.ReportInstances.
-func (c *managerServiceClient) ReportInstances(ctx context.Context, req *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error) {
-	return c.reportInstances.CallUnary(ctx, req)
-}
-
-// RevalidateGatewaySession calls codespace.v1.ManagerService.RevalidateGatewaySession.
-func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error) {
-	return c.revalidateGatewaySession.CallUnary(ctx, req)
+// NewManagerServiceClient constructs a client for the codespace.v1.ManagerService service. Multiple
+// service clients may share a single connect.Client.
+func NewManagerServiceClient(client *connect.Client) ManagerServiceClient {
+	return &managerServiceClient{client: client}
 }
 
 // ManagerServiceHandler is an implementation of the codespace.v1.ManagerService service.
 type ManagerServiceHandler interface {
 	// CheckManager verifies the configured Manager identity without changing runtime state.
-	CheckManager(context.Context, *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error)
+	CheckManager(context.Context, *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
-	DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error)
+	DeclareManager(context.Context, *v1.DeclareManagerRequest) (*v1.DeclareManagerResponse, error)
 	// FetchOperations returns operations for the Manager to execute.
-	FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error)
+	FetchOperations(context.Context, *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error)
 	// BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
-	BindRuntimeIdentity(context.Context, *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error)
+	BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error)
 	// FinalizeOperation reports the final result of an active operation.
-	FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error)
+	FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error)
 	// UpdateLog appends sanitized log lines at a given offset for an active operation.
-	UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error)
+	UpdateLog(context.Context, *v1.UpdateLogRequest) (*v1.UpdateLogResponse, error)
 	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
-	ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error)
+	ReportRuntimeMetadata(context.Context, *v1.ReportRuntimeMetadataRequest) (*v1.ReportRuntimeMetadataResponse, error)
 	// RequestRuntimeAccess prepares the current token, user secrets, and Git SSH trust for runtime startup or recovery.
-	RequestRuntimeAccess(context.Context, *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error)
+	RequestRuntimeAccess(context.Context, *v1.RequestRuntimeAccessRequest) (*v1.RequestRuntimeAccessResponse, error)
 	// RequestIdleStop asks Gitea to authorize an idle-triggered stop using current policy and interaction state.
-	RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error)
+	RequestIdleStop(context.Context, *v1.RequestIdleStopRequest) (*v1.RequestIdleStopResponse, error)
 	// ValidateOpenToken validates and consumes a one-time Gateway Open Token.
-	ValidateOpenToken(context.Context, *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error)
+	ValidateOpenToken(context.Context, *v1.ValidateOpenTokenRequest) (*v1.ValidateOpenTokenResponse, error)
 	// ValidatePublicEndpoint authorizes an unauthenticated request to a public Endpoint.
-	ValidatePublicEndpoint(context.Context, *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error)
+	ValidatePublicEndpoint(context.Context, *v1.ValidatePublicEndpointRequest) (*v1.ValidatePublicEndpointResponse, error)
 	// VerifySSHPublicKey authenticates an SSH session via public key.
-	VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error)
+	VerifySSHPublicKey(context.Context, *v1.VerifySSHPublicKeyRequest) (*v1.VerifySSHPublicKeyResponse, error)
 	// ReportInstances reports the complete set of local Runtime Instances at startup and periodically.
-	ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error)
+	ReportInstances(context.Context, *v1.ReportInstancesRequest) (*v1.ReportInstancesResponse, error)
 	// RevalidateGatewaySession checks an existing Endpoint or SSH session.
-	RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error)
+	RevalidateGatewaySession(context.Context, *v1.RevalidateGatewaySessionRequest) (*v1.RevalidateGatewaySessionResponse, error)
 }
 
-// NewManagerServiceHandler builds an HTTP handler from the service implementation. It returns the
-// path on which to mount the handler and the handler itself.
-//
-// By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
-// and JSON codecs. They also support gzip compression.
-func NewManagerServiceHandler(svc ManagerServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	managerServiceMethods := v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods()
-	managerServiceCheckManagerHandler := connect.NewUnaryHandler(
-		ManagerServiceCheckManagerProcedure,
-		svc.CheckManager,
-		connect.WithSchema(managerServiceMethods.ByName("CheckManager")),
-		connect.WithHandlerOptions(opts...),
+// RegisterManagerServiceHandler registers svc as the codespace.v1.ManagerService implementation on
+// server.
+func RegisterManagerServiceHandler(server *connect.Server, svc ManagerServiceHandler) {
+	adapter := managerServiceHandler{svc: svc}
+	server.Register(
+		connect.Method{Spec: managerServiceCheckManagerSpec(), Handler: adapter.checkManager},
+		connect.Method{Spec: managerServiceDeclareManagerSpec(), Handler: adapter.declareManager},
+		connect.Method{Spec: managerServiceFetchOperationsSpec(), Handler: adapter.fetchOperations},
+		connect.Method{Spec: managerServiceBindRuntimeIdentitySpec(), Handler: adapter.bindRuntimeIdentity},
+		connect.Method{Spec: managerServiceFinalizeOperationSpec(), Handler: adapter.finalizeOperation},
+		connect.Method{Spec: managerServiceUpdateLogSpec(), Handler: adapter.updateLog},
+		connect.Method{Spec: managerServiceReportRuntimeMetadataSpec(), Handler: adapter.reportRuntimeMetadata},
+		connect.Method{Spec: managerServiceRequestRuntimeAccessSpec(), Handler: adapter.requestRuntimeAccess},
+		connect.Method{Spec: managerServiceRequestIdleStopSpec(), Handler: adapter.requestIdleStop},
+		connect.Method{Spec: managerServiceValidateOpenTokenSpec(), Handler: adapter.validateOpenToken},
+		connect.Method{Spec: managerServiceValidatePublicEndpointSpec(), Handler: adapter.validatePublicEndpoint},
+		connect.Method{Spec: managerServiceVerifySSHPublicKeySpec(), Handler: adapter.verifySSHPublicKey},
+		connect.Method{Spec: managerServiceReportInstancesSpec(), Handler: adapter.reportInstances},
+		connect.Method{Spec: managerServiceRevalidateGatewaySessionSpec(), Handler: adapter.revalidateGatewaySession},
 	)
-	managerServiceDeclareManagerHandler := connect.NewUnaryHandler(
-		ManagerServiceDeclareManagerProcedure,
-		svc.DeclareManager,
-		connect.WithSchema(managerServiceMethods.ByName("DeclareManager")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceFetchOperationsHandler := connect.NewUnaryHandler(
-		ManagerServiceFetchOperationsProcedure,
-		svc.FetchOperations,
-		connect.WithSchema(managerServiceMethods.ByName("FetchOperations")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceBindRuntimeIdentityHandler := connect.NewUnaryHandler(
-		ManagerServiceBindRuntimeIdentityProcedure,
-		svc.BindRuntimeIdentity,
-		connect.WithSchema(managerServiceMethods.ByName("BindRuntimeIdentity")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceFinalizeOperationHandler := connect.NewUnaryHandler(
-		ManagerServiceFinalizeOperationProcedure,
-		svc.FinalizeOperation,
-		connect.WithSchema(managerServiceMethods.ByName("FinalizeOperation")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceUpdateLogHandler := connect.NewUnaryHandler(
-		ManagerServiceUpdateLogProcedure,
-		svc.UpdateLog,
-		connect.WithSchema(managerServiceMethods.ByName("UpdateLog")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceReportRuntimeMetadataHandler := connect.NewUnaryHandler(
-		ManagerServiceReportRuntimeMetadataProcedure,
-		svc.ReportRuntimeMetadata,
-		connect.WithSchema(managerServiceMethods.ByName("ReportRuntimeMetadata")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceRequestRuntimeAccessHandler := connect.NewUnaryHandler(
-		ManagerServiceRequestRuntimeAccessProcedure,
-		svc.RequestRuntimeAccess,
-		connect.WithSchema(managerServiceMethods.ByName("RequestRuntimeAccess")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceRequestIdleStopHandler := connect.NewUnaryHandler(
-		ManagerServiceRequestIdleStopProcedure,
-		svc.RequestIdleStop,
-		connect.WithSchema(managerServiceMethods.ByName("RequestIdleStop")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceValidateOpenTokenHandler := connect.NewUnaryHandler(
-		ManagerServiceValidateOpenTokenProcedure,
-		svc.ValidateOpenToken,
-		connect.WithSchema(managerServiceMethods.ByName("ValidateOpenToken")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceValidatePublicEndpointHandler := connect.NewUnaryHandler(
-		ManagerServiceValidatePublicEndpointProcedure,
-		svc.ValidatePublicEndpoint,
-		connect.WithSchema(managerServiceMethods.ByName("ValidatePublicEndpoint")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceVerifySSHPublicKeyHandler := connect.NewUnaryHandler(
-		ManagerServiceVerifySSHPublicKeyProcedure,
-		svc.VerifySSHPublicKey,
-		connect.WithSchema(managerServiceMethods.ByName("VerifySSHPublicKey")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceReportInstancesHandler := connect.NewUnaryHandler(
-		ManagerServiceReportInstancesProcedure,
-		svc.ReportInstances,
-		connect.WithSchema(managerServiceMethods.ByName("ReportInstances")),
-		connect.WithHandlerOptions(opts...),
-	)
-	managerServiceRevalidateGatewaySessionHandler := connect.NewUnaryHandler(
-		ManagerServiceRevalidateGatewaySessionProcedure,
-		svc.RevalidateGatewaySession,
-		connect.WithSchema(managerServiceMethods.ByName("RevalidateGatewaySession")),
-		connect.WithHandlerOptions(opts...),
-	)
-	return "/codespace.v1.ManagerService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		switch r.URL.Path {
-		case ManagerServiceCheckManagerProcedure:
-			managerServiceCheckManagerHandler.ServeHTTP(w, r)
-		case ManagerServiceDeclareManagerProcedure:
-			managerServiceDeclareManagerHandler.ServeHTTP(w, r)
-		case ManagerServiceFetchOperationsProcedure:
-			managerServiceFetchOperationsHandler.ServeHTTP(w, r)
-		case ManagerServiceBindRuntimeIdentityProcedure:
-			managerServiceBindRuntimeIdentityHandler.ServeHTTP(w, r)
-		case ManagerServiceFinalizeOperationProcedure:
-			managerServiceFinalizeOperationHandler.ServeHTTP(w, r)
-		case ManagerServiceUpdateLogProcedure:
-			managerServiceUpdateLogHandler.ServeHTTP(w, r)
-		case ManagerServiceReportRuntimeMetadataProcedure:
-			managerServiceReportRuntimeMetadataHandler.ServeHTTP(w, r)
-		case ManagerServiceRequestRuntimeAccessProcedure:
-			managerServiceRequestRuntimeAccessHandler.ServeHTTP(w, r)
-		case ManagerServiceRequestIdleStopProcedure:
-			managerServiceRequestIdleStopHandler.ServeHTTP(w, r)
-		case ManagerServiceValidateOpenTokenProcedure:
-			managerServiceValidateOpenTokenHandler.ServeHTTP(w, r)
-		case ManagerServiceValidatePublicEndpointProcedure:
-			managerServiceValidatePublicEndpointHandler.ServeHTTP(w, r)
-		case ManagerServiceVerifySSHPublicKeyProcedure:
-			managerServiceVerifySSHPublicKeyHandler.ServeHTTP(w, r)
-		case ManagerServiceReportInstancesProcedure:
-			managerServiceReportInstancesHandler.ServeHTTP(w, r)
-		case ManagerServiceRevalidateGatewaySessionProcedure:
-			managerServiceRevalidateGatewaySessionHandler.ServeHTTP(w, r)
-		default:
-			http.NotFound(w, r)
-		}
-	})
 }
 
 // UnimplementedManagerServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedManagerServiceHandler struct{}
 
-func (UnimplementedManagerServiceHandler) CheckManager(context.Context, *connect.Request[v1.CheckManagerRequest]) (*connect.Response[v1.CheckManagerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.CheckManager is not implemented"))
+func (UnimplementedManagerServiceHandler) CheckManager(context.Context, *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.CheckManager is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) DeclareManager(context.Context, *connect.Request[v1.DeclareManagerRequest]) (*connect.Response[v1.DeclareManagerResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.DeclareManager is not implemented"))
+func (UnimplementedManagerServiceHandler) DeclareManager(context.Context, *v1.DeclareManagerRequest) (*v1.DeclareManagerResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.DeclareManager is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) FetchOperations(context.Context, *connect.Request[v1.FetchOperationsRequest]) (*connect.Response[v1.FetchOperationsResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.FetchOperations is not implemented"))
+func (UnimplementedManagerServiceHandler) FetchOperations(context.Context, *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.FetchOperations is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) BindRuntimeIdentity(context.Context, *connect.Request[v1.BindRuntimeIdentityRequest]) (*connect.Response[v1.BindRuntimeIdentityResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.BindRuntimeIdentity is not implemented"))
+func (UnimplementedManagerServiceHandler) BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.BindRuntimeIdentity is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) FinalizeOperation(context.Context, *connect.Request[v1.FinalizeOperationRequest]) (*connect.Response[v1.FinalizeOperationResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.FinalizeOperation is not implemented"))
+func (UnimplementedManagerServiceHandler) FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.FinalizeOperation is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) UpdateLog(context.Context, *connect.Request[v1.UpdateLogRequest]) (*connect.Response[v1.UpdateLogResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.UpdateLog is not implemented"))
+func (UnimplementedManagerServiceHandler) UpdateLog(context.Context, *v1.UpdateLogRequest) (*v1.UpdateLogResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.UpdateLog is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) ReportRuntimeMetadata(context.Context, *connect.Request[v1.ReportRuntimeMetadataRequest]) (*connect.Response[v1.ReportRuntimeMetadataResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportRuntimeMetadata is not implemented"))
+func (UnimplementedManagerServiceHandler) ReportRuntimeMetadata(context.Context, *v1.ReportRuntimeMetadataRequest) (*v1.ReportRuntimeMetadataResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.ReportRuntimeMetadata is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) RequestRuntimeAccess(context.Context, *connect.Request[v1.RequestRuntimeAccessRequest]) (*connect.Response[v1.RequestRuntimeAccessResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RequestRuntimeAccess is not implemented"))
+func (UnimplementedManagerServiceHandler) RequestRuntimeAccess(context.Context, *v1.RequestRuntimeAccessRequest) (*v1.RequestRuntimeAccessResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.RequestRuntimeAccess is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) RequestIdleStop(context.Context, *connect.Request[v1.RequestIdleStopRequest]) (*connect.Response[v1.RequestIdleStopResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RequestIdleStop is not implemented"))
+func (UnimplementedManagerServiceHandler) RequestIdleStop(context.Context, *v1.RequestIdleStopRequest) (*v1.RequestIdleStopResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.RequestIdleStop is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) ValidateOpenToken(context.Context, *connect.Request[v1.ValidateOpenTokenRequest]) (*connect.Response[v1.ValidateOpenTokenResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ValidateOpenToken is not implemented"))
+func (UnimplementedManagerServiceHandler) ValidateOpenToken(context.Context, *v1.ValidateOpenTokenRequest) (*v1.ValidateOpenTokenResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.ValidateOpenToken is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) ValidatePublicEndpoint(context.Context, *connect.Request[v1.ValidatePublicEndpointRequest]) (*connect.Response[v1.ValidatePublicEndpointResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ValidatePublicEndpoint is not implemented"))
+func (UnimplementedManagerServiceHandler) ValidatePublicEndpoint(context.Context, *v1.ValidatePublicEndpointRequest) (*v1.ValidatePublicEndpointResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.ValidatePublicEndpoint is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) VerifySSHPublicKey(context.Context, *connect.Request[v1.VerifySSHPublicKeyRequest]) (*connect.Response[v1.VerifySSHPublicKeyResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.VerifySSHPublicKey is not implemented"))
+func (UnimplementedManagerServiceHandler) VerifySSHPublicKey(context.Context, *v1.VerifySSHPublicKeyRequest) (*v1.VerifySSHPublicKeyResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.VerifySSHPublicKey is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) ReportInstances(context.Context, *connect.Request[v1.ReportInstancesRequest]) (*connect.Response[v1.ReportInstancesResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.ReportInstances is not implemented"))
+func (UnimplementedManagerServiceHandler) ReportInstances(context.Context, *v1.ReportInstancesRequest) (*v1.ReportInstancesResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.ReportInstances is not implemented")
 }
 
-func (UnimplementedManagerServiceHandler) RevalidateGatewaySession(context.Context, *connect.Request[v1.RevalidateGatewaySessionRequest]) (*connect.Response[v1.RevalidateGatewaySessionResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("codespace.v1.ManagerService.RevalidateGatewaySession is not implemented"))
+func (UnimplementedManagerServiceHandler) RevalidateGatewaySession(context.Context, *v1.RevalidateGatewaySessionRequest) (*v1.RevalidateGatewaySessionResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.RevalidateGatewaySession is not implemented")
+}
+
+type managerServiceClient struct {
+	client *connect.Client
+}
+
+func (c *managerServiceClient) CheckManager(ctx context.Context, req *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error) {
+	var res v1.CheckManagerResponse
+	if err := c.client.CallUnary(ctx, managerServiceCheckManagerSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) DeclareManager(ctx context.Context, req *v1.DeclareManagerRequest) (*v1.DeclareManagerResponse, error) {
+	var res v1.DeclareManagerResponse
+	if err := c.client.CallUnary(ctx, managerServiceDeclareManagerSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) FetchOperations(ctx context.Context, req *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error) {
+	var res v1.FetchOperationsResponse
+	if err := c.client.CallUnary(ctx, managerServiceFetchOperationsSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) BindRuntimeIdentity(ctx context.Context, req *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error) {
+	var res v1.BindRuntimeIdentityResponse
+	if err := c.client.CallUnary(ctx, managerServiceBindRuntimeIdentitySpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) FinalizeOperation(ctx context.Context, req *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error) {
+	var res v1.FinalizeOperationResponse
+	if err := c.client.CallUnary(ctx, managerServiceFinalizeOperationSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) UpdateLog(ctx context.Context, req *v1.UpdateLogRequest) (*v1.UpdateLogResponse, error) {
+	var res v1.UpdateLogResponse
+	if err := c.client.CallUnary(ctx, managerServiceUpdateLogSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) ReportRuntimeMetadata(ctx context.Context, req *v1.ReportRuntimeMetadataRequest) (*v1.ReportRuntimeMetadataResponse, error) {
+	var res v1.ReportRuntimeMetadataResponse
+	if err := c.client.CallUnary(ctx, managerServiceReportRuntimeMetadataSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) RequestRuntimeAccess(ctx context.Context, req *v1.RequestRuntimeAccessRequest) (*v1.RequestRuntimeAccessResponse, error) {
+	var res v1.RequestRuntimeAccessResponse
+	if err := c.client.CallUnary(ctx, managerServiceRequestRuntimeAccessSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) RequestIdleStop(ctx context.Context, req *v1.RequestIdleStopRequest) (*v1.RequestIdleStopResponse, error) {
+	var res v1.RequestIdleStopResponse
+	if err := c.client.CallUnary(ctx, managerServiceRequestIdleStopSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) ValidateOpenToken(ctx context.Context, req *v1.ValidateOpenTokenRequest) (*v1.ValidateOpenTokenResponse, error) {
+	var res v1.ValidateOpenTokenResponse
+	if err := c.client.CallUnary(ctx, managerServiceValidateOpenTokenSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) ValidatePublicEndpoint(ctx context.Context, req *v1.ValidatePublicEndpointRequest) (*v1.ValidatePublicEndpointResponse, error) {
+	var res v1.ValidatePublicEndpointResponse
+	if err := c.client.CallUnary(ctx, managerServiceValidatePublicEndpointSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) VerifySSHPublicKey(ctx context.Context, req *v1.VerifySSHPublicKeyRequest) (*v1.VerifySSHPublicKeyResponse, error) {
+	var res v1.VerifySSHPublicKeyResponse
+	if err := c.client.CallUnary(ctx, managerServiceVerifySSHPublicKeySpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) ReportInstances(ctx context.Context, req *v1.ReportInstancesRequest) (*v1.ReportInstancesResponse, error) {
+	var res v1.ReportInstancesResponse
+	if err := c.client.CallUnary(ctx, managerServiceReportInstancesSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req *v1.RevalidateGatewaySessionRequest) (*v1.RevalidateGatewaySessionResponse, error) {
+	var res v1.RevalidateGatewaySessionResponse
+	if err := c.client.CallUnary(ctx, managerServiceRevalidateGatewaySessionSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
+}
+
+type managerServiceHandler struct{ svc ManagerServiceHandler }
+
+func (h managerServiceHandler) checkManager(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.CheckManagerRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.CheckManager(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) declareManager(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.DeclareManagerRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.DeclareManager(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) fetchOperations(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.FetchOperationsRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.FetchOperations(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) bindRuntimeIdentity(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.BindRuntimeIdentityRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.BindRuntimeIdentity(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) finalizeOperation(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.FinalizeOperationRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.FinalizeOperation(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) updateLog(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.UpdateLogRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.UpdateLog(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) reportRuntimeMetadata(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ReportRuntimeMetadataRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ReportRuntimeMetadata(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) requestRuntimeAccess(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RequestRuntimeAccessRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RequestRuntimeAccess(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) requestIdleStop(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RequestIdleStopRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RequestIdleStop(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) validateOpenToken(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ValidateOpenTokenRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ValidateOpenToken(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) validatePublicEndpoint(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ValidatePublicEndpointRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ValidatePublicEndpoint(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) verifySSHPublicKey(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.VerifySSHPublicKeyRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.VerifySSHPublicKey(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) reportInstances(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.ReportInstancesRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.ReportInstances(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
+
+func (h managerServiceHandler) revalidateGatewaySession(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RevalidateGatewaySessionRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RevalidateGatewaySession(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
 }

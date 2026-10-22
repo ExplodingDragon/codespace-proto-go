@@ -4,7 +4,7 @@ BUF ?= $(GO_BIN)/buf
 
 BUF_VERSION ?= v1.8.0
 PROTOC_GEN_GO_VERSION ?= v1.36.11
-PROTOC_GEN_CONNECT_GO_VERSION ?= v1.20.0
+PROTOC_GEN_CONNECT_GO_VERSION ?= v2.0.1
 
 .PHONY: build
 build: lint generate test
@@ -13,7 +13,7 @@ build: lint generate test
 install:
 	$(GO) install github.com/bufbuild/buf/cmd/buf@$(BUF_VERSION)
 	$(GO) install google.golang.org/protobuf/cmd/protoc-gen-go@$(PROTOC_GEN_GO_VERSION)
-	$(GO) install connectrpc.com/connect/cmd/protoc-gen-connect-go@$(PROTOC_GEN_CONNECT_GO_VERSION)
+	$(GO) install connectrpc.com/connect/v2/cmd/protoc-gen-connect-go@$(PROTOC_GEN_CONNECT_GO_VERSION)
 
 .PHONY: lint
 lint:
