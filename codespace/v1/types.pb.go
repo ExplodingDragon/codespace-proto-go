@@ -755,13 +755,12 @@ func (x *DeclareManagerRequest) GetGatewaySshHostKeyFingerprintSha256() string {
 	return ""
 }
 
-// DeclareManagerResponse returns server-side control-plane limits.
+// DeclareManagerResponse returns coordination intervals and the verified Gitea URL.
 type DeclareManagerResponse struct {
 	state                                      protoimpl.MessageState `protogen:"open.v1"`
 	HeartbeatIntervalMilliseconds              int64                  `protobuf:"varint,1,opt,name=heartbeat_interval_milliseconds,json=heartbeatIntervalMilliseconds,proto3" json:"heartbeat_interval_milliseconds,omitempty"`
 	RuntimeMetadataRefreshIntervalMilliseconds int64                  `protobuf:"varint,2,opt,name=runtime_metadata_refresh_interval_milliseconds,json=runtimeMetadataRefreshIntervalMilliseconds,proto3" json:"runtime_metadata_refresh_interval_milliseconds,omitempty"`
-	ControlPlaneMaxMessageSizeBytes            int64                  `protobuf:"varint,3,opt,name=control_plane_max_message_size_bytes,json=controlPlaneMaxMessageSizeBytes,proto3" json:"control_plane_max_message_size_bytes,omitempty"`
-	GiteaWebUrl                                string                 `protobuf:"bytes,4,opt,name=gitea_web_url,json=giteaWebUrl,proto3" json:"gitea_web_url,omitempty"`
+	GiteaWebUrl                                string                 `protobuf:"bytes,3,opt,name=gitea_web_url,json=giteaWebUrl,proto3" json:"gitea_web_url,omitempty"`
 	unknownFields                              protoimpl.UnknownFields
 	sizeCache                                  protoimpl.SizeCache
 }
@@ -806,13 +805,6 @@ func (x *DeclareManagerResponse) GetHeartbeatIntervalMilliseconds() int64 {
 func (x *DeclareManagerResponse) GetRuntimeMetadataRefreshIntervalMilliseconds() int64 {
 	if x != nil {
 		return x.RuntimeMetadataRefreshIntervalMilliseconds
-	}
-	return 0
-}
-
-func (x *DeclareManagerResponse) GetControlPlaneMaxMessageSizeBytes() int64 {
-	if x != nil {
-		return x.ControlPlaneMaxMessageSizeBytes
 	}
 	return 0
 }
@@ -4621,96 +4613,6 @@ func (x *FailureDetail) GetCategory() string {
 	return ""
 }
 
-// StaleGenerationDetail reports Gitea's current accepted generation.
-type StaleGenerationDetail struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	CurrentGeneration int64                  `protobuf:"varint,1,opt,name=current_generation,json=currentGeneration,proto3" json:"current_generation,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
-}
-
-func (x *StaleGenerationDetail) Reset() {
-	*x = StaleGenerationDetail{}
-	mi := &file_codespace_v1_types_proto_msgTypes[66]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *StaleGenerationDetail) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*StaleGenerationDetail) ProtoMessage() {}
-
-func (x *StaleGenerationDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[66]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use StaleGenerationDetail.ProtoReflect.Descriptor instead.
-func (*StaleGenerationDetail) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{66}
-}
-
-func (x *StaleGenerationDetail) GetCurrentGeneration() int64 {
-	if x != nil {
-		return x.CurrentGeneration
-	}
-	return 0
-}
-
-// LogOffsetDetail reports the current server-side log offset.
-type LogOffsetDetail struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	CurrentOffset int64                  `protobuf:"varint,1,opt,name=current_offset,json=currentOffset,proto3" json:"current_offset,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LogOffsetDetail) Reset() {
-	*x = LogOffsetDetail{}
-	mi := &file_codespace_v1_types_proto_msgTypes[67]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LogOffsetDetail) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LogOffsetDetail) ProtoMessage() {}
-
-func (x *LogOffsetDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[67]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LogOffsetDetail.ProtoReflect.Descriptor instead.
-func (*LogOffsetDetail) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{67}
-}
-
-func (x *LogOffsetDetail) GetCurrentOffset() int64 {
-	if x != nil {
-		return x.CurrentOffset
-	}
-	return 0
-}
-
 var File_codespace_v1_types_proto protoreflect.FileDescriptor
 
 const file_codespace_v1_types_proto_rawDesc = "" +
@@ -4733,12 +4635,11 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\aversion\x18\x05 \x01(\tR\aversion\x12U\n" +
 	"\x15manager_runtime_state\x18\x06 \x01(\x0e2!.codespace.v1.ManagerRuntimeStateR\x13managerRuntimeState\x12B\n" +
 	"\x1egateway_ssh_host_key_algorithm\x18\a \x01(\tR\x1agatewaySshHostKeyAlgorithm\x12S\n" +
-	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256\"\xb7\x02\n" +
+	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256\"\xe8\x01\n" +
 	"\x16DeclareManagerResponse\x12F\n" +
 	"\x1fheartbeat_interval_milliseconds\x18\x01 \x01(\x03R\x1dheartbeatIntervalMilliseconds\x12b\n" +
-	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12M\n" +
-	"$control_plane_max_message_size_bytes\x18\x03 \x01(\x03R\x1fcontrolPlaneMaxMessageSizeBytes\x12\"\n" +
-	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"\xde\x03\n" +
+	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12\"\n" +
+	"\rgitea_web_url\x18\x03 \x01(\tR\vgiteaWebUrl\"\xde\x03\n" +
 	"\x16FetchOperationsRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12<\n" +
 	"\x1astartup_capacity_available\x18\x02 \x01(\x05R\x18startupCapacityAvailable\x12]\n" +
@@ -4980,11 +4881,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\aoutcome\"\x10\n" +
 	"\x0eSessionAllowed\"+\n" +
 	"\rFailureDetail\x12\x1a\n" +
-	"\bcategory\x18\x01 \x01(\tR\bcategory\"F\n" +
-	"\x15StaleGenerationDetail\x12-\n" +
-	"\x12current_generation\x18\x01 \x01(\x03R\x11currentGeneration\"8\n" +
-	"\x0fLogOffsetDetail\x12%\n" +
-	"\x0ecurrent_offset\x18\x01 \x01(\x03R\rcurrentOffset*\x84\x01\n" +
+	"\bcategory\x18\x01 \x01(\tR\bcategory*\x84\x01\n" +
 	"\x13ManagerRuntimeState\x12%\n" +
 	"!MANAGER_RUNTIME_STATE_UNSPECIFIED\x10\x00\x12 \n" +
 	"\x1cMANAGER_RUNTIME_STATE_ONLINE\x10\x01\x12$\n" +
@@ -5045,7 +4942,7 @@ func file_codespace_v1_types_proto_rawDescGZIP() []byte {
 }
 
 var file_codespace_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 68)
+var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 66)
 var file_codespace_v1_types_proto_goTypes = []any{
 	(ManagerRuntimeState)(0),                  // 0: codespace.v1.ManagerRuntimeState
 	(AcceptedOperationType)(0),                // 1: codespace.v1.AcceptedOperationType
@@ -5122,8 +5019,6 @@ var file_codespace_v1_types_proto_goTypes = []any{
 	(*RevalidateGatewaySessionResponse)(nil),  // 72: codespace.v1.RevalidateGatewaySessionResponse
 	(*SessionAllowed)(nil),                    // 73: codespace.v1.SessionAllowed
 	(*FailureDetail)(nil),                     // 74: codespace.v1.FailureDetail
-	(*StaleGenerationDetail)(nil),             // 75: codespace.v1.StaleGenerationDetail
-	(*LogOffsetDetail)(nil),                   // 76: codespace.v1.LogOffsetDetail
 }
 var file_codespace_v1_types_proto_depIdxs = []int32{
 	9,  // 0: codespace.v1.DeclareManagerRequest.environments:type_name -> codespace.v1.EnvironmentTag
@@ -5235,7 +5130,7 @@ func file_codespace_v1_types_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_codespace_v1_types_proto_rawDesc), len(file_codespace_v1_types_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   68,
+			NumMessages:   66,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -108,12 +108,11 @@ message DeclareManagerRequest {
   string gateway_ssh_host_key_fingerprint_sha256 = 8;
 }
 
-// DeclareManagerResponse returns server-side control-plane limits.
+// DeclareManagerResponse returns coordination intervals and the verified Gitea URL.
 message DeclareManagerResponse {
   int64 heartbeat_interval_milliseconds = 1;
   int64 runtime_metadata_refresh_interval_milliseconds = 2;
-  int64 control_plane_max_message_size_bytes = 3;
-  string gitea_web_url = 4;
+  string gitea_web_url = 3;
 }
 
 // FetchOperationsRequest asks Gitea for work and renews observed leases.
@@ -550,14 +549,4 @@ message SessionAllowed {}
 message FailureDetail {
   // category is a lower_snake_case reason used by callers for branching.
   string category = 1;
-}
-
-// StaleGenerationDetail reports Gitea's current accepted generation.
-message StaleGenerationDetail {
-  int64 current_generation = 1;
-}
-
-// LogOffsetDetail reports the current server-side log offset.
-message LogOffsetDetail {
-  int64 current_offset = 1;
 }
