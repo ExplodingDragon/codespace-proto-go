@@ -83,6 +83,22 @@ message EnvironmentTag {
   string description = 2;
 }
 
+// RegisterManagerRequest creates one Manager in the registration token's scope.
+message RegisterManagerRequest {
+  // protocol_version is the wire protocol version and must be field 1.
+  int32 protocol_version = 1;
+  string token = 2;
+  string name = 3;
+}
+
+// RegisterManagerResponse returns the new Manager's runtime identity once.
+message RegisterManagerResponse {
+  int64 manager_id = 1;
+  string manager_secret = 2;
+  string manager_name = 3;
+  string gitea_web_url = 4;
+}
+
 // CheckManagerRequest verifies Manager authentication and the exact protocol version.
 message CheckManagerRequest {
   // protocol_version is the wire protocol version and must be field 1.

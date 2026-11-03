@@ -24,6 +24,9 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
+	// ManagerServiceRegisterManagerProcedure is the procedure name of the ManagerService's
+	// RegisterManager RPC.
+	ManagerServiceRegisterManagerProcedure = "/codespace.v1.ManagerService/RegisterManager"
 	// ManagerServiceCheckManagerProcedure is the procedure name of the ManagerService's CheckManager
 	// RPC.
 	ManagerServiceCheckManagerProcedure = "/codespace.v1.ManagerService/CheckManager"
@@ -68,6 +71,13 @@ const (
 )
 
 var (
+	managerServiceRegisterManagerSpec = sync.OnceValue(func() connect.Spec {
+		return connect.Spec{
+			StreamType: connect.StreamTypeUnary,
+			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("RegisterManager"),
+			Procedure:  ManagerServiceRegisterManagerProcedure,
+		}
+	})
 	managerServiceCheckManagerSpec = sync.OnceValue(func() connect.Spec {
 		return connect.Spec{
 			StreamType: connect.StreamTypeUnary,
@@ -170,6 +180,8 @@ var (
 
 // ManagerServiceClient is a client for the codespace.v1.ManagerService service.
 type ManagerServiceClient interface {
+	// RegisterManager exchanges a scope registration token for one Manager identity.
+	RegisterManager(context.Context, *v1.RegisterManagerRequest) (*v1.RegisterManagerResponse, error)
 	// CheckManager verifies the configured Manager identity without changing runtime state.
 	CheckManager(context.Context, *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
@@ -208,6 +220,8 @@ func NewManagerServiceClient(client *connect.Client) ManagerServiceClient {
 
 // ManagerServiceHandler is an implementation of the codespace.v1.ManagerService service.
 type ManagerServiceHandler interface {
+	// RegisterManager exchanges a scope registration token for one Manager identity.
+	RegisterManager(context.Context, *v1.RegisterManagerRequest) (*v1.RegisterManagerResponse, error)
 	// CheckManager verifies the configured Manager identity without changing runtime state.
 	CheckManager(context.Context, *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error)
 	// DeclareManager updates Manager metadata, tags, and serves as heartbeat.
@@ -243,6 +257,7 @@ type ManagerServiceHandler interface {
 func RegisterManagerServiceHandler(server *connect.Server, svc ManagerServiceHandler) {
 	adapter := managerServiceHandler{svc: svc}
 	server.Register(
+		connect.Method{Spec: managerServiceRegisterManagerSpec(), Handler: adapter.registerManager},
 		connect.Method{Spec: managerServiceCheckManagerSpec(), Handler: adapter.checkManager},
 		connect.Method{Spec: managerServiceDeclareManagerSpec(), Handler: adapter.declareManager},
 		connect.Method{Spec: managerServiceFetchOperationsSpec(), Handler: adapter.fetchOperations},
@@ -262,6 +277,10 @@ func RegisterManagerServiceHandler(server *connect.Server, svc ManagerServiceHan
 
 // UnimplementedManagerServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedManagerServiceHandler struct{}
+
+func (UnimplementedManagerServiceHandler) RegisterManager(context.Context, *v1.RegisterManagerRequest) (*v1.RegisterManagerResponse, error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.RegisterManager is not implemented")
+}
 
 func (UnimplementedManagerServiceHandler) CheckManager(context.Context, *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.CheckManager is not implemented")
@@ -321,6 +340,14 @@ func (UnimplementedManagerServiceHandler) RevalidateGatewaySession(context.Conte
 
 type managerServiceClient struct {
 	client *connect.Client
+}
+
+func (c *managerServiceClient) RegisterManager(ctx context.Context, req *v1.RegisterManagerRequest) (*v1.RegisterManagerResponse, error) {
+	var res v1.RegisterManagerResponse
+	if err := c.client.CallUnary(ctx, managerServiceRegisterManagerSpec(), req, &res); err != nil {
+		return nil, err
+	}
+	return &res, nil
 }
 
 func (c *managerServiceClient) CheckManager(ctx context.Context, req *v1.CheckManagerRequest) (*v1.CheckManagerResponse, error) {
@@ -436,6 +463,18 @@ func (c *managerServiceClient) RevalidateGatewaySession(ctx context.Context, req
 }
 
 type managerServiceHandler struct{ svc ManagerServiceHandler }
+
+func (h managerServiceHandler) registerManager(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
+	var req v1.RegisterManagerRequest
+	if err := stream.Receive(&req); err != nil {
+		return err
+	}
+	res, err := h.svc.RegisterManager(ctx, &req)
+	if err != nil {
+		return err
+	}
+	return stream.Send(res)
+}
 
 func (h managerServiceHandler) checkManager(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
 	var req v1.CheckManagerRequest

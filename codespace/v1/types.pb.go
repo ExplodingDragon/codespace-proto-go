@@ -554,6 +554,137 @@ func (x *EnvironmentTag) GetDescription() string {
 	return ""
 }
 
+// RegisterManagerRequest creates one Manager in the registration token's scope.
+type RegisterManagerRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// protocol_version is the wire protocol version and must be field 1.
+	ProtocolVersion int32  `protobuf:"varint,1,opt,name=protocol_version,json=protocolVersion,proto3" json:"protocol_version,omitempty"`
+	Token           string `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Name            string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *RegisterManagerRequest) Reset() {
+	*x = RegisterManagerRequest{}
+	mi := &file_codespace_v1_types_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegisterManagerRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterManagerRequest) ProtoMessage() {}
+
+func (x *RegisterManagerRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_codespace_v1_types_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterManagerRequest.ProtoReflect.Descriptor instead.
+func (*RegisterManagerRequest) Descriptor() ([]byte, []int) {
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *RegisterManagerRequest) GetProtocolVersion() int32 {
+	if x != nil {
+		return x.ProtocolVersion
+	}
+	return 0
+}
+
+func (x *RegisterManagerRequest) GetToken() string {
+	if x != nil {
+		return x.Token
+	}
+	return ""
+}
+
+func (x *RegisterManagerRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+// RegisterManagerResponse returns the new Manager's runtime identity once.
+type RegisterManagerResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ManagerId     int64                  `protobuf:"varint,1,opt,name=manager_id,json=managerId,proto3" json:"manager_id,omitempty"`
+	ManagerSecret string                 `protobuf:"bytes,2,opt,name=manager_secret,json=managerSecret,proto3" json:"manager_secret,omitempty"`
+	ManagerName   string                 `protobuf:"bytes,3,opt,name=manager_name,json=managerName,proto3" json:"manager_name,omitempty"`
+	GiteaWebUrl   string                 `protobuf:"bytes,4,opt,name=gitea_web_url,json=giteaWebUrl,proto3" json:"gitea_web_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RegisterManagerResponse) Reset() {
+	*x = RegisterManagerResponse{}
+	mi := &file_codespace_v1_types_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RegisterManagerResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RegisterManagerResponse) ProtoMessage() {}
+
+func (x *RegisterManagerResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_codespace_v1_types_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RegisterManagerResponse.ProtoReflect.Descriptor instead.
+func (*RegisterManagerResponse) Descriptor() ([]byte, []int) {
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *RegisterManagerResponse) GetManagerId() int64 {
+	if x != nil {
+		return x.ManagerId
+	}
+	return 0
+}
+
+func (x *RegisterManagerResponse) GetManagerSecret() string {
+	if x != nil {
+		return x.ManagerSecret
+	}
+	return ""
+}
+
+func (x *RegisterManagerResponse) GetManagerName() string {
+	if x != nil {
+		return x.ManagerName
+	}
+	return ""
+}
+
+func (x *RegisterManagerResponse) GetGiteaWebUrl() string {
+	if x != nil {
+		return x.GiteaWebUrl
+	}
+	return ""
+}
+
 // CheckManagerRequest verifies Manager authentication and the exact protocol version.
 type CheckManagerRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -565,7 +696,7 @@ type CheckManagerRequest struct {
 
 func (x *CheckManagerRequest) Reset() {
 	*x = CheckManagerRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[1]
+	mi := &file_codespace_v1_types_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -577,7 +708,7 @@ func (x *CheckManagerRequest) String() string {
 func (*CheckManagerRequest) ProtoMessage() {}
 
 func (x *CheckManagerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[1]
+	mi := &file_codespace_v1_types_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -590,7 +721,7 @@ func (x *CheckManagerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckManagerRequest.ProtoReflect.Descriptor instead.
 func (*CheckManagerRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{1}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CheckManagerRequest) GetProtocolVersion() int32 {
@@ -611,7 +742,7 @@ type CheckManagerResponse struct {
 
 func (x *CheckManagerResponse) Reset() {
 	*x = CheckManagerResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[2]
+	mi := &file_codespace_v1_types_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -623,7 +754,7 @@ func (x *CheckManagerResponse) String() string {
 func (*CheckManagerResponse) ProtoMessage() {}
 
 func (x *CheckManagerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[2]
+	mi := &file_codespace_v1_types_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -636,7 +767,7 @@ func (x *CheckManagerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckManagerResponse.ProtoReflect.Descriptor instead.
 func (*CheckManagerResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{2}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CheckManagerResponse) GetGiteaWebUrl() string {
@@ -671,7 +802,7 @@ type DeclareManagerRequest struct {
 
 func (x *DeclareManagerRequest) Reset() {
 	*x = DeclareManagerRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[3]
+	mi := &file_codespace_v1_types_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -683,7 +814,7 @@ func (x *DeclareManagerRequest) String() string {
 func (*DeclareManagerRequest) ProtoMessage() {}
 
 func (x *DeclareManagerRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[3]
+	mi := &file_codespace_v1_types_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -696,7 +827,7 @@ func (x *DeclareManagerRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeclareManagerRequest.ProtoReflect.Descriptor instead.
 func (*DeclareManagerRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{3}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DeclareManagerRequest) GetProtocolVersion() int32 {
@@ -767,7 +898,7 @@ type DeclareManagerResponse struct {
 
 func (x *DeclareManagerResponse) Reset() {
 	*x = DeclareManagerResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[4]
+	mi := &file_codespace_v1_types_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -779,7 +910,7 @@ func (x *DeclareManagerResponse) String() string {
 func (*DeclareManagerResponse) ProtoMessage() {}
 
 func (x *DeclareManagerResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[4]
+	mi := &file_codespace_v1_types_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -792,7 +923,7 @@ func (x *DeclareManagerResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeclareManagerResponse.ProtoReflect.Descriptor instead.
 func (*DeclareManagerResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{4}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DeclareManagerResponse) GetHeartbeatIntervalMilliseconds() int64 {
@@ -835,7 +966,7 @@ type FetchOperationsRequest struct {
 
 func (x *FetchOperationsRequest) Reset() {
 	*x = FetchOperationsRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[5]
+	mi := &file_codespace_v1_types_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -847,7 +978,7 @@ func (x *FetchOperationsRequest) String() string {
 func (*FetchOperationsRequest) ProtoMessage() {}
 
 func (x *FetchOperationsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[5]
+	mi := &file_codespace_v1_types_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -860,7 +991,7 @@ func (x *FetchOperationsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FetchOperationsRequest.ProtoReflect.Descriptor instead.
 func (*FetchOperationsRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{5}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *FetchOperationsRequest) GetProtocolVersion() int32 {
@@ -923,7 +1054,7 @@ type ObservedOperation struct {
 
 func (x *ObservedOperation) Reset() {
 	*x = ObservedOperation{}
-	mi := &file_codespace_v1_types_proto_msgTypes[6]
+	mi := &file_codespace_v1_types_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -935,7 +1066,7 @@ func (x *ObservedOperation) String() string {
 func (*ObservedOperation) ProtoMessage() {}
 
 func (x *ObservedOperation) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[6]
+	mi := &file_codespace_v1_types_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -948,7 +1079,7 @@ func (x *ObservedOperation) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ObservedOperation.ProtoReflect.Descriptor instead.
 func (*ObservedOperation) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{6}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ObservedOperation) GetRuntimeUuid() string {
@@ -976,7 +1107,7 @@ type FetchOperationsResponse struct {
 
 func (x *FetchOperationsResponse) Reset() {
 	*x = FetchOperationsResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[7]
+	mi := &file_codespace_v1_types_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -988,7 +1119,7 @@ func (x *FetchOperationsResponse) String() string {
 func (*FetchOperationsResponse) ProtoMessage() {}
 
 func (x *FetchOperationsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[7]
+	mi := &file_codespace_v1_types_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1001,7 +1132,7 @@ func (x *FetchOperationsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FetchOperationsResponse.ProtoReflect.Descriptor instead.
 func (*FetchOperationsResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{7}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *FetchOperationsResponse) GetOperations() []*OperationPayload {
@@ -1030,7 +1161,7 @@ type RenewedOperationLease struct {
 
 func (x *RenewedOperationLease) Reset() {
 	*x = RenewedOperationLease{}
-	mi := &file_codespace_v1_types_proto_msgTypes[8]
+	mi := &file_codespace_v1_types_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1042,7 +1173,7 @@ func (x *RenewedOperationLease) String() string {
 func (*RenewedOperationLease) ProtoMessage() {}
 
 func (x *RenewedOperationLease) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[8]
+	mi := &file_codespace_v1_types_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1055,7 +1186,7 @@ func (x *RenewedOperationLease) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenewedOperationLease.ProtoReflect.Descriptor instead.
 func (*RenewedOperationLease) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{8}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *RenewedOperationLease) GetRuntimeUuid() string {
@@ -1102,7 +1233,7 @@ type OperationPayload struct {
 
 func (x *OperationPayload) Reset() {
 	*x = OperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[9]
+	mi := &file_codespace_v1_types_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1114,7 +1245,7 @@ func (x *OperationPayload) String() string {
 func (*OperationPayload) ProtoMessage() {}
 
 func (x *OperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[9]
+	mi := &file_codespace_v1_types_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1127,7 +1258,7 @@ func (x *OperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OperationPayload.ProtoReflect.Descriptor instead.
 func (*OperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{9}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *OperationPayload) GetOperationRversion() int64 {
@@ -1280,7 +1411,7 @@ type BindRuntimeIdentityRequest struct {
 
 func (x *BindRuntimeIdentityRequest) Reset() {
 	*x = BindRuntimeIdentityRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[10]
+	mi := &file_codespace_v1_types_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1292,7 +1423,7 @@ func (x *BindRuntimeIdentityRequest) String() string {
 func (*BindRuntimeIdentityRequest) ProtoMessage() {}
 
 func (x *BindRuntimeIdentityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[10]
+	mi := &file_codespace_v1_types_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1305,7 +1436,7 @@ func (x *BindRuntimeIdentityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BindRuntimeIdentityRequest.ProtoReflect.Descriptor instead.
 func (*BindRuntimeIdentityRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{10}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *BindRuntimeIdentityRequest) GetProtocolVersion() int32 {
@@ -1346,7 +1477,7 @@ type BindRuntimeIdentityResponse struct {
 
 func (x *BindRuntimeIdentityResponse) Reset() {
 	*x = BindRuntimeIdentityResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[11]
+	mi := &file_codespace_v1_types_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1358,7 +1489,7 @@ func (x *BindRuntimeIdentityResponse) String() string {
 func (*BindRuntimeIdentityResponse) ProtoMessage() {}
 
 func (x *BindRuntimeIdentityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[11]
+	mi := &file_codespace_v1_types_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1371,7 +1502,7 @@ func (x *BindRuntimeIdentityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BindRuntimeIdentityResponse.ProtoReflect.Descriptor instead.
 func (*BindRuntimeIdentityResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{11}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *BindRuntimeIdentityResponse) GetRuntimeUuid() string {
@@ -1391,7 +1522,7 @@ type ResumeOperationPayload struct {
 
 func (x *ResumeOperationPayload) Reset() {
 	*x = ResumeOperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[12]
+	mi := &file_codespace_v1_types_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1403,7 +1534,7 @@ func (x *ResumeOperationPayload) String() string {
 func (*ResumeOperationPayload) ProtoMessage() {}
 
 func (x *ResumeOperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[12]
+	mi := &file_codespace_v1_types_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1416,7 +1547,7 @@ func (x *ResumeOperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResumeOperationPayload.ProtoReflect.Descriptor instead.
 func (*ResumeOperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{12}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ResumeOperationPayload) GetRuntimeSettings() *EffectiveCodespaceRuntimeSettings {
@@ -1435,7 +1566,7 @@ type StopOperationPayload struct {
 
 func (x *StopOperationPayload) Reset() {
 	*x = StopOperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[13]
+	mi := &file_codespace_v1_types_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1447,7 +1578,7 @@ func (x *StopOperationPayload) String() string {
 func (*StopOperationPayload) ProtoMessage() {}
 
 func (x *StopOperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[13]
+	mi := &file_codespace_v1_types_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1460,7 +1591,7 @@ func (x *StopOperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StopOperationPayload.ProtoReflect.Descriptor instead.
 func (*StopOperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{13}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{15}
 }
 
 // DeleteOperationPayload asks the manager to delete the local runtime.
@@ -1472,7 +1603,7 @@ type DeleteOperationPayload struct {
 
 func (x *DeleteOperationPayload) Reset() {
 	*x = DeleteOperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[14]
+	mi := &file_codespace_v1_types_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1484,7 +1615,7 @@ func (x *DeleteOperationPayload) String() string {
 func (*DeleteOperationPayload) ProtoMessage() {}
 
 func (x *DeleteOperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[14]
+	mi := &file_codespace_v1_types_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1497,7 +1628,7 @@ func (x *DeleteOperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteOperationPayload.ProtoReflect.Descriptor instead.
 func (*DeleteOperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{14}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{16}
 }
 
 // AbortCreateOperationPayload asks the manager to abort an active create.
@@ -1509,7 +1640,7 @@ type AbortCreateOperationPayload struct {
 
 func (x *AbortCreateOperationPayload) Reset() {
 	*x = AbortCreateOperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[15]
+	mi := &file_codespace_v1_types_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1521,7 +1652,7 @@ func (x *AbortCreateOperationPayload) String() string {
 func (*AbortCreateOperationPayload) ProtoMessage() {}
 
 func (x *AbortCreateOperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[15]
+	mi := &file_codespace_v1_types_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1534,7 +1665,7 @@ func (x *AbortCreateOperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AbortCreateOperationPayload.ProtoReflect.Descriptor instead.
 func (*AbortCreateOperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{15}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{17}
 }
 
 // AbortResumeOperationPayload asks the manager to abort an active resume.
@@ -1546,7 +1677,7 @@ type AbortResumeOperationPayload struct {
 
 func (x *AbortResumeOperationPayload) Reset() {
 	*x = AbortResumeOperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[16]
+	mi := &file_codespace_v1_types_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1558,7 +1689,7 @@ func (x *AbortResumeOperationPayload) String() string {
 func (*AbortResumeOperationPayload) ProtoMessage() {}
 
 func (x *AbortResumeOperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[16]
+	mi := &file_codespace_v1_types_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1571,7 +1702,7 @@ func (x *AbortResumeOperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AbortResumeOperationPayload.ProtoReflect.Descriptor instead.
 func (*AbortResumeOperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{16}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{18}
 }
 
 // CreateOperationPayload contains immutable inputs selected for create.
@@ -1591,7 +1722,7 @@ type CreateOperationPayload struct {
 
 func (x *CreateOperationPayload) Reset() {
 	*x = CreateOperationPayload{}
-	mi := &file_codespace_v1_types_proto_msgTypes[17]
+	mi := &file_codespace_v1_types_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1603,7 +1734,7 @@ func (x *CreateOperationPayload) String() string {
 func (*CreateOperationPayload) ProtoMessage() {}
 
 func (x *CreateOperationPayload) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[17]
+	mi := &file_codespace_v1_types_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1616,7 +1747,7 @@ func (x *CreateOperationPayload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateOperationPayload.ProtoReflect.Descriptor instead.
 func (*CreateOperationPayload) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{17}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *CreateOperationPayload) GetRepository() *RepositoryCheckout {
@@ -1673,7 +1804,7 @@ type RepositoryCheckout struct {
 
 func (x *RepositoryCheckout) Reset() {
 	*x = RepositoryCheckout{}
-	mi := &file_codespace_v1_types_proto_msgTypes[18]
+	mi := &file_codespace_v1_types_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1685,7 +1816,7 @@ func (x *RepositoryCheckout) String() string {
 func (*RepositoryCheckout) ProtoMessage() {}
 
 func (x *RepositoryCheckout) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[18]
+	mi := &file_codespace_v1_types_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1698,7 +1829,7 @@ func (x *RepositoryCheckout) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RepositoryCheckout.ProtoReflect.Descriptor instead.
 func (*RepositoryCheckout) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{18}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *RepositoryCheckout) GetFullName() string {
@@ -1764,7 +1895,7 @@ type GitIdentity struct {
 
 func (x *GitIdentity) Reset() {
 	*x = GitIdentity{}
-	mi := &file_codespace_v1_types_proto_msgTypes[19]
+	mi := &file_codespace_v1_types_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1776,7 +1907,7 @@ func (x *GitIdentity) String() string {
 func (*GitIdentity) ProtoMessage() {}
 
 func (x *GitIdentity) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[19]
+	mi := &file_codespace_v1_types_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1789,7 +1920,7 @@ func (x *GitIdentity) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GitIdentity.ProtoReflect.Descriptor instead.
 func (*GitIdentity) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{19}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GitIdentity) GetGiteaUsername() string {
@@ -1827,7 +1958,7 @@ type DevContainerConfiguration struct {
 
 func (x *DevContainerConfiguration) Reset() {
 	*x = DevContainerConfiguration{}
-	mi := &file_codespace_v1_types_proto_msgTypes[20]
+	mi := &file_codespace_v1_types_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1839,7 +1970,7 @@ func (x *DevContainerConfiguration) String() string {
 func (*DevContainerConfiguration) ProtoMessage() {}
 
 func (x *DevContainerConfiguration) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[20]
+	mi := &file_codespace_v1_types_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1852,7 +1983,7 @@ func (x *DevContainerConfiguration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DevContainerConfiguration.ProtoReflect.Descriptor instead.
 func (*DevContainerConfiguration) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{20}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *DevContainerConfiguration) GetSource() isDevContainerConfiguration_Source {
@@ -1913,7 +2044,7 @@ type FinalizeOperationRequest struct {
 
 func (x *FinalizeOperationRequest) Reset() {
 	*x = FinalizeOperationRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[21]
+	mi := &file_codespace_v1_types_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1925,7 +2056,7 @@ func (x *FinalizeOperationRequest) String() string {
 func (*FinalizeOperationRequest) ProtoMessage() {}
 
 func (x *FinalizeOperationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[21]
+	mi := &file_codespace_v1_types_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1938,7 +2069,7 @@ func (x *FinalizeOperationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FinalizeOperationRequest.ProtoReflect.Descriptor instead.
 func (*FinalizeOperationRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{21}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *FinalizeOperationRequest) GetProtocolVersion() int32 {
@@ -1986,7 +2117,7 @@ type FinalizeOperationResponse struct {
 
 func (x *FinalizeOperationResponse) Reset() {
 	*x = FinalizeOperationResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[22]
+	mi := &file_codespace_v1_types_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1998,7 +2129,7 @@ func (x *FinalizeOperationResponse) String() string {
 func (*FinalizeOperationResponse) ProtoMessage() {}
 
 func (x *FinalizeOperationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[22]
+	mi := &file_codespace_v1_types_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2011,7 +2142,7 @@ func (x *FinalizeOperationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FinalizeOperationResponse.ProtoReflect.Descriptor instead.
 func (*FinalizeOperationResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{22}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *FinalizeOperationResponse) GetResourceAbsent() bool {
@@ -2036,7 +2167,7 @@ type UpdateLogRequest struct {
 
 func (x *UpdateLogRequest) Reset() {
 	*x = UpdateLogRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[23]
+	mi := &file_codespace_v1_types_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2048,7 +2179,7 @@ func (x *UpdateLogRequest) String() string {
 func (*UpdateLogRequest) ProtoMessage() {}
 
 func (x *UpdateLogRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[23]
+	mi := &file_codespace_v1_types_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2061,7 +2192,7 @@ func (x *UpdateLogRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateLogRequest.ProtoReflect.Descriptor instead.
 func (*UpdateLogRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{23}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *UpdateLogRequest) GetProtocolVersion() int32 {
@@ -2110,7 +2241,7 @@ type LogLine struct {
 
 func (x *LogLine) Reset() {
 	*x = LogLine{}
-	mi := &file_codespace_v1_types_proto_msgTypes[24]
+	mi := &file_codespace_v1_types_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2122,7 +2253,7 @@ func (x *LogLine) String() string {
 func (*LogLine) ProtoMessage() {}
 
 func (x *LogLine) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[24]
+	mi := &file_codespace_v1_types_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2135,7 +2266,7 @@ func (x *LogLine) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogLine.ProtoReflect.Descriptor instead.
 func (*LogLine) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{24}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *LogLine) GetTimestampUnixNano() int64 {
@@ -2162,7 +2293,7 @@ type UpdateLogResponse struct {
 
 func (x *UpdateLogResponse) Reset() {
 	*x = UpdateLogResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[25]
+	mi := &file_codespace_v1_types_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2174,7 +2305,7 @@ func (x *UpdateLogResponse) String() string {
 func (*UpdateLogResponse) ProtoMessage() {}
 
 func (x *UpdateLogResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[25]
+	mi := &file_codespace_v1_types_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2187,7 +2318,7 @@ func (x *UpdateLogResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateLogResponse.ProtoReflect.Descriptor instead.
 func (*UpdateLogResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{25}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *UpdateLogResponse) GetNextOffset() int64 {
@@ -2211,7 +2342,7 @@ type ReportRuntimeMetadataRequest struct {
 
 func (x *ReportRuntimeMetadataRequest) Reset() {
 	*x = ReportRuntimeMetadataRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[26]
+	mi := &file_codespace_v1_types_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2223,7 +2354,7 @@ func (x *ReportRuntimeMetadataRequest) String() string {
 func (*ReportRuntimeMetadataRequest) ProtoMessage() {}
 
 func (x *ReportRuntimeMetadataRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[26]
+	mi := &file_codespace_v1_types_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2236,7 +2367,7 @@ func (x *ReportRuntimeMetadataRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReportRuntimeMetadataRequest.ProtoReflect.Descriptor instead.
 func (*ReportRuntimeMetadataRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{26}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ReportRuntimeMetadataRequest) GetProtocolVersion() int32 {
@@ -2276,7 +2407,7 @@ type ReportRuntimeMetadataResponse struct {
 
 func (x *ReportRuntimeMetadataResponse) Reset() {
 	*x = ReportRuntimeMetadataResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[27]
+	mi := &file_codespace_v1_types_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2288,7 +2419,7 @@ func (x *ReportRuntimeMetadataResponse) String() string {
 func (*ReportRuntimeMetadataResponse) ProtoMessage() {}
 
 func (x *ReportRuntimeMetadataResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[27]
+	mi := &file_codespace_v1_types_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2301,7 +2432,7 @@ func (x *ReportRuntimeMetadataResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReportRuntimeMetadataResponse.ProtoReflect.Descriptor instead.
 func (*ReportRuntimeMetadataResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{27}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{29}
 }
 
 // RuntimeMetadata describes the user-visible runtime entry points and usage.
@@ -2317,7 +2448,7 @@ type RuntimeMetadata struct {
 
 func (x *RuntimeMetadata) Reset() {
 	*x = RuntimeMetadata{}
-	mi := &file_codespace_v1_types_proto_msgTypes[28]
+	mi := &file_codespace_v1_types_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2329,7 +2460,7 @@ func (x *RuntimeMetadata) String() string {
 func (*RuntimeMetadata) ProtoMessage() {}
 
 func (x *RuntimeMetadata) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[28]
+	mi := &file_codespace_v1_types_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2342,7 +2473,7 @@ func (x *RuntimeMetadata) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeMetadata.ProtoReflect.Descriptor instead.
 func (*RuntimeMetadata) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{28}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *RuntimeMetadata) GetEndpoints() []*RuntimeEndpoint {
@@ -2380,7 +2511,7 @@ type RuntimeEndpoint struct {
 
 func (x *RuntimeEndpoint) Reset() {
 	*x = RuntimeEndpoint{}
-	mi := &file_codespace_v1_types_proto_msgTypes[29]
+	mi := &file_codespace_v1_types_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2392,7 +2523,7 @@ func (x *RuntimeEndpoint) String() string {
 func (*RuntimeEndpoint) ProtoMessage() {}
 
 func (x *RuntimeEndpoint) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[29]
+	mi := &file_codespace_v1_types_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2405,7 +2536,7 @@ func (x *RuntimeEndpoint) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeEndpoint.ProtoReflect.Descriptor instead.
 func (*RuntimeEndpoint) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{29}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *RuntimeEndpoint) GetEndpointId() string {
@@ -2449,7 +2580,7 @@ type RuntimeBoot struct {
 
 func (x *RuntimeBoot) Reset() {
 	*x = RuntimeBoot{}
-	mi := &file_codespace_v1_types_proto_msgTypes[30]
+	mi := &file_codespace_v1_types_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2461,7 +2592,7 @@ func (x *RuntimeBoot) String() string {
 func (*RuntimeBoot) ProtoMessage() {}
 
 func (x *RuntimeBoot) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[30]
+	mi := &file_codespace_v1_types_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2474,7 +2605,7 @@ func (x *RuntimeBoot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeBoot.ProtoReflect.Descriptor instead.
 func (*RuntimeBoot) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{30}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *RuntimeBoot) GetOperationRversion() int64 {
@@ -2518,7 +2649,7 @@ type RuntimeResourceUsage struct {
 
 func (x *RuntimeResourceUsage) Reset() {
 	*x = RuntimeResourceUsage{}
-	mi := &file_codespace_v1_types_proto_msgTypes[31]
+	mi := &file_codespace_v1_types_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2530,7 +2661,7 @@ func (x *RuntimeResourceUsage) String() string {
 func (*RuntimeResourceUsage) ProtoMessage() {}
 
 func (x *RuntimeResourceUsage) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[31]
+	mi := &file_codespace_v1_types_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2543,7 +2674,7 @@ func (x *RuntimeResourceUsage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeResourceUsage.ProtoReflect.Descriptor instead.
 func (*RuntimeResourceUsage) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{31}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *RuntimeResourceUsage) GetCpu() *RuntimeCPUUsage {
@@ -2585,7 +2716,7 @@ type RuntimeCPUUsage struct {
 
 func (x *RuntimeCPUUsage) Reset() {
 	*x = RuntimeCPUUsage{}
-	mi := &file_codespace_v1_types_proto_msgTypes[32]
+	mi := &file_codespace_v1_types_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2597,7 +2728,7 @@ func (x *RuntimeCPUUsage) String() string {
 func (*RuntimeCPUUsage) ProtoMessage() {}
 
 func (x *RuntimeCPUUsage) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[32]
+	mi := &file_codespace_v1_types_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2610,7 +2741,7 @@ func (x *RuntimeCPUUsage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeCPUUsage.ProtoReflect.Descriptor instead.
 func (*RuntimeCPUUsage) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{32}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *RuntimeCPUUsage) GetUsedMillicores() int64 {
@@ -2638,7 +2769,7 @@ type RuntimeMemoryUsage struct {
 
 func (x *RuntimeMemoryUsage) Reset() {
 	*x = RuntimeMemoryUsage{}
-	mi := &file_codespace_v1_types_proto_msgTypes[33]
+	mi := &file_codespace_v1_types_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2650,7 +2781,7 @@ func (x *RuntimeMemoryUsage) String() string {
 func (*RuntimeMemoryUsage) ProtoMessage() {}
 
 func (x *RuntimeMemoryUsage) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[33]
+	mi := &file_codespace_v1_types_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2663,7 +2794,7 @@ func (x *RuntimeMemoryUsage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeMemoryUsage.ProtoReflect.Descriptor instead.
 func (*RuntimeMemoryUsage) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{33}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *RuntimeMemoryUsage) GetUsedBytes() int64 {
@@ -2691,7 +2822,7 @@ type RuntimeDiskUsage struct {
 
 func (x *RuntimeDiskUsage) Reset() {
 	*x = RuntimeDiskUsage{}
-	mi := &file_codespace_v1_types_proto_msgTypes[34]
+	mi := &file_codespace_v1_types_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2703,7 +2834,7 @@ func (x *RuntimeDiskUsage) String() string {
 func (*RuntimeDiskUsage) ProtoMessage() {}
 
 func (x *RuntimeDiskUsage) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[34]
+	mi := &file_codespace_v1_types_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2716,7 +2847,7 @@ func (x *RuntimeDiskUsage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeDiskUsage.ProtoReflect.Descriptor instead.
 func (*RuntimeDiskUsage) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{34}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *RuntimeDiskUsage) GetUsedBytes() int64 {
@@ -2744,7 +2875,7 @@ type RuntimeSecretEnvironmentVariable struct {
 
 func (x *RuntimeSecretEnvironmentVariable) Reset() {
 	*x = RuntimeSecretEnvironmentVariable{}
-	mi := &file_codespace_v1_types_proto_msgTypes[35]
+	mi := &file_codespace_v1_types_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2756,7 +2887,7 @@ func (x *RuntimeSecretEnvironmentVariable) String() string {
 func (*RuntimeSecretEnvironmentVariable) ProtoMessage() {}
 
 func (x *RuntimeSecretEnvironmentVariable) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[35]
+	mi := &file_codespace_v1_types_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2769,7 +2900,7 @@ func (x *RuntimeSecretEnvironmentVariable) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeSecretEnvironmentVariable.ProtoReflect.Descriptor instead.
 func (*RuntimeSecretEnvironmentVariable) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{35}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *RuntimeSecretEnvironmentVariable) GetName() string {
@@ -2800,7 +2931,7 @@ type RequestRuntimeAccessRequest struct {
 
 func (x *RequestRuntimeAccessRequest) Reset() {
 	*x = RequestRuntimeAccessRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[36]
+	mi := &file_codespace_v1_types_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2812,7 +2943,7 @@ func (x *RequestRuntimeAccessRequest) String() string {
 func (*RequestRuntimeAccessRequest) ProtoMessage() {}
 
 func (x *RequestRuntimeAccessRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[36]
+	mi := &file_codespace_v1_types_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2825,7 +2956,7 @@ func (x *RequestRuntimeAccessRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestRuntimeAccessRequest.ProtoReflect.Descriptor instead.
 func (*RequestRuntimeAccessRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{36}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *RequestRuntimeAccessRequest) GetProtocolVersion() int32 {
@@ -2866,7 +2997,7 @@ type RuntimeGitSSHKey struct {
 
 func (x *RuntimeGitSSHKey) Reset() {
 	*x = RuntimeGitSSHKey{}
-	mi := &file_codespace_v1_types_proto_msgTypes[37]
+	mi := &file_codespace_v1_types_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2878,7 +3009,7 @@ func (x *RuntimeGitSSHKey) String() string {
 func (*RuntimeGitSSHKey) ProtoMessage() {}
 
 func (x *RuntimeGitSSHKey) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[37]
+	mi := &file_codespace_v1_types_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2891,7 +3022,7 @@ func (x *RuntimeGitSSHKey) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeGitSSHKey.ProtoReflect.Descriptor instead.
 func (*RuntimeGitSSHKey) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{37}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *RuntimeGitSSHKey) GetPublicKey() []byte {
@@ -2911,7 +3042,7 @@ type RequestRuntimeAccessResponse struct {
 
 func (x *RequestRuntimeAccessResponse) Reset() {
 	*x = RequestRuntimeAccessResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[38]
+	mi := &file_codespace_v1_types_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2923,7 +3054,7 @@ func (x *RequestRuntimeAccessResponse) String() string {
 func (*RequestRuntimeAccessResponse) ProtoMessage() {}
 
 func (x *RequestRuntimeAccessResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[38]
+	mi := &file_codespace_v1_types_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2936,7 +3067,7 @@ func (x *RequestRuntimeAccessResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestRuntimeAccessResponse.ProtoReflect.Descriptor instead.
 func (*RequestRuntimeAccessResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{38}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *RequestRuntimeAccessResponse) GetAccess() *RuntimeAccessBundle {
@@ -2959,7 +3090,7 @@ type RuntimeAccessBundle struct {
 
 func (x *RuntimeAccessBundle) Reset() {
 	*x = RuntimeAccessBundle{}
-	mi := &file_codespace_v1_types_proto_msgTypes[39]
+	mi := &file_codespace_v1_types_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2971,7 +3102,7 @@ func (x *RuntimeAccessBundle) String() string {
 func (*RuntimeAccessBundle) ProtoMessage() {}
 
 func (x *RuntimeAccessBundle) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[39]
+	mi := &file_codespace_v1_types_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2984,7 +3115,7 @@ func (x *RuntimeAccessBundle) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeAccessBundle.ProtoReflect.Descriptor instead.
 func (*RuntimeAccessBundle) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{39}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *RuntimeAccessBundle) GetGiteaToken() string {
@@ -3025,7 +3156,7 @@ type GitSSHTrust struct {
 
 func (x *GitSSHTrust) Reset() {
 	*x = GitSSHTrust{}
-	mi := &file_codespace_v1_types_proto_msgTypes[40]
+	mi := &file_codespace_v1_types_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3037,7 +3168,7 @@ func (x *GitSSHTrust) String() string {
 func (*GitSSHTrust) ProtoMessage() {}
 
 func (x *GitSSHTrust) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[40]
+	mi := &file_codespace_v1_types_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3050,7 +3181,7 @@ func (x *GitSSHTrust) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GitSSHTrust.ProtoReflect.Descriptor instead.
 func (*GitSSHTrust) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{40}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *GitSSHTrust) GetKnownHostsLines() []string {
@@ -3072,7 +3203,7 @@ type EffectiveCodespaceRuntimeSettings struct {
 
 func (x *EffectiveCodespaceRuntimeSettings) Reset() {
 	*x = EffectiveCodespaceRuntimeSettings{}
-	mi := &file_codespace_v1_types_proto_msgTypes[41]
+	mi := &file_codespace_v1_types_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3084,7 +3215,7 @@ func (x *EffectiveCodespaceRuntimeSettings) String() string {
 func (*EffectiveCodespaceRuntimeSettings) ProtoMessage() {}
 
 func (x *EffectiveCodespaceRuntimeSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[41]
+	mi := &file_codespace_v1_types_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3097,7 +3228,7 @@ func (x *EffectiveCodespaceRuntimeSettings) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use EffectiveCodespaceRuntimeSettings.ProtoReflect.Descriptor instead.
 func (*EffectiveCodespaceRuntimeSettings) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{41}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *EffectiveCodespaceRuntimeSettings) GetAutoStopEnabled() bool {
@@ -3134,7 +3265,7 @@ type RequestIdleStopRequest struct {
 
 func (x *RequestIdleStopRequest) Reset() {
 	*x = RequestIdleStopRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[42]
+	mi := &file_codespace_v1_types_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3146,7 +3277,7 @@ func (x *RequestIdleStopRequest) String() string {
 func (*RequestIdleStopRequest) ProtoMessage() {}
 
 func (x *RequestIdleStopRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[42]
+	mi := &file_codespace_v1_types_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3159,7 +3290,7 @@ func (x *RequestIdleStopRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestIdleStopRequest.ProtoReflect.Descriptor instead.
 func (*RequestIdleStopRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{42}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *RequestIdleStopRequest) GetProtocolVersion() int32 {
@@ -3198,7 +3329,7 @@ type RequestIdleStopResponse struct {
 
 func (x *RequestIdleStopResponse) Reset() {
 	*x = RequestIdleStopResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[43]
+	mi := &file_codespace_v1_types_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3210,7 +3341,7 @@ func (x *RequestIdleStopResponse) String() string {
 func (*RequestIdleStopResponse) ProtoMessage() {}
 
 func (x *RequestIdleStopResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[43]
+	mi := &file_codespace_v1_types_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3223,7 +3354,7 @@ func (x *RequestIdleStopResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestIdleStopResponse.ProtoReflect.Descriptor instead.
 func (*RequestIdleStopResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{43}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *RequestIdleStopResponse) GetOutcome() isRequestIdleStopResponse_Outcome {
@@ -3292,7 +3423,7 @@ type IdleStopPending struct {
 
 func (x *IdleStopPending) Reset() {
 	*x = IdleStopPending{}
-	mi := &file_codespace_v1_types_proto_msgTypes[44]
+	mi := &file_codespace_v1_types_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3304,7 +3435,7 @@ func (x *IdleStopPending) String() string {
 func (*IdleStopPending) ProtoMessage() {}
 
 func (x *IdleStopPending) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[44]
+	mi := &file_codespace_v1_types_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3317,7 +3448,7 @@ func (x *IdleStopPending) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdleStopPending.ProtoReflect.Descriptor instead.
 func (*IdleStopPending) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{44}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *IdleStopPending) GetOperationRversion() int64 {
@@ -3337,7 +3468,7 @@ type IdleStopObservationChanged struct {
 
 func (x *IdleStopObservationChanged) Reset() {
 	*x = IdleStopObservationChanged{}
-	mi := &file_codespace_v1_types_proto_msgTypes[45]
+	mi := &file_codespace_v1_types_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3349,7 +3480,7 @@ func (x *IdleStopObservationChanged) String() string {
 func (*IdleStopObservationChanged) ProtoMessage() {}
 
 func (x *IdleStopObservationChanged) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[45]
+	mi := &file_codespace_v1_types_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3362,7 +3493,7 @@ func (x *IdleStopObservationChanged) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdleStopObservationChanged.ProtoReflect.Descriptor instead.
 func (*IdleStopObservationChanged) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{45}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *IdleStopObservationChanged) GetRuntimeSettings() *EffectiveCodespaceRuntimeSettings {
@@ -3382,7 +3513,7 @@ type IdleStopNotApplicable struct {
 
 func (x *IdleStopNotApplicable) Reset() {
 	*x = IdleStopNotApplicable{}
-	mi := &file_codespace_v1_types_proto_msgTypes[46]
+	mi := &file_codespace_v1_types_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3394,7 +3525,7 @@ func (x *IdleStopNotApplicable) String() string {
 func (*IdleStopNotApplicable) ProtoMessage() {}
 
 func (x *IdleStopNotApplicable) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[46]
+	mi := &file_codespace_v1_types_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3407,7 +3538,7 @@ func (x *IdleStopNotApplicable) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IdleStopNotApplicable.ProtoReflect.Descriptor instead.
 func (*IdleStopNotApplicable) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{46}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *IdleStopNotApplicable) GetReason() IdleStopNotApplicableReason {
@@ -3429,7 +3560,7 @@ type ValidateOpenTokenRequest struct {
 
 func (x *ValidateOpenTokenRequest) Reset() {
 	*x = ValidateOpenTokenRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[47]
+	mi := &file_codespace_v1_types_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3441,7 +3572,7 @@ func (x *ValidateOpenTokenRequest) String() string {
 func (*ValidateOpenTokenRequest) ProtoMessage() {}
 
 func (x *ValidateOpenTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[47]
+	mi := &file_codespace_v1_types_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3454,7 +3585,7 @@ func (x *ValidateOpenTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateOpenTokenRequest.ProtoReflect.Descriptor instead.
 func (*ValidateOpenTokenRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{47}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *ValidateOpenTokenRequest) GetProtocolVersion() int32 {
@@ -3485,7 +3616,7 @@ type ValidateOpenTokenResponse struct {
 
 func (x *ValidateOpenTokenResponse) Reset() {
 	*x = ValidateOpenTokenResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[48]
+	mi := &file_codespace_v1_types_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3497,7 +3628,7 @@ func (x *ValidateOpenTokenResponse) String() string {
 func (*ValidateOpenTokenResponse) ProtoMessage() {}
 
 func (x *ValidateOpenTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[48]
+	mi := &file_codespace_v1_types_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3510,7 +3641,7 @@ func (x *ValidateOpenTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidateOpenTokenResponse.ProtoReflect.Descriptor instead.
 func (*ValidateOpenTokenResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{48}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *ValidateOpenTokenResponse) GetOutcome() isValidateOpenTokenResponse_Outcome {
@@ -3567,7 +3698,7 @@ type OpenTokenBinding struct {
 
 func (x *OpenTokenBinding) Reset() {
 	*x = OpenTokenBinding{}
-	mi := &file_codespace_v1_types_proto_msgTypes[49]
+	mi := &file_codespace_v1_types_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3579,7 +3710,7 @@ func (x *OpenTokenBinding) String() string {
 func (*OpenTokenBinding) ProtoMessage() {}
 
 func (x *OpenTokenBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[49]
+	mi := &file_codespace_v1_types_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3592,7 +3723,7 @@ func (x *OpenTokenBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpenTokenBinding.ProtoReflect.Descriptor instead.
 func (*OpenTokenBinding) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{49}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *OpenTokenBinding) GetUserId() int64 {
@@ -3636,7 +3767,7 @@ type ValidatePublicEndpointRequest struct {
 
 func (x *ValidatePublicEndpointRequest) Reset() {
 	*x = ValidatePublicEndpointRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[50]
+	mi := &file_codespace_v1_types_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3648,7 +3779,7 @@ func (x *ValidatePublicEndpointRequest) String() string {
 func (*ValidatePublicEndpointRequest) ProtoMessage() {}
 
 func (x *ValidatePublicEndpointRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[50]
+	mi := &file_codespace_v1_types_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3661,7 +3792,7 @@ func (x *ValidatePublicEndpointRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidatePublicEndpointRequest.ProtoReflect.Descriptor instead.
 func (*ValidatePublicEndpointRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{50}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *ValidatePublicEndpointRequest) GetProtocolVersion() int32 {
@@ -3699,7 +3830,7 @@ type ValidatePublicEndpointResponse struct {
 
 func (x *ValidatePublicEndpointResponse) Reset() {
 	*x = ValidatePublicEndpointResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[51]
+	mi := &file_codespace_v1_types_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3711,7 +3842,7 @@ func (x *ValidatePublicEndpointResponse) String() string {
 func (*ValidatePublicEndpointResponse) ProtoMessage() {}
 
 func (x *ValidatePublicEndpointResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[51]
+	mi := &file_codespace_v1_types_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3724,7 +3855,7 @@ func (x *ValidatePublicEndpointResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ValidatePublicEndpointResponse.ProtoReflect.Descriptor instead.
 func (*ValidatePublicEndpointResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{51}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *ValidatePublicEndpointResponse) GetOutcome() isValidatePublicEndpointResponse_Outcome {
@@ -3777,7 +3908,7 @@ type PublicEndpointAllowed struct {
 
 func (x *PublicEndpointAllowed) Reset() {
 	*x = PublicEndpointAllowed{}
-	mi := &file_codespace_v1_types_proto_msgTypes[52]
+	mi := &file_codespace_v1_types_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3789,7 +3920,7 @@ func (x *PublicEndpointAllowed) String() string {
 func (*PublicEndpointAllowed) ProtoMessage() {}
 
 func (x *PublicEndpointAllowed) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[52]
+	mi := &file_codespace_v1_types_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3802,7 +3933,7 @@ func (x *PublicEndpointAllowed) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublicEndpointAllowed.ProtoReflect.Descriptor instead.
 func (*PublicEndpointAllowed) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{52}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{54}
 }
 
 // VerifySSHPublicKeyRequest validates a gateway SSH public key login.
@@ -3818,7 +3949,7 @@ type VerifySSHPublicKeyRequest struct {
 
 func (x *VerifySSHPublicKeyRequest) Reset() {
 	*x = VerifySSHPublicKeyRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[53]
+	mi := &file_codespace_v1_types_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3830,7 +3961,7 @@ func (x *VerifySSHPublicKeyRequest) String() string {
 func (*VerifySSHPublicKeyRequest) ProtoMessage() {}
 
 func (x *VerifySSHPublicKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[53]
+	mi := &file_codespace_v1_types_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3843,7 +3974,7 @@ func (x *VerifySSHPublicKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifySSHPublicKeyRequest.ProtoReflect.Descriptor instead.
 func (*VerifySSHPublicKeyRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{53}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *VerifySSHPublicKeyRequest) GetProtocolVersion() int32 {
@@ -3881,7 +4012,7 @@ type VerifySSHPublicKeyResponse struct {
 
 func (x *VerifySSHPublicKeyResponse) Reset() {
 	*x = VerifySSHPublicKeyResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[54]
+	mi := &file_codespace_v1_types_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3893,7 +4024,7 @@ func (x *VerifySSHPublicKeyResponse) String() string {
 func (*VerifySSHPublicKeyResponse) ProtoMessage() {}
 
 func (x *VerifySSHPublicKeyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[54]
+	mi := &file_codespace_v1_types_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3906,7 +4037,7 @@ func (x *VerifySSHPublicKeyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifySSHPublicKeyResponse.ProtoReflect.Descriptor instead.
 func (*VerifySSHPublicKeyResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{54}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *VerifySSHPublicKeyResponse) GetOutcome() isVerifySSHPublicKeyResponse_Outcome {
@@ -3961,7 +4092,7 @@ type SSHAuthBinding struct {
 
 func (x *SSHAuthBinding) Reset() {
 	*x = SSHAuthBinding{}
-	mi := &file_codespace_v1_types_proto_msgTypes[55]
+	mi := &file_codespace_v1_types_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3973,7 +4104,7 @@ func (x *SSHAuthBinding) String() string {
 func (*SSHAuthBinding) ProtoMessage() {}
 
 func (x *SSHAuthBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[55]
+	mi := &file_codespace_v1_types_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3986,7 +4117,7 @@ func (x *SSHAuthBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SSHAuthBinding.ProtoReflect.Descriptor instead.
 func (*SSHAuthBinding) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{55}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *SSHAuthBinding) GetUserId() int64 {
@@ -4016,7 +4147,7 @@ type ReportInstancesRequest struct {
 
 func (x *ReportInstancesRequest) Reset() {
 	*x = ReportInstancesRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[56]
+	mi := &file_codespace_v1_types_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4028,7 +4159,7 @@ func (x *ReportInstancesRequest) String() string {
 func (*ReportInstancesRequest) ProtoMessage() {}
 
 func (x *ReportInstancesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[56]
+	mi := &file_codespace_v1_types_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4041,7 +4172,7 @@ func (x *ReportInstancesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReportInstancesRequest.ProtoReflect.Descriptor instead.
 func (*ReportInstancesRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{56}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *ReportInstancesRequest) GetProtocolVersion() int32 {
@@ -4077,7 +4208,7 @@ type RuntimeInstanceRef struct {
 
 func (x *RuntimeInstanceRef) Reset() {
 	*x = RuntimeInstanceRef{}
-	mi := &file_codespace_v1_types_proto_msgTypes[57]
+	mi := &file_codespace_v1_types_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4089,7 +4220,7 @@ func (x *RuntimeInstanceRef) String() string {
 func (*RuntimeInstanceRef) ProtoMessage() {}
 
 func (x *RuntimeInstanceRef) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[57]
+	mi := &file_codespace_v1_types_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4102,7 +4233,7 @@ func (x *RuntimeInstanceRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeInstanceRef.ProtoReflect.Descriptor instead.
 func (*RuntimeInstanceRef) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{57}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *RuntimeInstanceRef) GetRuntimeUuid() string {
@@ -4136,7 +4267,7 @@ type ReportInstancesResponse struct {
 
 func (x *ReportInstancesResponse) Reset() {
 	*x = ReportInstancesResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[58]
+	mi := &file_codespace_v1_types_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4148,7 +4279,7 @@ func (x *ReportInstancesResponse) String() string {
 func (*ReportInstancesResponse) ProtoMessage() {}
 
 func (x *ReportInstancesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[58]
+	mi := &file_codespace_v1_types_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4161,7 +4292,7 @@ func (x *ReportInstancesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReportInstancesResponse.ProtoReflect.Descriptor instead.
 func (*ReportInstancesResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{58}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ReportInstancesResponse) GetResults() []*RuntimeInstanceResult {
@@ -4185,7 +4316,7 @@ type RuntimeInstanceResult struct {
 
 func (x *RuntimeInstanceResult) Reset() {
 	*x = RuntimeInstanceResult{}
-	mi := &file_codespace_v1_types_proto_msgTypes[59]
+	mi := &file_codespace_v1_types_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4197,7 +4328,7 @@ func (x *RuntimeInstanceResult) String() string {
 func (*RuntimeInstanceResult) ProtoMessage() {}
 
 func (x *RuntimeInstanceResult) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[59]
+	mi := &file_codespace_v1_types_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4210,7 +4341,7 @@ func (x *RuntimeInstanceResult) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RuntimeInstanceResult.ProtoReflect.Descriptor instead.
 func (*RuntimeInstanceResult) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{59}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{61}
 }
 
 func (x *RuntimeInstanceResult) GetRuntimeUuid() string {
@@ -4257,7 +4388,7 @@ type RevalidateGatewaySessionRequest struct {
 
 func (x *RevalidateGatewaySessionRequest) Reset() {
 	*x = RevalidateGatewaySessionRequest{}
-	mi := &file_codespace_v1_types_proto_msgTypes[60]
+	mi := &file_codespace_v1_types_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4269,7 +4400,7 @@ func (x *RevalidateGatewaySessionRequest) String() string {
 func (*RevalidateGatewaySessionRequest) ProtoMessage() {}
 
 func (x *RevalidateGatewaySessionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[60]
+	mi := &file_codespace_v1_types_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4282,7 +4413,7 @@ func (x *RevalidateGatewaySessionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevalidateGatewaySessionRequest.ProtoReflect.Descriptor instead.
 func (*RevalidateGatewaySessionRequest) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{60}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{62}
 }
 
 func (x *RevalidateGatewaySessionRequest) GetProtocolVersion() int32 {
@@ -4345,7 +4476,7 @@ type EndpointSessionBinding struct {
 
 func (x *EndpointSessionBinding) Reset() {
 	*x = EndpointSessionBinding{}
-	mi := &file_codespace_v1_types_proto_msgTypes[61]
+	mi := &file_codespace_v1_types_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4357,7 +4488,7 @@ func (x *EndpointSessionBinding) String() string {
 func (*EndpointSessionBinding) ProtoMessage() {}
 
 func (x *EndpointSessionBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[61]
+	mi := &file_codespace_v1_types_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4370,7 +4501,7 @@ func (x *EndpointSessionBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EndpointSessionBinding.ProtoReflect.Descriptor instead.
 func (*EndpointSessionBinding) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{61}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{63}
 }
 
 func (x *EndpointSessionBinding) GetUserId() int64 {
@@ -4405,7 +4536,7 @@ type SSHSessionBinding struct {
 
 func (x *SSHSessionBinding) Reset() {
 	*x = SSHSessionBinding{}
-	mi := &file_codespace_v1_types_proto_msgTypes[62]
+	mi := &file_codespace_v1_types_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4417,7 +4548,7 @@ func (x *SSHSessionBinding) String() string {
 func (*SSHSessionBinding) ProtoMessage() {}
 
 func (x *SSHSessionBinding) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[62]
+	mi := &file_codespace_v1_types_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4430,7 +4561,7 @@ func (x *SSHSessionBinding) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SSHSessionBinding.ProtoReflect.Descriptor instead.
 func (*SSHSessionBinding) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{62}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{64}
 }
 
 func (x *SSHSessionBinding) GetUserId() int64 {
@@ -4461,7 +4592,7 @@ type RevalidateGatewaySessionResponse struct {
 
 func (x *RevalidateGatewaySessionResponse) Reset() {
 	*x = RevalidateGatewaySessionResponse{}
-	mi := &file_codespace_v1_types_proto_msgTypes[63]
+	mi := &file_codespace_v1_types_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4473,7 +4604,7 @@ func (x *RevalidateGatewaySessionResponse) String() string {
 func (*RevalidateGatewaySessionResponse) ProtoMessage() {}
 
 func (x *RevalidateGatewaySessionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[63]
+	mi := &file_codespace_v1_types_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4486,7 +4617,7 @@ func (x *RevalidateGatewaySessionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RevalidateGatewaySessionResponse.ProtoReflect.Descriptor instead.
 func (*RevalidateGatewaySessionResponse) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{63}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{65}
 }
 
 func (x *RevalidateGatewaySessionResponse) GetOutcome() isRevalidateGatewaySessionResponse_Outcome {
@@ -4539,7 +4670,7 @@ type SessionAllowed struct {
 
 func (x *SessionAllowed) Reset() {
 	*x = SessionAllowed{}
-	mi := &file_codespace_v1_types_proto_msgTypes[64]
+	mi := &file_codespace_v1_types_proto_msgTypes[66]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4551,7 +4682,7 @@ func (x *SessionAllowed) String() string {
 func (*SessionAllowed) ProtoMessage() {}
 
 func (x *SessionAllowed) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[64]
+	mi := &file_codespace_v1_types_proto_msgTypes[66]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4564,7 +4695,7 @@ func (x *SessionAllowed) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SessionAllowed.ProtoReflect.Descriptor instead.
 func (*SessionAllowed) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{64}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{66}
 }
 
 // FailureDetail carries a stable denial category for gateway and control-plane decisions.
@@ -4578,7 +4709,7 @@ type FailureDetail struct {
 
 func (x *FailureDetail) Reset() {
 	*x = FailureDetail{}
-	mi := &file_codespace_v1_types_proto_msgTypes[65]
+	mi := &file_codespace_v1_types_proto_msgTypes[67]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4590,7 +4721,7 @@ func (x *FailureDetail) String() string {
 func (*FailureDetail) ProtoMessage() {}
 
 func (x *FailureDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_codespace_v1_types_proto_msgTypes[65]
+	mi := &file_codespace_v1_types_proto_msgTypes[67]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4603,7 +4734,7 @@ func (x *FailureDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FailureDetail.ProtoReflect.Descriptor instead.
 func (*FailureDetail) Descriptor() ([]byte, []int) {
-	return file_codespace_v1_types_proto_rawDescGZIP(), []int{65}
+	return file_codespace_v1_types_proto_rawDescGZIP(), []int{67}
 }
 
 func (x *FailureDetail) GetCategory() string {
@@ -4620,7 +4751,17 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x18codespace/v1/types.proto\x12\fcodespace.v1\"D\n" +
 	"\x0eEnvironmentTag\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\"@\n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\"m\n" +
+	"\x16RegisterManagerRequest\x12)\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12\x14\n" +
+	"\x05token\x18\x02 \x01(\tR\x05token\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"\xa6\x01\n" +
+	"\x17RegisterManagerResponse\x12\x1d\n" +
+	"\n" +
+	"manager_id\x18\x01 \x01(\x03R\tmanagerId\x12%\n" +
+	"\x0emanager_secret\x18\x02 \x01(\tR\rmanagerSecret\x12!\n" +
+	"\fmanager_name\x18\x03 \x01(\tR\vmanagerName\x12\"\n" +
+	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"@\n" +
 	"\x13CheckManagerRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\"]\n" +
 	"\x14CheckManagerResponse\x12\"\n" +
@@ -4942,7 +5083,7 @@ func file_codespace_v1_types_proto_rawDescGZIP() []byte {
 }
 
 var file_codespace_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
-var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 66)
+var file_codespace_v1_types_proto_msgTypes = make([]protoimpl.MessageInfo, 68)
 var file_codespace_v1_types_proto_goTypes = []any{
 	(ManagerRuntimeState)(0),                  // 0: codespace.v1.ManagerRuntimeState
 	(AcceptedOperationType)(0),                // 1: codespace.v1.AcceptedOperationType
@@ -4954,127 +5095,129 @@ var file_codespace_v1_types_proto_goTypes = []any{
 	(IdleStopNotApplicableReason)(0),          // 7: codespace.v1.IdleStopNotApplicableReason
 	(RuntimeReconcileAction)(0),               // 8: codespace.v1.RuntimeReconcileAction
 	(*EnvironmentTag)(nil),                    // 9: codespace.v1.EnvironmentTag
-	(*CheckManagerRequest)(nil),               // 10: codespace.v1.CheckManagerRequest
-	(*CheckManagerResponse)(nil),              // 11: codespace.v1.CheckManagerResponse
-	(*DeclareManagerRequest)(nil),             // 12: codespace.v1.DeclareManagerRequest
-	(*DeclareManagerResponse)(nil),            // 13: codespace.v1.DeclareManagerResponse
-	(*FetchOperationsRequest)(nil),            // 14: codespace.v1.FetchOperationsRequest
-	(*ObservedOperation)(nil),                 // 15: codespace.v1.ObservedOperation
-	(*FetchOperationsResponse)(nil),           // 16: codespace.v1.FetchOperationsResponse
-	(*RenewedOperationLease)(nil),             // 17: codespace.v1.RenewedOperationLease
-	(*OperationPayload)(nil),                  // 18: codespace.v1.OperationPayload
-	(*BindRuntimeIdentityRequest)(nil),        // 19: codespace.v1.BindRuntimeIdentityRequest
-	(*BindRuntimeIdentityResponse)(nil),       // 20: codespace.v1.BindRuntimeIdentityResponse
-	(*ResumeOperationPayload)(nil),            // 21: codespace.v1.ResumeOperationPayload
-	(*StopOperationPayload)(nil),              // 22: codespace.v1.StopOperationPayload
-	(*DeleteOperationPayload)(nil),            // 23: codespace.v1.DeleteOperationPayload
-	(*AbortCreateOperationPayload)(nil),       // 24: codespace.v1.AbortCreateOperationPayload
-	(*AbortResumeOperationPayload)(nil),       // 25: codespace.v1.AbortResumeOperationPayload
-	(*CreateOperationPayload)(nil),            // 26: codespace.v1.CreateOperationPayload
-	(*RepositoryCheckout)(nil),                // 27: codespace.v1.RepositoryCheckout
-	(*GitIdentity)(nil),                       // 28: codespace.v1.GitIdentity
-	(*DevContainerConfiguration)(nil),         // 29: codespace.v1.DevContainerConfiguration
-	(*FinalizeOperationRequest)(nil),          // 30: codespace.v1.FinalizeOperationRequest
-	(*FinalizeOperationResponse)(nil),         // 31: codespace.v1.FinalizeOperationResponse
-	(*UpdateLogRequest)(nil),                  // 32: codespace.v1.UpdateLogRequest
-	(*LogLine)(nil),                           // 33: codespace.v1.LogLine
-	(*UpdateLogResponse)(nil),                 // 34: codespace.v1.UpdateLogResponse
-	(*ReportRuntimeMetadataRequest)(nil),      // 35: codespace.v1.ReportRuntimeMetadataRequest
-	(*ReportRuntimeMetadataResponse)(nil),     // 36: codespace.v1.ReportRuntimeMetadataResponse
-	(*RuntimeMetadata)(nil),                   // 37: codespace.v1.RuntimeMetadata
-	(*RuntimeEndpoint)(nil),                   // 38: codespace.v1.RuntimeEndpoint
-	(*RuntimeBoot)(nil),                       // 39: codespace.v1.RuntimeBoot
-	(*RuntimeResourceUsage)(nil),              // 40: codespace.v1.RuntimeResourceUsage
-	(*RuntimeCPUUsage)(nil),                   // 41: codespace.v1.RuntimeCPUUsage
-	(*RuntimeMemoryUsage)(nil),                // 42: codespace.v1.RuntimeMemoryUsage
-	(*RuntimeDiskUsage)(nil),                  // 43: codespace.v1.RuntimeDiskUsage
-	(*RuntimeSecretEnvironmentVariable)(nil),  // 44: codespace.v1.RuntimeSecretEnvironmentVariable
-	(*RequestRuntimeAccessRequest)(nil),       // 45: codespace.v1.RequestRuntimeAccessRequest
-	(*RuntimeGitSSHKey)(nil),                  // 46: codespace.v1.RuntimeGitSSHKey
-	(*RequestRuntimeAccessResponse)(nil),      // 47: codespace.v1.RequestRuntimeAccessResponse
-	(*RuntimeAccessBundle)(nil),               // 48: codespace.v1.RuntimeAccessBundle
-	(*GitSSHTrust)(nil),                       // 49: codespace.v1.GitSSHTrust
-	(*EffectiveCodespaceRuntimeSettings)(nil), // 50: codespace.v1.EffectiveCodespaceRuntimeSettings
-	(*RequestIdleStopRequest)(nil),            // 51: codespace.v1.RequestIdleStopRequest
-	(*RequestIdleStopResponse)(nil),           // 52: codespace.v1.RequestIdleStopResponse
-	(*IdleStopPending)(nil),                   // 53: codespace.v1.IdleStopPending
-	(*IdleStopObservationChanged)(nil),        // 54: codespace.v1.IdleStopObservationChanged
-	(*IdleStopNotApplicable)(nil),             // 55: codespace.v1.IdleStopNotApplicable
-	(*ValidateOpenTokenRequest)(nil),          // 56: codespace.v1.ValidateOpenTokenRequest
-	(*ValidateOpenTokenResponse)(nil),         // 57: codespace.v1.ValidateOpenTokenResponse
-	(*OpenTokenBinding)(nil),                  // 58: codespace.v1.OpenTokenBinding
-	(*ValidatePublicEndpointRequest)(nil),     // 59: codespace.v1.ValidatePublicEndpointRequest
-	(*ValidatePublicEndpointResponse)(nil),    // 60: codespace.v1.ValidatePublicEndpointResponse
-	(*PublicEndpointAllowed)(nil),             // 61: codespace.v1.PublicEndpointAllowed
-	(*VerifySSHPublicKeyRequest)(nil),         // 62: codespace.v1.VerifySSHPublicKeyRequest
-	(*VerifySSHPublicKeyResponse)(nil),        // 63: codespace.v1.VerifySSHPublicKeyResponse
-	(*SSHAuthBinding)(nil),                    // 64: codespace.v1.SSHAuthBinding
-	(*ReportInstancesRequest)(nil),            // 65: codespace.v1.ReportInstancesRequest
-	(*RuntimeInstanceRef)(nil),                // 66: codespace.v1.RuntimeInstanceRef
-	(*ReportInstancesResponse)(nil),           // 67: codespace.v1.ReportInstancesResponse
-	(*RuntimeInstanceResult)(nil),             // 68: codespace.v1.RuntimeInstanceResult
-	(*RevalidateGatewaySessionRequest)(nil),   // 69: codespace.v1.RevalidateGatewaySessionRequest
-	(*EndpointSessionBinding)(nil),            // 70: codespace.v1.EndpointSessionBinding
-	(*SSHSessionBinding)(nil),                 // 71: codespace.v1.SSHSessionBinding
-	(*RevalidateGatewaySessionResponse)(nil),  // 72: codespace.v1.RevalidateGatewaySessionResponse
-	(*SessionAllowed)(nil),                    // 73: codespace.v1.SessionAllowed
-	(*FailureDetail)(nil),                     // 74: codespace.v1.FailureDetail
+	(*RegisterManagerRequest)(nil),            // 10: codespace.v1.RegisterManagerRequest
+	(*RegisterManagerResponse)(nil),           // 11: codespace.v1.RegisterManagerResponse
+	(*CheckManagerRequest)(nil),               // 12: codespace.v1.CheckManagerRequest
+	(*CheckManagerResponse)(nil),              // 13: codespace.v1.CheckManagerResponse
+	(*DeclareManagerRequest)(nil),             // 14: codespace.v1.DeclareManagerRequest
+	(*DeclareManagerResponse)(nil),            // 15: codespace.v1.DeclareManagerResponse
+	(*FetchOperationsRequest)(nil),            // 16: codespace.v1.FetchOperationsRequest
+	(*ObservedOperation)(nil),                 // 17: codespace.v1.ObservedOperation
+	(*FetchOperationsResponse)(nil),           // 18: codespace.v1.FetchOperationsResponse
+	(*RenewedOperationLease)(nil),             // 19: codespace.v1.RenewedOperationLease
+	(*OperationPayload)(nil),                  // 20: codespace.v1.OperationPayload
+	(*BindRuntimeIdentityRequest)(nil),        // 21: codespace.v1.BindRuntimeIdentityRequest
+	(*BindRuntimeIdentityResponse)(nil),       // 22: codespace.v1.BindRuntimeIdentityResponse
+	(*ResumeOperationPayload)(nil),            // 23: codespace.v1.ResumeOperationPayload
+	(*StopOperationPayload)(nil),              // 24: codespace.v1.StopOperationPayload
+	(*DeleteOperationPayload)(nil),            // 25: codespace.v1.DeleteOperationPayload
+	(*AbortCreateOperationPayload)(nil),       // 26: codespace.v1.AbortCreateOperationPayload
+	(*AbortResumeOperationPayload)(nil),       // 27: codespace.v1.AbortResumeOperationPayload
+	(*CreateOperationPayload)(nil),            // 28: codespace.v1.CreateOperationPayload
+	(*RepositoryCheckout)(nil),                // 29: codespace.v1.RepositoryCheckout
+	(*GitIdentity)(nil),                       // 30: codespace.v1.GitIdentity
+	(*DevContainerConfiguration)(nil),         // 31: codespace.v1.DevContainerConfiguration
+	(*FinalizeOperationRequest)(nil),          // 32: codespace.v1.FinalizeOperationRequest
+	(*FinalizeOperationResponse)(nil),         // 33: codespace.v1.FinalizeOperationResponse
+	(*UpdateLogRequest)(nil),                  // 34: codespace.v1.UpdateLogRequest
+	(*LogLine)(nil),                           // 35: codespace.v1.LogLine
+	(*UpdateLogResponse)(nil),                 // 36: codespace.v1.UpdateLogResponse
+	(*ReportRuntimeMetadataRequest)(nil),      // 37: codespace.v1.ReportRuntimeMetadataRequest
+	(*ReportRuntimeMetadataResponse)(nil),     // 38: codespace.v1.ReportRuntimeMetadataResponse
+	(*RuntimeMetadata)(nil),                   // 39: codespace.v1.RuntimeMetadata
+	(*RuntimeEndpoint)(nil),                   // 40: codespace.v1.RuntimeEndpoint
+	(*RuntimeBoot)(nil),                       // 41: codespace.v1.RuntimeBoot
+	(*RuntimeResourceUsage)(nil),              // 42: codespace.v1.RuntimeResourceUsage
+	(*RuntimeCPUUsage)(nil),                   // 43: codespace.v1.RuntimeCPUUsage
+	(*RuntimeMemoryUsage)(nil),                // 44: codespace.v1.RuntimeMemoryUsage
+	(*RuntimeDiskUsage)(nil),                  // 45: codespace.v1.RuntimeDiskUsage
+	(*RuntimeSecretEnvironmentVariable)(nil),  // 46: codespace.v1.RuntimeSecretEnvironmentVariable
+	(*RequestRuntimeAccessRequest)(nil),       // 47: codespace.v1.RequestRuntimeAccessRequest
+	(*RuntimeGitSSHKey)(nil),                  // 48: codespace.v1.RuntimeGitSSHKey
+	(*RequestRuntimeAccessResponse)(nil),      // 49: codespace.v1.RequestRuntimeAccessResponse
+	(*RuntimeAccessBundle)(nil),               // 50: codespace.v1.RuntimeAccessBundle
+	(*GitSSHTrust)(nil),                       // 51: codespace.v1.GitSSHTrust
+	(*EffectiveCodespaceRuntimeSettings)(nil), // 52: codespace.v1.EffectiveCodespaceRuntimeSettings
+	(*RequestIdleStopRequest)(nil),            // 53: codespace.v1.RequestIdleStopRequest
+	(*RequestIdleStopResponse)(nil),           // 54: codespace.v1.RequestIdleStopResponse
+	(*IdleStopPending)(nil),                   // 55: codespace.v1.IdleStopPending
+	(*IdleStopObservationChanged)(nil),        // 56: codespace.v1.IdleStopObservationChanged
+	(*IdleStopNotApplicable)(nil),             // 57: codespace.v1.IdleStopNotApplicable
+	(*ValidateOpenTokenRequest)(nil),          // 58: codespace.v1.ValidateOpenTokenRequest
+	(*ValidateOpenTokenResponse)(nil),         // 59: codespace.v1.ValidateOpenTokenResponse
+	(*OpenTokenBinding)(nil),                  // 60: codespace.v1.OpenTokenBinding
+	(*ValidatePublicEndpointRequest)(nil),     // 61: codespace.v1.ValidatePublicEndpointRequest
+	(*ValidatePublicEndpointResponse)(nil),    // 62: codespace.v1.ValidatePublicEndpointResponse
+	(*PublicEndpointAllowed)(nil),             // 63: codespace.v1.PublicEndpointAllowed
+	(*VerifySSHPublicKeyRequest)(nil),         // 64: codespace.v1.VerifySSHPublicKeyRequest
+	(*VerifySSHPublicKeyResponse)(nil),        // 65: codespace.v1.VerifySSHPublicKeyResponse
+	(*SSHAuthBinding)(nil),                    // 66: codespace.v1.SSHAuthBinding
+	(*ReportInstancesRequest)(nil),            // 67: codespace.v1.ReportInstancesRequest
+	(*RuntimeInstanceRef)(nil),                // 68: codespace.v1.RuntimeInstanceRef
+	(*ReportInstancesResponse)(nil),           // 69: codespace.v1.ReportInstancesResponse
+	(*RuntimeInstanceResult)(nil),             // 70: codespace.v1.RuntimeInstanceResult
+	(*RevalidateGatewaySessionRequest)(nil),   // 71: codespace.v1.RevalidateGatewaySessionRequest
+	(*EndpointSessionBinding)(nil),            // 72: codespace.v1.EndpointSessionBinding
+	(*SSHSessionBinding)(nil),                 // 73: codespace.v1.SSHSessionBinding
+	(*RevalidateGatewaySessionResponse)(nil),  // 74: codespace.v1.RevalidateGatewaySessionResponse
+	(*SessionAllowed)(nil),                    // 75: codespace.v1.SessionAllowed
+	(*FailureDetail)(nil),                     // 76: codespace.v1.FailureDetail
 }
 var file_codespace_v1_types_proto_depIdxs = []int32{
 	9,  // 0: codespace.v1.DeclareManagerRequest.environments:type_name -> codespace.v1.EnvironmentTag
 	0,  // 1: codespace.v1.DeclareManagerRequest.manager_runtime_state:type_name -> codespace.v1.ManagerRuntimeState
 	1,  // 2: codespace.v1.FetchOperationsRequest.accepted_operation_types:type_name -> codespace.v1.AcceptedOperationType
-	15, // 3: codespace.v1.FetchOperationsRequest.observed_operations:type_name -> codespace.v1.ObservedOperation
-	18, // 4: codespace.v1.FetchOperationsResponse.operations:type_name -> codespace.v1.OperationPayload
-	17, // 5: codespace.v1.FetchOperationsResponse.renewed_leases:type_name -> codespace.v1.RenewedOperationLease
-	26, // 6: codespace.v1.OperationPayload.create:type_name -> codespace.v1.CreateOperationPayload
-	21, // 7: codespace.v1.OperationPayload.resume:type_name -> codespace.v1.ResumeOperationPayload
-	22, // 8: codespace.v1.OperationPayload.stop:type_name -> codespace.v1.StopOperationPayload
-	23, // 9: codespace.v1.OperationPayload.delete:type_name -> codespace.v1.DeleteOperationPayload
-	24, // 10: codespace.v1.OperationPayload.abort_create:type_name -> codespace.v1.AbortCreateOperationPayload
-	25, // 11: codespace.v1.OperationPayload.abort_resume:type_name -> codespace.v1.AbortResumeOperationPayload
-	50, // 12: codespace.v1.ResumeOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
-	27, // 13: codespace.v1.CreateOperationPayload.repository:type_name -> codespace.v1.RepositoryCheckout
-	28, // 14: codespace.v1.CreateOperationPayload.git_identity:type_name -> codespace.v1.GitIdentity
-	29, // 15: codespace.v1.CreateOperationPayload.dev_container:type_name -> codespace.v1.DevContainerConfiguration
-	50, // 16: codespace.v1.CreateOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	17, // 3: codespace.v1.FetchOperationsRequest.observed_operations:type_name -> codespace.v1.ObservedOperation
+	20, // 4: codespace.v1.FetchOperationsResponse.operations:type_name -> codespace.v1.OperationPayload
+	19, // 5: codespace.v1.FetchOperationsResponse.renewed_leases:type_name -> codespace.v1.RenewedOperationLease
+	28, // 6: codespace.v1.OperationPayload.create:type_name -> codespace.v1.CreateOperationPayload
+	23, // 7: codespace.v1.OperationPayload.resume:type_name -> codespace.v1.ResumeOperationPayload
+	24, // 8: codespace.v1.OperationPayload.stop:type_name -> codespace.v1.StopOperationPayload
+	25, // 9: codespace.v1.OperationPayload.delete:type_name -> codespace.v1.DeleteOperationPayload
+	26, // 10: codespace.v1.OperationPayload.abort_create:type_name -> codespace.v1.AbortCreateOperationPayload
+	27, // 11: codespace.v1.OperationPayload.abort_resume:type_name -> codespace.v1.AbortResumeOperationPayload
+	52, // 12: codespace.v1.ResumeOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	29, // 13: codespace.v1.CreateOperationPayload.repository:type_name -> codespace.v1.RepositoryCheckout
+	30, // 14: codespace.v1.CreateOperationPayload.git_identity:type_name -> codespace.v1.GitIdentity
+	31, // 15: codespace.v1.CreateOperationPayload.dev_container:type_name -> codespace.v1.DevContainerConfiguration
+	52, // 16: codespace.v1.CreateOperationPayload.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
 	4,  // 17: codespace.v1.RepositoryCheckout.preferred_protocol:type_name -> codespace.v1.GitProtocol
 	2,  // 18: codespace.v1.FinalizeOperationRequest.status:type_name -> codespace.v1.FinalStatus
 	3,  // 19: codespace.v1.FinalizeOperationRequest.operation_type:type_name -> codespace.v1.OperationType
-	33, // 20: codespace.v1.UpdateLogRequest.lines:type_name -> codespace.v1.LogLine
-	37, // 21: codespace.v1.ReportRuntimeMetadataRequest.metadata:type_name -> codespace.v1.RuntimeMetadata
-	38, // 22: codespace.v1.RuntimeMetadata.endpoints:type_name -> codespace.v1.RuntimeEndpoint
-	39, // 23: codespace.v1.RuntimeMetadata.boot:type_name -> codespace.v1.RuntimeBoot
-	40, // 24: codespace.v1.RuntimeMetadata.resource_usage:type_name -> codespace.v1.RuntimeResourceUsage
+	35, // 20: codespace.v1.UpdateLogRequest.lines:type_name -> codespace.v1.LogLine
+	39, // 21: codespace.v1.ReportRuntimeMetadataRequest.metadata:type_name -> codespace.v1.RuntimeMetadata
+	40, // 22: codespace.v1.RuntimeMetadata.endpoints:type_name -> codespace.v1.RuntimeEndpoint
+	41, // 23: codespace.v1.RuntimeMetadata.boot:type_name -> codespace.v1.RuntimeBoot
+	42, // 24: codespace.v1.RuntimeMetadata.resource_usage:type_name -> codespace.v1.RuntimeResourceUsage
 	6,  // 25: codespace.v1.RuntimeBoot.stage:type_name -> codespace.v1.RuntimeBootStage
-	41, // 26: codespace.v1.RuntimeResourceUsage.cpu:type_name -> codespace.v1.RuntimeCPUUsage
-	42, // 27: codespace.v1.RuntimeResourceUsage.memory:type_name -> codespace.v1.RuntimeMemoryUsage
-	43, // 28: codespace.v1.RuntimeResourceUsage.disk:type_name -> codespace.v1.RuntimeDiskUsage
-	46, // 29: codespace.v1.RequestRuntimeAccessRequest.git_ssh_key:type_name -> codespace.v1.RuntimeGitSSHKey
-	48, // 30: codespace.v1.RequestRuntimeAccessResponse.access:type_name -> codespace.v1.RuntimeAccessBundle
-	44, // 31: codespace.v1.RuntimeAccessBundle.secrets:type_name -> codespace.v1.RuntimeSecretEnvironmentVariable
-	49, // 32: codespace.v1.RuntimeAccessBundle.git_ssh_trust:type_name -> codespace.v1.GitSSHTrust
-	50, // 33: codespace.v1.RequestIdleStopRequest.observed_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
-	53, // 34: codespace.v1.RequestIdleStopResponse.pending:type_name -> codespace.v1.IdleStopPending
-	54, // 35: codespace.v1.RequestIdleStopResponse.observation_changed:type_name -> codespace.v1.IdleStopObservationChanged
-	55, // 36: codespace.v1.RequestIdleStopResponse.not_applicable:type_name -> codespace.v1.IdleStopNotApplicable
-	50, // 37: codespace.v1.IdleStopObservationChanged.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	43, // 26: codespace.v1.RuntimeResourceUsage.cpu:type_name -> codespace.v1.RuntimeCPUUsage
+	44, // 27: codespace.v1.RuntimeResourceUsage.memory:type_name -> codespace.v1.RuntimeMemoryUsage
+	45, // 28: codespace.v1.RuntimeResourceUsage.disk:type_name -> codespace.v1.RuntimeDiskUsage
+	48, // 29: codespace.v1.RequestRuntimeAccessRequest.git_ssh_key:type_name -> codespace.v1.RuntimeGitSSHKey
+	50, // 30: codespace.v1.RequestRuntimeAccessResponse.access:type_name -> codespace.v1.RuntimeAccessBundle
+	46, // 31: codespace.v1.RuntimeAccessBundle.secrets:type_name -> codespace.v1.RuntimeSecretEnvironmentVariable
+	51, // 32: codespace.v1.RuntimeAccessBundle.git_ssh_trust:type_name -> codespace.v1.GitSSHTrust
+	52, // 33: codespace.v1.RequestIdleStopRequest.observed_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	55, // 34: codespace.v1.RequestIdleStopResponse.pending:type_name -> codespace.v1.IdleStopPending
+	56, // 35: codespace.v1.RequestIdleStopResponse.observation_changed:type_name -> codespace.v1.IdleStopObservationChanged
+	57, // 36: codespace.v1.RequestIdleStopResponse.not_applicable:type_name -> codespace.v1.IdleStopNotApplicable
+	52, // 37: codespace.v1.IdleStopObservationChanged.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
 	7,  // 38: codespace.v1.IdleStopNotApplicable.reason:type_name -> codespace.v1.IdleStopNotApplicableReason
-	58, // 39: codespace.v1.ValidateOpenTokenResponse.allowed:type_name -> codespace.v1.OpenTokenBinding
-	74, // 40: codespace.v1.ValidateOpenTokenResponse.denied:type_name -> codespace.v1.FailureDetail
-	61, // 41: codespace.v1.ValidatePublicEndpointResponse.allowed:type_name -> codespace.v1.PublicEndpointAllowed
-	74, // 42: codespace.v1.ValidatePublicEndpointResponse.denied:type_name -> codespace.v1.FailureDetail
-	64, // 43: codespace.v1.VerifySSHPublicKeyResponse.allowed:type_name -> codespace.v1.SSHAuthBinding
-	74, // 44: codespace.v1.VerifySSHPublicKeyResponse.denied:type_name -> codespace.v1.FailureDetail
-	66, // 45: codespace.v1.ReportInstancesRequest.instances:type_name -> codespace.v1.RuntimeInstanceRef
+	60, // 39: codespace.v1.ValidateOpenTokenResponse.allowed:type_name -> codespace.v1.OpenTokenBinding
+	76, // 40: codespace.v1.ValidateOpenTokenResponse.denied:type_name -> codespace.v1.FailureDetail
+	63, // 41: codespace.v1.ValidatePublicEndpointResponse.allowed:type_name -> codespace.v1.PublicEndpointAllowed
+	76, // 42: codespace.v1.ValidatePublicEndpointResponse.denied:type_name -> codespace.v1.FailureDetail
+	66, // 43: codespace.v1.VerifySSHPublicKeyResponse.allowed:type_name -> codespace.v1.SSHAuthBinding
+	76, // 44: codespace.v1.VerifySSHPublicKeyResponse.denied:type_name -> codespace.v1.FailureDetail
+	68, // 45: codespace.v1.ReportInstancesRequest.instances:type_name -> codespace.v1.RuntimeInstanceRef
 	5,  // 46: codespace.v1.RuntimeInstanceRef.runtime_state:type_name -> codespace.v1.RuntimeState
-	68, // 47: codespace.v1.ReportInstancesResponse.results:type_name -> codespace.v1.RuntimeInstanceResult
-	50, // 48: codespace.v1.RuntimeInstanceResult.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
+	70, // 47: codespace.v1.ReportInstancesResponse.results:type_name -> codespace.v1.RuntimeInstanceResult
+	52, // 48: codespace.v1.RuntimeInstanceResult.runtime_settings:type_name -> codespace.v1.EffectiveCodespaceRuntimeSettings
 	8,  // 49: codespace.v1.RuntimeInstanceResult.action:type_name -> codespace.v1.RuntimeReconcileAction
-	70, // 50: codespace.v1.RevalidateGatewaySessionRequest.endpoint:type_name -> codespace.v1.EndpointSessionBinding
-	71, // 51: codespace.v1.RevalidateGatewaySessionRequest.ssh:type_name -> codespace.v1.SSHSessionBinding
-	73, // 52: codespace.v1.RevalidateGatewaySessionResponse.allowed:type_name -> codespace.v1.SessionAllowed
-	74, // 53: codespace.v1.RevalidateGatewaySessionResponse.denied:type_name -> codespace.v1.FailureDetail
+	72, // 50: codespace.v1.RevalidateGatewaySessionRequest.endpoint:type_name -> codespace.v1.EndpointSessionBinding
+	73, // 51: codespace.v1.RevalidateGatewaySessionRequest.ssh:type_name -> codespace.v1.SSHSessionBinding
+	75, // 52: codespace.v1.RevalidateGatewaySessionResponse.allowed:type_name -> codespace.v1.SessionAllowed
+	76, // 53: codespace.v1.RevalidateGatewaySessionResponse.denied:type_name -> codespace.v1.FailureDetail
 	54, // [54:54] is the sub-list for method output_type
 	54, // [54:54] is the sub-list for method input_type
 	54, // [54:54] is the sub-list for extension type_name
@@ -5087,7 +5230,7 @@ func file_codespace_v1_types_proto_init() {
 	if File_codespace_v1_types_proto != nil {
 		return
 	}
-	file_codespace_v1_types_proto_msgTypes[9].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[11].OneofWrappers = []any{
 		(*OperationPayload_Create)(nil),
 		(*OperationPayload_Resume)(nil),
 		(*OperationPayload_Stop)(nil),
@@ -5095,32 +5238,32 @@ func file_codespace_v1_types_proto_init() {
 		(*OperationPayload_AbortCreate)(nil),
 		(*OperationPayload_AbortResume)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[20].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[22].OneofWrappers = []any{
 		(*DevContainerConfiguration_RepositoryPath)(nil),
 		(*DevContainerConfiguration_TemplateContent)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[43].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[45].OneofWrappers = []any{
 		(*RequestIdleStopResponse_Pending)(nil),
 		(*RequestIdleStopResponse_ObservationChanged)(nil),
 		(*RequestIdleStopResponse_NotApplicable)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[48].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[50].OneofWrappers = []any{
 		(*ValidateOpenTokenResponse_Allowed)(nil),
 		(*ValidateOpenTokenResponse_Denied)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[51].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[53].OneofWrappers = []any{
 		(*ValidatePublicEndpointResponse_Allowed)(nil),
 		(*ValidatePublicEndpointResponse_Denied)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[54].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[56].OneofWrappers = []any{
 		(*VerifySSHPublicKeyResponse_Allowed)(nil),
 		(*VerifySSHPublicKeyResponse_Denied)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[60].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[62].OneofWrappers = []any{
 		(*RevalidateGatewaySessionRequest_Endpoint)(nil),
 		(*RevalidateGatewaySessionRequest_Ssh)(nil),
 	}
-	file_codespace_v1_types_proto_msgTypes[63].OneofWrappers = []any{
+	file_codespace_v1_types_proto_msgTypes[65].OneofWrappers = []any{
 		(*RevalidateGatewaySessionResponse_Allowed)(nil),
 		(*RevalidateGatewaySessionResponse_Denied)(nil),
 	}
@@ -5130,7 +5273,7 @@ func file_codespace_v1_types_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_codespace_v1_types_proto_rawDesc), len(file_codespace_v1_types_proto_rawDesc)),
 			NumEnums:      9,
-			NumMessages:   66,
+			NumMessages:   68,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

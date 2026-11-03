@@ -24,8 +24,9 @@ var File_codespace_v1_service_proto protoreflect.FileDescriptor
 
 const file_codespace_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x1acodespace/v1/service.proto\x12\fcodespace.v1\x1a\x18codespace/v1/types.proto2\xa4\v\n" +
-	"\x0eManagerService\x12U\n" +
+	"\x1acodespace/v1/service.proto\x12\fcodespace.v1\x1a\x18codespace/v1/types.proto2\x84\f\n" +
+	"\x0eManagerService\x12^\n" +
+	"\x0fRegisterManager\x12$.codespace.v1.RegisterManagerRequest\x1a%.codespace.v1.RegisterManagerResponse\x12U\n" +
 	"\fCheckManager\x12!.codespace.v1.CheckManagerRequest\x1a\".codespace.v1.CheckManagerResponse\x12[\n" +
 	"\x0eDeclareManager\x12#.codespace.v1.DeclareManagerRequest\x1a$.codespace.v1.DeclareManagerResponse\x12^\n" +
 	"\x0fFetchOperations\x12$.codespace.v1.FetchOperationsRequest\x1a%.codespace.v1.FetchOperationsResponse\x12j\n" +
@@ -42,66 +43,70 @@ const file_codespace_v1_service_proto_rawDesc = "" +
 	"\x18RevalidateGatewaySession\x12-.codespace.v1.RevalidateGatewaySessionRequest\x1a..codespace.v1.RevalidateGatewaySessionResponseB7Z5gitea.dev/codespace-proto-go/codespace/v1;codespacev1b\x06proto3"
 
 var file_codespace_v1_service_proto_goTypes = []any{
-	(*CheckManagerRequest)(nil),              // 0: codespace.v1.CheckManagerRequest
-	(*DeclareManagerRequest)(nil),            // 1: codespace.v1.DeclareManagerRequest
-	(*FetchOperationsRequest)(nil),           // 2: codespace.v1.FetchOperationsRequest
-	(*BindRuntimeIdentityRequest)(nil),       // 3: codespace.v1.BindRuntimeIdentityRequest
-	(*FinalizeOperationRequest)(nil),         // 4: codespace.v1.FinalizeOperationRequest
-	(*UpdateLogRequest)(nil),                 // 5: codespace.v1.UpdateLogRequest
-	(*ReportRuntimeMetadataRequest)(nil),     // 6: codespace.v1.ReportRuntimeMetadataRequest
-	(*RequestRuntimeAccessRequest)(nil),      // 7: codespace.v1.RequestRuntimeAccessRequest
-	(*RequestIdleStopRequest)(nil),           // 8: codespace.v1.RequestIdleStopRequest
-	(*ValidateOpenTokenRequest)(nil),         // 9: codespace.v1.ValidateOpenTokenRequest
-	(*ValidatePublicEndpointRequest)(nil),    // 10: codespace.v1.ValidatePublicEndpointRequest
-	(*VerifySSHPublicKeyRequest)(nil),        // 11: codespace.v1.VerifySSHPublicKeyRequest
-	(*ReportInstancesRequest)(nil),           // 12: codespace.v1.ReportInstancesRequest
-	(*RevalidateGatewaySessionRequest)(nil),  // 13: codespace.v1.RevalidateGatewaySessionRequest
-	(*CheckManagerResponse)(nil),             // 14: codespace.v1.CheckManagerResponse
-	(*DeclareManagerResponse)(nil),           // 15: codespace.v1.DeclareManagerResponse
-	(*FetchOperationsResponse)(nil),          // 16: codespace.v1.FetchOperationsResponse
-	(*BindRuntimeIdentityResponse)(nil),      // 17: codespace.v1.BindRuntimeIdentityResponse
-	(*FinalizeOperationResponse)(nil),        // 18: codespace.v1.FinalizeOperationResponse
-	(*UpdateLogResponse)(nil),                // 19: codespace.v1.UpdateLogResponse
-	(*ReportRuntimeMetadataResponse)(nil),    // 20: codespace.v1.ReportRuntimeMetadataResponse
-	(*RequestRuntimeAccessResponse)(nil),     // 21: codespace.v1.RequestRuntimeAccessResponse
-	(*RequestIdleStopResponse)(nil),          // 22: codespace.v1.RequestIdleStopResponse
-	(*ValidateOpenTokenResponse)(nil),        // 23: codespace.v1.ValidateOpenTokenResponse
-	(*ValidatePublicEndpointResponse)(nil),   // 24: codespace.v1.ValidatePublicEndpointResponse
-	(*VerifySSHPublicKeyResponse)(nil),       // 25: codespace.v1.VerifySSHPublicKeyResponse
-	(*ReportInstancesResponse)(nil),          // 26: codespace.v1.ReportInstancesResponse
-	(*RevalidateGatewaySessionResponse)(nil), // 27: codespace.v1.RevalidateGatewaySessionResponse
+	(*RegisterManagerRequest)(nil),           // 0: codespace.v1.RegisterManagerRequest
+	(*CheckManagerRequest)(nil),              // 1: codespace.v1.CheckManagerRequest
+	(*DeclareManagerRequest)(nil),            // 2: codespace.v1.DeclareManagerRequest
+	(*FetchOperationsRequest)(nil),           // 3: codespace.v1.FetchOperationsRequest
+	(*BindRuntimeIdentityRequest)(nil),       // 4: codespace.v1.BindRuntimeIdentityRequest
+	(*FinalizeOperationRequest)(nil),         // 5: codespace.v1.FinalizeOperationRequest
+	(*UpdateLogRequest)(nil),                 // 6: codespace.v1.UpdateLogRequest
+	(*ReportRuntimeMetadataRequest)(nil),     // 7: codespace.v1.ReportRuntimeMetadataRequest
+	(*RequestRuntimeAccessRequest)(nil),      // 8: codespace.v1.RequestRuntimeAccessRequest
+	(*RequestIdleStopRequest)(nil),           // 9: codespace.v1.RequestIdleStopRequest
+	(*ValidateOpenTokenRequest)(nil),         // 10: codespace.v1.ValidateOpenTokenRequest
+	(*ValidatePublicEndpointRequest)(nil),    // 11: codespace.v1.ValidatePublicEndpointRequest
+	(*VerifySSHPublicKeyRequest)(nil),        // 12: codespace.v1.VerifySSHPublicKeyRequest
+	(*ReportInstancesRequest)(nil),           // 13: codespace.v1.ReportInstancesRequest
+	(*RevalidateGatewaySessionRequest)(nil),  // 14: codespace.v1.RevalidateGatewaySessionRequest
+	(*RegisterManagerResponse)(nil),          // 15: codespace.v1.RegisterManagerResponse
+	(*CheckManagerResponse)(nil),             // 16: codespace.v1.CheckManagerResponse
+	(*DeclareManagerResponse)(nil),           // 17: codespace.v1.DeclareManagerResponse
+	(*FetchOperationsResponse)(nil),          // 18: codespace.v1.FetchOperationsResponse
+	(*BindRuntimeIdentityResponse)(nil),      // 19: codespace.v1.BindRuntimeIdentityResponse
+	(*FinalizeOperationResponse)(nil),        // 20: codespace.v1.FinalizeOperationResponse
+	(*UpdateLogResponse)(nil),                // 21: codespace.v1.UpdateLogResponse
+	(*ReportRuntimeMetadataResponse)(nil),    // 22: codespace.v1.ReportRuntimeMetadataResponse
+	(*RequestRuntimeAccessResponse)(nil),     // 23: codespace.v1.RequestRuntimeAccessResponse
+	(*RequestIdleStopResponse)(nil),          // 24: codespace.v1.RequestIdleStopResponse
+	(*ValidateOpenTokenResponse)(nil),        // 25: codespace.v1.ValidateOpenTokenResponse
+	(*ValidatePublicEndpointResponse)(nil),   // 26: codespace.v1.ValidatePublicEndpointResponse
+	(*VerifySSHPublicKeyResponse)(nil),       // 27: codespace.v1.VerifySSHPublicKeyResponse
+	(*ReportInstancesResponse)(nil),          // 28: codespace.v1.ReportInstancesResponse
+	(*RevalidateGatewaySessionResponse)(nil), // 29: codespace.v1.RevalidateGatewaySessionResponse
 }
 var file_codespace_v1_service_proto_depIdxs = []int32{
-	0,  // 0: codespace.v1.ManagerService.CheckManager:input_type -> codespace.v1.CheckManagerRequest
-	1,  // 1: codespace.v1.ManagerService.DeclareManager:input_type -> codespace.v1.DeclareManagerRequest
-	2,  // 2: codespace.v1.ManagerService.FetchOperations:input_type -> codespace.v1.FetchOperationsRequest
-	3,  // 3: codespace.v1.ManagerService.BindRuntimeIdentity:input_type -> codespace.v1.BindRuntimeIdentityRequest
-	4,  // 4: codespace.v1.ManagerService.FinalizeOperation:input_type -> codespace.v1.FinalizeOperationRequest
-	5,  // 5: codespace.v1.ManagerService.UpdateLog:input_type -> codespace.v1.UpdateLogRequest
-	6,  // 6: codespace.v1.ManagerService.ReportRuntimeMetadata:input_type -> codespace.v1.ReportRuntimeMetadataRequest
-	7,  // 7: codespace.v1.ManagerService.RequestRuntimeAccess:input_type -> codespace.v1.RequestRuntimeAccessRequest
-	8,  // 8: codespace.v1.ManagerService.RequestIdleStop:input_type -> codespace.v1.RequestIdleStopRequest
-	9,  // 9: codespace.v1.ManagerService.ValidateOpenToken:input_type -> codespace.v1.ValidateOpenTokenRequest
-	10, // 10: codespace.v1.ManagerService.ValidatePublicEndpoint:input_type -> codespace.v1.ValidatePublicEndpointRequest
-	11, // 11: codespace.v1.ManagerService.VerifySSHPublicKey:input_type -> codespace.v1.VerifySSHPublicKeyRequest
-	12, // 12: codespace.v1.ManagerService.ReportInstances:input_type -> codespace.v1.ReportInstancesRequest
-	13, // 13: codespace.v1.ManagerService.RevalidateGatewaySession:input_type -> codespace.v1.RevalidateGatewaySessionRequest
-	14, // 14: codespace.v1.ManagerService.CheckManager:output_type -> codespace.v1.CheckManagerResponse
-	15, // 15: codespace.v1.ManagerService.DeclareManager:output_type -> codespace.v1.DeclareManagerResponse
-	16, // 16: codespace.v1.ManagerService.FetchOperations:output_type -> codespace.v1.FetchOperationsResponse
-	17, // 17: codespace.v1.ManagerService.BindRuntimeIdentity:output_type -> codespace.v1.BindRuntimeIdentityResponse
-	18, // 18: codespace.v1.ManagerService.FinalizeOperation:output_type -> codespace.v1.FinalizeOperationResponse
-	19, // 19: codespace.v1.ManagerService.UpdateLog:output_type -> codespace.v1.UpdateLogResponse
-	20, // 20: codespace.v1.ManagerService.ReportRuntimeMetadata:output_type -> codespace.v1.ReportRuntimeMetadataResponse
-	21, // 21: codespace.v1.ManagerService.RequestRuntimeAccess:output_type -> codespace.v1.RequestRuntimeAccessResponse
-	22, // 22: codespace.v1.ManagerService.RequestIdleStop:output_type -> codespace.v1.RequestIdleStopResponse
-	23, // 23: codespace.v1.ManagerService.ValidateOpenToken:output_type -> codespace.v1.ValidateOpenTokenResponse
-	24, // 24: codespace.v1.ManagerService.ValidatePublicEndpoint:output_type -> codespace.v1.ValidatePublicEndpointResponse
-	25, // 25: codespace.v1.ManagerService.VerifySSHPublicKey:output_type -> codespace.v1.VerifySSHPublicKeyResponse
-	26, // 26: codespace.v1.ManagerService.ReportInstances:output_type -> codespace.v1.ReportInstancesResponse
-	27, // 27: codespace.v1.ManagerService.RevalidateGatewaySession:output_type -> codespace.v1.RevalidateGatewaySessionResponse
-	14, // [14:28] is the sub-list for method output_type
-	0,  // [0:14] is the sub-list for method input_type
+	0,  // 0: codespace.v1.ManagerService.RegisterManager:input_type -> codespace.v1.RegisterManagerRequest
+	1,  // 1: codespace.v1.ManagerService.CheckManager:input_type -> codespace.v1.CheckManagerRequest
+	2,  // 2: codespace.v1.ManagerService.DeclareManager:input_type -> codespace.v1.DeclareManagerRequest
+	3,  // 3: codespace.v1.ManagerService.FetchOperations:input_type -> codespace.v1.FetchOperationsRequest
+	4,  // 4: codespace.v1.ManagerService.BindRuntimeIdentity:input_type -> codespace.v1.BindRuntimeIdentityRequest
+	5,  // 5: codespace.v1.ManagerService.FinalizeOperation:input_type -> codespace.v1.FinalizeOperationRequest
+	6,  // 6: codespace.v1.ManagerService.UpdateLog:input_type -> codespace.v1.UpdateLogRequest
+	7,  // 7: codespace.v1.ManagerService.ReportRuntimeMetadata:input_type -> codespace.v1.ReportRuntimeMetadataRequest
+	8,  // 8: codespace.v1.ManagerService.RequestRuntimeAccess:input_type -> codespace.v1.RequestRuntimeAccessRequest
+	9,  // 9: codespace.v1.ManagerService.RequestIdleStop:input_type -> codespace.v1.RequestIdleStopRequest
+	10, // 10: codespace.v1.ManagerService.ValidateOpenToken:input_type -> codespace.v1.ValidateOpenTokenRequest
+	11, // 11: codespace.v1.ManagerService.ValidatePublicEndpoint:input_type -> codespace.v1.ValidatePublicEndpointRequest
+	12, // 12: codespace.v1.ManagerService.VerifySSHPublicKey:input_type -> codespace.v1.VerifySSHPublicKeyRequest
+	13, // 13: codespace.v1.ManagerService.ReportInstances:input_type -> codespace.v1.ReportInstancesRequest
+	14, // 14: codespace.v1.ManagerService.RevalidateGatewaySession:input_type -> codespace.v1.RevalidateGatewaySessionRequest
+	15, // 15: codespace.v1.ManagerService.RegisterManager:output_type -> codespace.v1.RegisterManagerResponse
+	16, // 16: codespace.v1.ManagerService.CheckManager:output_type -> codespace.v1.CheckManagerResponse
+	17, // 17: codespace.v1.ManagerService.DeclareManager:output_type -> codespace.v1.DeclareManagerResponse
+	18, // 18: codespace.v1.ManagerService.FetchOperations:output_type -> codespace.v1.FetchOperationsResponse
+	19, // 19: codespace.v1.ManagerService.BindRuntimeIdentity:output_type -> codespace.v1.BindRuntimeIdentityResponse
+	20, // 20: codespace.v1.ManagerService.FinalizeOperation:output_type -> codespace.v1.FinalizeOperationResponse
+	21, // 21: codespace.v1.ManagerService.UpdateLog:output_type -> codespace.v1.UpdateLogResponse
+	22, // 22: codespace.v1.ManagerService.ReportRuntimeMetadata:output_type -> codespace.v1.ReportRuntimeMetadataResponse
+	23, // 23: codespace.v1.ManagerService.RequestRuntimeAccess:output_type -> codespace.v1.RequestRuntimeAccessResponse
+	24, // 24: codespace.v1.ManagerService.RequestIdleStop:output_type -> codespace.v1.RequestIdleStopResponse
+	25, // 25: codespace.v1.ManagerService.ValidateOpenToken:output_type -> codespace.v1.ValidateOpenTokenResponse
+	26, // 26: codespace.v1.ManagerService.ValidatePublicEndpoint:output_type -> codespace.v1.ValidatePublicEndpointResponse
+	27, // 27: codespace.v1.ManagerService.VerifySSHPublicKey:output_type -> codespace.v1.VerifySSHPublicKeyResponse
+	28, // 28: codespace.v1.ManagerService.ReportInstances:output_type -> codespace.v1.ReportInstancesResponse
+	29, // 29: codespace.v1.ManagerService.RevalidateGatewaySession:output_type -> codespace.v1.RevalidateGatewaySessionResponse
+	15, // [15:30] is the sub-list for method output_type
+	0,  // [0:15] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
