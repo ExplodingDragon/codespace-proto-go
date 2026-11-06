@@ -266,6 +266,8 @@ message FinalizeOperationRequest {
   int64 operation_rversion = 3;
   FinalStatus status = 4;
   OperationType operation_type = 5;
+  // codespace_id identifies the Gitea record before a create has a bound Runtime UUID.
+  int64 codespace_id = 6;
 }
 
 // FinalizeOperationResponse reports whether the target Codespace no longer exists.

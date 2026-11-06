@@ -2038,8 +2038,10 @@ type FinalizeOperationRequest struct {
 	OperationRversion int64         `protobuf:"varint,3,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	Status            FinalStatus   `protobuf:"varint,4,opt,name=status,proto3,enum=codespace.v1.FinalStatus" json:"status,omitempty"`
 	OperationType     OperationType `protobuf:"varint,5,opt,name=operation_type,json=operationType,proto3,enum=codespace.v1.OperationType" json:"operation_type,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// codespace_id identifies the Gitea record before a create has a bound Runtime UUID.
+	CodespaceId   int64 `protobuf:"varint,6,opt,name=codespace_id,json=codespaceId,proto3" json:"codespace_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FinalizeOperationRequest) Reset() {
@@ -2105,6 +2107,13 @@ func (x *FinalizeOperationRequest) GetOperationType() OperationType {
 		return x.OperationType
 	}
 	return OperationType_OPERATION_TYPE_UNSPECIFIED
+}
+
+func (x *FinalizeOperationRequest) GetCodespaceId() int64 {
+	if x != nil {
+		return x.CodespaceId
+	}
+	return 0
 }
 
 // FinalizeOperationResponse reports whether the target Codespace no longer exists.
@@ -4853,13 +4862,14 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x19DevContainerConfiguration\x12)\n" +
 	"\x0frepository_path\x18\x01 \x01(\tH\x00R\x0erepositoryPath\x12+\n" +
 	"\x10template_content\x18\x02 \x01(\tH\x00R\x0ftemplateContentB\b\n" +
-	"\x06source\"\x8e\x02\n" +
+	"\x06source\"\xb1\x02\n" +
 	"\x18FinalizeOperationRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
 	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x121\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x19.codespace.v1.FinalStatusR\x06status\x12B\n" +
-	"\x0eoperation_type\x18\x05 \x01(\x0e2\x1b.codespace.v1.OperationTypeR\roperationType\"D\n" +
+	"\x0eoperation_type\x18\x05 \x01(\x0e2\x1b.codespace.v1.OperationTypeR\roperationType\x12!\n" +
+	"\fcodespace_id\x18\x06 \x01(\x03R\vcodespaceId\"D\n" +
 	"\x19FinalizeOperationResponse\x12'\n" +
 	"\x0fresource_absent\x18\x01 \x01(\bR\x0eresourceAbsent\"\xd4\x01\n" +
 	"\x10UpdateLogRequest\x12)\n" +
