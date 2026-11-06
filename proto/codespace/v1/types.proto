@@ -314,6 +314,8 @@ message RuntimeMetadata {
   RuntimeBoot boot = 2;
   // Optional samples refresh independently of the endpoint and boot generation.
   RuntimeResourceUsage resource_usage = 3;
+  // workspace_folder is the resolved project folder inside the primary Dev Container.
+  string workspace_folder = 4;
 }
 
 // RuntimeEndpoint describes one HTTP/WebSocket endpoint exposed by the manager.
@@ -344,18 +346,21 @@ message RuntimeResourceUsage {
 // RuntimeCPUUsage reports CPU usage and limit in millicores.
 message RuntimeCPUUsage {
   int64 used_millicores = 1;
+  // limit_millicores is zero when the runtime has no CPU limit.
   int64 limit_millicores = 2;
 }
 
 // RuntimeMemoryUsage reports memory usage and limit in bytes.
 message RuntimeMemoryUsage {
   int64 used_bytes = 1;
+  // limit_bytes is zero when the runtime has no memory limit.
   int64 limit_bytes = 2;
 }
 
 // RuntimeDiskUsage reports disk usage and limit in bytes.
 message RuntimeDiskUsage {
   int64 used_bytes = 1;
+  // limit_bytes is the positive capacity of the runtime filesystem.
   int64 limit_bytes = 2;
 }
 

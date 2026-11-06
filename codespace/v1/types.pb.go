@@ -2451,8 +2451,10 @@ type RuntimeMetadata struct {
 	Boot      *RuntimeBoot           `protobuf:"bytes,2,opt,name=boot,proto3" json:"boot,omitempty"`
 	// Optional samples refresh independently of the endpoint and boot generation.
 	ResourceUsage *RuntimeResourceUsage `protobuf:"bytes,3,opt,name=resource_usage,json=resourceUsage,proto3" json:"resource_usage,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	// workspace_folder is the resolved project folder inside the primary Dev Container.
+	WorkspaceFolder string `protobuf:"bytes,4,opt,name=workspace_folder,json=workspaceFolder,proto3" json:"workspace_folder,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *RuntimeMetadata) Reset() {
@@ -2504,6 +2506,13 @@ func (x *RuntimeMetadata) GetResourceUsage() *RuntimeResourceUsage {
 		return x.ResourceUsage
 	}
 	return nil
+}
+
+func (x *RuntimeMetadata) GetWorkspaceFolder() string {
+	if x != nil {
+		return x.WorkspaceFolder
+	}
+	return ""
 }
 
 // RuntimeEndpoint describes one HTTP/WebSocket endpoint exposed by the manager.
@@ -2716,9 +2725,10 @@ func (x *RuntimeResourceUsage) GetObservedUnix() int64 {
 
 // RuntimeCPUUsage reports CPU usage and limit in millicores.
 type RuntimeCPUUsage struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	UsedMillicores  int64                  `protobuf:"varint,1,opt,name=used_millicores,json=usedMillicores,proto3" json:"used_millicores,omitempty"`
-	LimitMillicores int64                  `protobuf:"varint,2,opt,name=limit_millicores,json=limitMillicores,proto3" json:"limit_millicores,omitempty"`
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UsedMillicores int64                  `protobuf:"varint,1,opt,name=used_millicores,json=usedMillicores,proto3" json:"used_millicores,omitempty"`
+	// limit_millicores is zero when the runtime has no CPU limit.
+	LimitMillicores int64 `protobuf:"varint,2,opt,name=limit_millicores,json=limitMillicores,proto3" json:"limit_millicores,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -2769,9 +2779,10 @@ func (x *RuntimeCPUUsage) GetLimitMillicores() int64 {
 
 // RuntimeMemoryUsage reports memory usage and limit in bytes.
 type RuntimeMemoryUsage struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UsedBytes     int64                  `protobuf:"varint,1,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
-	LimitBytes    int64                  `protobuf:"varint,2,opt,name=limit_bytes,json=limitBytes,proto3" json:"limit_bytes,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	UsedBytes int64                  `protobuf:"varint,1,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
+	// limit_bytes is zero when the runtime has no memory limit.
+	LimitBytes    int64 `protobuf:"varint,2,opt,name=limit_bytes,json=limitBytes,proto3" json:"limit_bytes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2822,9 +2833,10 @@ func (x *RuntimeMemoryUsage) GetLimitBytes() int64 {
 
 // RuntimeDiskUsage reports disk usage and limit in bytes.
 type RuntimeDiskUsage struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UsedBytes     int64                  `protobuf:"varint,1,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
-	LimitBytes    int64                  `protobuf:"varint,2,opt,name=limit_bytes,json=limitBytes,proto3" json:"limit_bytes,omitempty"`
+	state     protoimpl.MessageState `protogen:"open.v1"`
+	UsedBytes int64                  `protobuf:"varint,1,opt,name=used_bytes,json=usedBytes,proto3" json:"used_bytes,omitempty"`
+	// limit_bytes is the positive capacity of the runtime filesystem.
+	LimitBytes    int64 `protobuf:"varint,2,opt,name=limit_bytes,json=limitBytes,proto3" json:"limit_bytes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -4889,11 +4901,12 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\fruntime_uuid\x18\x02 \x01(\tR\vruntimeUuid\x12/\n" +
 	"\x13metadata_generation\x18\x03 \x01(\x03R\x12metadataGeneration\x129\n" +
 	"\bmetadata\x18\x04 \x01(\v2\x1d.codespace.v1.RuntimeMetadataR\bmetadata\"\x1f\n" +
-	"\x1dReportRuntimeMetadataResponse\"\xc8\x01\n" +
+	"\x1dReportRuntimeMetadataResponse\"\xf3\x01\n" +
 	"\x0fRuntimeMetadata\x12;\n" +
 	"\tendpoints\x18\x01 \x03(\v2\x1d.codespace.v1.RuntimeEndpointR\tendpoints\x12-\n" +
 	"\x04boot\x18\x02 \x01(\v2\x19.codespace.v1.RuntimeBootR\x04boot\x12I\n" +
-	"\x0eresource_usage\x18\x03 \x01(\v2\".codespace.v1.RuntimeResourceUsageR\rresourceUsage\"t\n" +
+	"\x0eresource_usage\x18\x03 \x01(\v2\".codespace.v1.RuntimeResourceUsageR\rresourceUsage\x12)\n" +
+	"\x10workspace_folder\x18\x04 \x01(\tR\x0fworkspaceFolder\"t\n" +
 	"\x0fRuntimeEndpoint\x12\x1f\n" +
 	"\vendpoint_id\x18\x01 \x01(\tR\n" +
 	"endpointId\x12\x14\n" +
