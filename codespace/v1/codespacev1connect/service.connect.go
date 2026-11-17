@@ -192,7 +192,7 @@ type ManagerServiceClient interface {
 	BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error)
 	// FinalizeOperation reports the final result of an active operation.
 	FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error)
-	// UpdateLog appends sanitized log lines at a given offset for an active operation.
+	// UpdateLog appends sanitized log lines for the current executed operation, including its final output after completion.
 	UpdateLog(context.Context, *v1.UpdateLogRequest) (*v1.UpdateLogResponse, error)
 	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
 	ReportRuntimeMetadata(context.Context, *v1.ReportRuntimeMetadataRequest) (*v1.ReportRuntimeMetadataResponse, error)
@@ -232,7 +232,7 @@ type ManagerServiceHandler interface {
 	BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error)
 	// FinalizeOperation reports the final result of an active operation.
 	FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error)
-	// UpdateLog appends sanitized log lines at a given offset for an active operation.
+	// UpdateLog appends sanitized log lines for the current executed operation, including its final output after completion.
 	UpdateLog(context.Context, *v1.UpdateLogRequest) (*v1.UpdateLogResponse, error)
 	// ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.
 	ReportRuntimeMetadata(context.Context, *v1.ReportRuntimeMetadataRequest) (*v1.ReportRuntimeMetadataResponse, error)

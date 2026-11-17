@@ -107,8 +107,10 @@ message CheckManagerRequest {
 
 // CheckManagerResponse identifies the authenticated Gitea and Manager.
 message CheckManagerResponse {
+  reserved 2;
+  reserved "manager_name";
+
   string gitea_web_url = 1;
-  string manager_name = 2;
 }
 
 // DeclareManagerRequest publishes the manager's current routing and runtime metadata.
@@ -133,6 +135,9 @@ message DeclareManagerResponse {
 
 // FetchOperationsRequest asks Gitea for work and renews observed leases.
 message FetchOperationsRequest {
+  reserved 7;
+  reserved "wait_timeout_milliseconds";
+
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
   int32 startup_capacity_available = 2;
@@ -141,8 +146,6 @@ message FetchOperationsRequest {
   int32 cleanup_capacity_available = 5;
   // accepted_create_tags limits this fetch to environments that can create a runtime now.
   repeated string accepted_create_tags = 6;
-  // wait_timeout_milliseconds bounds how long an empty fetch may wait for work.
-  int64 wait_timeout_milliseconds = 7;
 }
 
 // ObservedOperation reports an active operation context kept by the manager.
@@ -166,10 +169,12 @@ message RenewedOperationLease {
 
 // OperationPayload is one Gitea-issued lifecycle command.
 message OperationPayload {
+  reserved 4;
+  reserved "log_offset";
+
   int64 operation_rversion = 1;
   int64 codespace_id = 2;
   string runtime_uuid = 3;
-  int64 log_offset = 4;
   int64 lease_valid_for_milliseconds = 5;
 
   oneof command {

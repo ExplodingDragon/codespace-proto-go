@@ -26,7 +26,7 @@ service ManagerService {
   // FinalizeOperation reports the final result of an active operation.
   rpc FinalizeOperation(FinalizeOperationRequest) returns (FinalizeOperationResponse);
 
-  // UpdateLog appends sanitized log lines at a given offset for an active operation.
+  // UpdateLog appends sanitized log lines for the current executed operation, including its final output after completion.
   rpc UpdateLog(UpdateLogRequest) returns (UpdateLogResponse);
 
   // ReportRuntimeMetadata writes a Runtime Metadata snapshot to Gitea's configured cache adapter.

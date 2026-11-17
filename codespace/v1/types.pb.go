@@ -735,7 +735,6 @@ func (x *CheckManagerRequest) GetProtocolVersion() int32 {
 type CheckManagerResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	GiteaWebUrl   string                 `protobuf:"bytes,1,opt,name=gitea_web_url,json=giteaWebUrl,proto3" json:"gitea_web_url,omitempty"`
-	ManagerName   string                 `protobuf:"bytes,2,opt,name=manager_name,json=managerName,proto3" json:"manager_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -773,13 +772,6 @@ func (*CheckManagerResponse) Descriptor() ([]byte, []int) {
 func (x *CheckManagerResponse) GetGiteaWebUrl() string {
 	if x != nil {
 		return x.GiteaWebUrl
-	}
-	return ""
-}
-
-func (x *CheckManagerResponse) GetManagerName() string {
-	if x != nil {
-		return x.ManagerName
 	}
 	return ""
 }
@@ -958,10 +950,8 @@ type FetchOperationsRequest struct {
 	CleanupCapacityAvailable int32                   `protobuf:"varint,5,opt,name=cleanup_capacity_available,json=cleanupCapacityAvailable,proto3" json:"cleanup_capacity_available,omitempty"`
 	// accepted_create_tags limits this fetch to environments that can create a runtime now.
 	AcceptedCreateTags []string `protobuf:"bytes,6,rep,name=accepted_create_tags,json=acceptedCreateTags,proto3" json:"accepted_create_tags,omitempty"`
-	// wait_timeout_milliseconds bounds how long an empty fetch may wait for work.
-	WaitTimeoutMilliseconds int64 `protobuf:"varint,7,opt,name=wait_timeout_milliseconds,json=waitTimeoutMilliseconds,proto3" json:"wait_timeout_milliseconds,omitempty"`
-	unknownFields           protoimpl.UnknownFields
-	sizeCache               protoimpl.SizeCache
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *FetchOperationsRequest) Reset() {
@@ -1034,13 +1024,6 @@ func (x *FetchOperationsRequest) GetAcceptedCreateTags() []string {
 		return x.AcceptedCreateTags
 	}
 	return nil
-}
-
-func (x *FetchOperationsRequest) GetWaitTimeoutMilliseconds() int64 {
-	if x != nil {
-		return x.WaitTimeoutMilliseconds
-	}
-	return 0
 }
 
 // ObservedOperation reports an active operation context kept by the manager.
@@ -1216,7 +1199,6 @@ type OperationPayload struct {
 	OperationRversion         int64                  `protobuf:"varint,1,opt,name=operation_rversion,json=operationRversion,proto3" json:"operation_rversion,omitempty"`
 	CodespaceId               int64                  `protobuf:"varint,2,opt,name=codespace_id,json=codespaceId,proto3" json:"codespace_id,omitempty"`
 	RuntimeUuid               string                 `protobuf:"bytes,3,opt,name=runtime_uuid,json=runtimeUuid,proto3" json:"runtime_uuid,omitempty"`
-	LogOffset                 int64                  `protobuf:"varint,4,opt,name=log_offset,json=logOffset,proto3" json:"log_offset,omitempty"`
 	LeaseValidForMilliseconds int64                  `protobuf:"varint,5,opt,name=lease_valid_for_milliseconds,json=leaseValidForMilliseconds,proto3" json:"lease_valid_for_milliseconds,omitempty"`
 	// Types that are valid to be assigned to Command:
 	//
@@ -1280,13 +1262,6 @@ func (x *OperationPayload) GetRuntimeUuid() string {
 		return x.RuntimeUuid
 	}
 	return ""
-}
-
-func (x *OperationPayload) GetLogOffset() int64 {
-	if x != nil {
-		return x.LogOffset
-	}
-	return 0
 }
 
 func (x *OperationPayload) GetLeaseValidForMilliseconds() int64 {
@@ -4784,10 +4759,9 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\fmanager_name\x18\x03 \x01(\tR\vmanagerName\x12\"\n" +
 	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"@\n" +
 	"\x13CheckManagerRequest\x12)\n" +
-	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\"]\n" +
+	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\"N\n" +
 	"\x14CheckManagerResponse\x12\"\n" +
-	"\rgitea_web_url\x18\x01 \x01(\tR\vgiteaWebUrl\x12!\n" +
-	"\fmanager_name\x18\x02 \x01(\tR\vmanagerName\"\xd9\x03\n" +
+	"\rgitea_web_url\x18\x01 \x01(\tR\vgiteaWebUrlJ\x04\b\x02\x10\x03R\fmanager_name\"\xd9\x03\n" +
 	"\x15DeclareManagerRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12\x1f\n" +
 	"\vgateway_url\x18\x02 \x01(\tR\n" +
@@ -4801,15 +4775,14 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x16DeclareManagerResponse\x12F\n" +
 	"\x1fheartbeat_interval_milliseconds\x18\x01 \x01(\x03R\x1dheartbeatIntervalMilliseconds\x12b\n" +
 	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12\"\n" +
-	"\rgitea_web_url\x18\x03 \x01(\tR\vgiteaWebUrl\"\xde\x03\n" +
+	"\rgitea_web_url\x18\x03 \x01(\tR\vgiteaWebUrl\"\xc3\x03\n" +
 	"\x16FetchOperationsRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12<\n" +
 	"\x1astartup_capacity_available\x18\x02 \x01(\x05R\x18startupCapacityAvailable\x12]\n" +
 	"\x18accepted_operation_types\x18\x03 \x03(\x0e2#.codespace.v1.AcceptedOperationTypeR\x16acceptedOperationTypes\x12P\n" +
 	"\x13observed_operations\x18\x04 \x03(\v2\x1f.codespace.v1.ObservedOperationR\x12observedOperations\x12<\n" +
 	"\x1acleanup_capacity_available\x18\x05 \x01(\x05R\x18cleanupCapacityAvailable\x120\n" +
-	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTags\x12:\n" +
-	"\x19wait_timeout_milliseconds\x18\a \x01(\x03R\x17waitTimeoutMilliseconds\"e\n" +
+	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTagsJ\x04\b\a\x10\bR\x19wait_timeout_milliseconds\"e\n" +
 	"\x11ObservedOperation\x12!\n" +
 	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\"\xa5\x01\n" +
@@ -4821,13 +4794,11 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x15RenewedOperationLease\x12!\n" +
 	"\fruntime_uuid\x18\x01 \x01(\tR\vruntimeUuid\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\x12?\n" +
-	"\x1clease_valid_for_milliseconds\x18\x03 \x01(\x03R\x19leaseValidForMilliseconds\"\x8c\x05\n" +
+	"\x1clease_valid_for_milliseconds\x18\x03 \x01(\x03R\x19leaseValidForMilliseconds\"\xff\x04\n" +
 	"\x10OperationPayload\x12-\n" +
 	"\x12operation_rversion\x18\x01 \x01(\x03R\x11operationRversion\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12!\n" +
-	"\fruntime_uuid\x18\x03 \x01(\tR\vruntimeUuid\x12\x1d\n" +
-	"\n" +
-	"log_offset\x18\x04 \x01(\x03R\tlogOffset\x12?\n" +
+	"\fruntime_uuid\x18\x03 \x01(\tR\vruntimeUuid\x12?\n" +
 	"\x1clease_valid_for_milliseconds\x18\x05 \x01(\x03R\x19leaseValidForMilliseconds\x12>\n" +
 	"\x06create\x18\n" +
 	" \x01(\v2$.codespace.v1.CreateOperationPayloadH\x00R\x06create\x12>\n" +
@@ -4836,7 +4807,8 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x06delete\x18\r \x01(\v2$.codespace.v1.DeleteOperationPayloadH\x00R\x06delete\x12N\n" +
 	"\fabort_create\x18\x0e \x01(\v2).codespace.v1.AbortCreateOperationPayloadH\x00R\vabortCreate\x12N\n" +
 	"\fabort_resume\x18\x0f \x01(\v2).codespace.v1.AbortResumeOperationPayloadH\x00R\vabortResumeB\t\n" +
-	"\acommand\"\xbc\x01\n" +
+	"\acommandJ\x04\b\x04\x10\x05R\n" +
+	"log_offset\"\xbc\x01\n" +
 	"\x1aBindRuntimeIdentityRequest\x12)\n" +
 	"\x10protocol_version\x18\x01 \x01(\x05R\x0fprotocolVersion\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12-\n" +
