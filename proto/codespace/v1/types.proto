@@ -150,7 +150,7 @@ message FetchOperationsRequest {
 
 // ObservedOperation reports an active operation context kept by the manager.
 message ObservedOperation {
-  string runtime_uuid = 1;
+  int64 codespace_id = 1;
   int64 operation_rversion = 2;
 }
 
@@ -162,7 +162,7 @@ message FetchOperationsResponse {
 
 // RenewedOperationLease extends a manager-held operation without resending payload.
 message RenewedOperationLease {
-  string runtime_uuid = 1;
+  int64 codespace_id = 1;
   int64 operation_rversion = 2;
   int64 lease_valid_for_milliseconds = 3;
 }
@@ -174,7 +174,6 @@ message OperationPayload {
 
   int64 operation_rversion = 1;
   int64 codespace_id = 2;
-  string runtime_uuid = 3;
   int64 lease_valid_for_milliseconds = 5;
 
   oneof command {
@@ -185,20 +184,6 @@ message OperationPayload {
     AbortCreateOperationPayload abort_create = 14;
     AbortResumeOperationPayload abort_resume = 15;
   }
-}
-
-// BindRuntimeIdentityRequest stores the manager-allocated runtime UUID for a create operation.
-message BindRuntimeIdentityRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
-  int64 codespace_id = 2;
-  int64 operation_rversion = 3;
-  string runtime_uuid = 4;
-}
-
-// BindRuntimeIdentityResponse returns the accepted runtime UUID.
-message BindRuntimeIdentityResponse {
-  string runtime_uuid = 1;
 }
 
 // ResumeOperationPayload contains only settings needed to restart an existing runtime.
@@ -267,11 +252,9 @@ message DevContainerConfiguration {
 message FinalizeOperationRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
   int64 operation_rversion = 3;
   FinalStatus status = 4;
   OperationType operation_type = 5;
-  // codespace_id identifies the Gitea record before a create has a bound Runtime UUID.
   int64 codespace_id = 6;
 }
 
@@ -284,7 +267,7 @@ message FinalizeOperationResponse {
 message UpdateLogRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   int64 operation_rversion = 3;
   int64 offset = 4;
   repeated LogLine lines = 5;
@@ -305,7 +288,7 @@ message UpdateLogResponse {
 message ReportRuntimeMetadataRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   int64 metadata_generation = 3;
   RuntimeMetadata metadata = 4;
 }
@@ -321,6 +304,7 @@ message RuntimeMetadata {
   RuntimeResourceUsage resource_usage = 3;
   // workspace_folder is the resolved project folder inside the primary Dev Container.
   string workspace_folder = 4;
+  RuntimeSSH ssh = 5;
 }
 
 // RuntimeEndpoint describes one HTTP/WebSocket endpoint exposed by the manager.
@@ -330,6 +314,19 @@ message RuntimeEndpoint {
   bool public = 3;
   // Port is the user-visible application port, or zero when it is not applicable.
   uint32 port = 4;
+  // url is the complete browser address published by the manager.
+  string url = 5;
+  // open_url accepts a Gitea-issued one-time code on the endpoint's origin.
+  string open_url = 6;
+}
+
+// RuntimeSSH contains connection addresses published by the manager.
+message RuntimeSSH {
+  string host = 1;
+  uint32 port = 2;
+  string user = 3;
+  string vscode_url = 4;
+  string zed_url = 5;
 }
 
 // RuntimeBoot reports startup progress for the active operation.
@@ -379,7 +376,7 @@ message RuntimeSecretEnvironmentVariable {
 message RequestRuntimeAccessRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   int64 operation_rversion = 3;
   RuntimeGitSSHKey git_ssh_key = 4;
 }
@@ -418,7 +415,7 @@ message EffectiveCodespaceRuntimeSettings {
 message RequestIdleStopRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   EffectiveCodespaceRuntimeSettings observed_settings = 3;
 }
 
@@ -464,7 +461,7 @@ message ValidateOpenTokenResponse {
 // OpenTokenBinding binds an allowed browser session to one endpoint.
 message OpenTokenBinding {
   int64 user_id = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   string endpoint_id = 3;
   int64 interaction_generation = 4;
 }
@@ -473,7 +470,7 @@ message OpenTokenBinding {
 message ValidatePublicEndpointRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   string endpoint_id = 3;
 }
 
@@ -492,7 +489,7 @@ message PublicEndpointAllowed {}
 message VerifySSHPublicKeyRequest {
   // protocol_version is the wire protocol version and must be field 1.
   int32 protocol_version = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   bytes public_key = 3;
 }
 
@@ -520,7 +517,7 @@ message ReportInstancesRequest {
 
 // RuntimeInstanceRef is one manager-owned runtime instance in inventory.
 message RuntimeInstanceRef {
-  string runtime_uuid = 1;
+  int64 codespace_id = 1;
   RuntimeState runtime_state = 2;
   int64 observed_operation_rversion = 3;
 }
@@ -532,7 +529,7 @@ message ReportInstancesResponse {
 
 // RuntimeInstanceResult contains settings and one optional reconciliation action.
 message RuntimeInstanceResult {
-  string runtime_uuid = 1;
+  int64 codespace_id = 1;
   EffectiveCodespaceRuntimeSettings runtime_settings = 2;
   RuntimeReconcileAction action = 3;
   // current_operation_rversion is positive for actions tied to Gitea operation history.
@@ -552,14 +549,14 @@ message RevalidateGatewaySessionRequest {
 // EndpointSessionBinding identifies a live endpoint session.
 message EndpointSessionBinding {
   int64 user_id = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
   string endpoint_id = 3;
 }
 
 // SSHSessionBinding identifies a live SSH session.
 message SSHSessionBinding {
   int64 user_id = 1;
-  string runtime_uuid = 2;
+  int64 codespace_id = 2;
 }
 
 // RevalidateGatewaySessionResponse returns the live session decision.

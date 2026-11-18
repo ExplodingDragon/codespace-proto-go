@@ -36,9 +36,6 @@ const (
 	// ManagerServiceFetchOperationsProcedure is the procedure name of the ManagerService's
 	// FetchOperations RPC.
 	ManagerServiceFetchOperationsProcedure = "/codespace.v1.ManagerService/FetchOperations"
-	// ManagerServiceBindRuntimeIdentityProcedure is the procedure name of the ManagerService's
-	// BindRuntimeIdentity RPC.
-	ManagerServiceBindRuntimeIdentityProcedure = "/codespace.v1.ManagerService/BindRuntimeIdentity"
 	// ManagerServiceFinalizeOperationProcedure is the procedure name of the ManagerService's
 	// FinalizeOperation RPC.
 	ManagerServiceFinalizeOperationProcedure = "/codespace.v1.ManagerService/FinalizeOperation"
@@ -97,13 +94,6 @@ var (
 			StreamType: connect.StreamTypeUnary,
 			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("FetchOperations"),
 			Procedure:  ManagerServiceFetchOperationsProcedure,
-		}
-	})
-	managerServiceBindRuntimeIdentitySpec = sync.OnceValue(func() connect.Spec {
-		return connect.Spec{
-			StreamType: connect.StreamTypeUnary,
-			Schema:     v1.File_codespace_v1_service_proto.Services().ByName("ManagerService").Methods().ByName("BindRuntimeIdentity"),
-			Procedure:  ManagerServiceBindRuntimeIdentityProcedure,
 		}
 	})
 	managerServiceFinalizeOperationSpec = sync.OnceValue(func() connect.Spec {
@@ -188,8 +178,6 @@ type ManagerServiceClient interface {
 	DeclareManager(context.Context, *v1.DeclareManagerRequest) (*v1.DeclareManagerResponse, error)
 	// FetchOperations returns operations for the Manager to execute.
 	FetchOperations(context.Context, *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error)
-	// BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
-	BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error)
 	// FinalizeOperation reports the final result of an active operation.
 	FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error)
 	// UpdateLog appends sanitized log lines for the current executed operation, including its final output after completion.
@@ -228,8 +216,6 @@ type ManagerServiceHandler interface {
 	DeclareManager(context.Context, *v1.DeclareManagerRequest) (*v1.DeclareManagerResponse, error)
 	// FetchOperations returns operations for the Manager to execute.
 	FetchOperations(context.Context, *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error)
-	// BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
-	BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error)
 	// FinalizeOperation reports the final result of an active operation.
 	FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error)
 	// UpdateLog appends sanitized log lines for the current executed operation, including its final output after completion.
@@ -261,7 +247,6 @@ func RegisterManagerServiceHandler(server *connect.Server, svc ManagerServiceHan
 		connect.Method{Spec: managerServiceCheckManagerSpec(), Handler: adapter.checkManager},
 		connect.Method{Spec: managerServiceDeclareManagerSpec(), Handler: adapter.declareManager},
 		connect.Method{Spec: managerServiceFetchOperationsSpec(), Handler: adapter.fetchOperations},
-		connect.Method{Spec: managerServiceBindRuntimeIdentitySpec(), Handler: adapter.bindRuntimeIdentity},
 		connect.Method{Spec: managerServiceFinalizeOperationSpec(), Handler: adapter.finalizeOperation},
 		connect.Method{Spec: managerServiceUpdateLogSpec(), Handler: adapter.updateLog},
 		connect.Method{Spec: managerServiceReportRuntimeMetadataSpec(), Handler: adapter.reportRuntimeMetadata},
@@ -292,10 +277,6 @@ func (UnimplementedManagerServiceHandler) DeclareManager(context.Context, *v1.De
 
 func (UnimplementedManagerServiceHandler) FetchOperations(context.Context, *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.FetchOperations is not implemented")
-}
-
-func (UnimplementedManagerServiceHandler) BindRuntimeIdentity(context.Context, *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, "codespace.v1.ManagerService.BindRuntimeIdentity is not implemented")
 }
 
 func (UnimplementedManagerServiceHandler) FinalizeOperation(context.Context, *v1.FinalizeOperationRequest) (*v1.FinalizeOperationResponse, error) {
@@ -369,14 +350,6 @@ func (c *managerServiceClient) DeclareManager(ctx context.Context, req *v1.Decla
 func (c *managerServiceClient) FetchOperations(ctx context.Context, req *v1.FetchOperationsRequest) (*v1.FetchOperationsResponse, error) {
 	var res v1.FetchOperationsResponse
 	if err := c.client.CallUnary(ctx, managerServiceFetchOperationsSpec(), req, &res); err != nil {
-		return nil, err
-	}
-	return &res, nil
-}
-
-func (c *managerServiceClient) BindRuntimeIdentity(ctx context.Context, req *v1.BindRuntimeIdentityRequest) (*v1.BindRuntimeIdentityResponse, error) {
-	var res v1.BindRuntimeIdentityResponse
-	if err := c.client.CallUnary(ctx, managerServiceBindRuntimeIdentitySpec(), req, &res); err != nil {
 		return nil, err
 	}
 	return &res, nil
@@ -506,18 +479,6 @@ func (h managerServiceHandler) fetchOperations(ctx context.Context, _ connect.Sp
 		return err
 	}
 	res, err := h.svc.FetchOperations(ctx, &req)
-	if err != nil {
-		return err
-	}
-	return stream.Send(res)
-}
-
-func (h managerServiceHandler) bindRuntimeIdentity(ctx context.Context, _ connect.Spec, stream connect.ServerStream) error {
-	var req v1.BindRuntimeIdentityRequest
-	if err := stream.Receive(&req); err != nil {
-		return err
-	}
-	res, err := h.svc.BindRuntimeIdentity(ctx, &req)
 	if err != nil {
 		return err
 	}

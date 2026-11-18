@@ -20,9 +20,6 @@ service ManagerService {
   // FetchOperations returns operations for the Manager to execute.
   rpc FetchOperations(FetchOperationsRequest) returns (FetchOperationsResponse);
 
-  // BindRuntimeIdentity stores the Manager-allocated runtime UUID before infrastructure is created.
-  rpc BindRuntimeIdentity(BindRuntimeIdentityRequest) returns (BindRuntimeIdentityResponse);
-
   // FinalizeOperation reports the final result of an active operation.
   rpc FinalizeOperation(FinalizeOperationRequest) returns (FinalizeOperationResponse);
 
