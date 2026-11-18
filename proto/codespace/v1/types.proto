@@ -304,7 +304,8 @@ message RuntimeMetadata {
   RuntimeResourceUsage resource_usage = 3;
   // workspace_folder is the resolved project folder inside the primary Dev Container.
   string workspace_folder = 4;
-  RuntimeSSH ssh = 5;
+  // ssh is the complete ssh://user@host:port connection URI, or empty if unavailable.
+  string ssh = 5;
 }
 
 // RuntimeEndpoint describes one HTTP/WebSocket endpoint exposed by the manager.
@@ -316,17 +317,6 @@ message RuntimeEndpoint {
   uint32 port = 4;
   // url is the complete browser address published by the manager.
   string url = 5;
-  // open_url accepts a Gitea-issued one-time code on the endpoint's origin.
-  string open_url = 6;
-}
-
-// RuntimeSSH contains connection addresses published by the manager.
-message RuntimeSSH {
-  string host = 1;
-  uint32 port = 2;
-  string user = 3;
-  string vscode_url = 4;
-  string zed_url = 5;
 }
 
 // RuntimeBoot reports startup progress for the active operation.
