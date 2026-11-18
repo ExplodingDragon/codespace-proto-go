@@ -4155,19 +4155,19 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x18codespace/v1/types.proto\x12\fcodespace.v1\"D\n" +
 	"\x0eEnvironmentTag\x12\x10\n" +
 	"\x03tag\x18\x01 \x01(\tR\x03tag\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\"Z\n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\"B\n" +
 	"\x16RegisterManagerRequest\x12\x14\n" +
 	"\x05token\x18\x02 \x01(\tR\x05token\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04nameJ\x04\b\x01\x10\x02R\x10protocol_version\"\xa6\x01\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\"\xa6\x01\n" +
 	"\x17RegisterManagerResponse\x12\x1d\n" +
 	"\n" +
 	"manager_id\x18\x01 \x01(\x03R\tmanagerId\x12%\n" +
 	"\x0emanager_secret\x18\x02 \x01(\tR\rmanagerSecret\x12!\n" +
 	"\fmanager_name\x18\x03 \x01(\tR\vmanagerName\x12\"\n" +
-	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"-\n" +
-	"\x13CheckManagerRequestJ\x04\b\x01\x10\x02R\x10protocol_version\"N\n" +
+	"\rgitea_web_url\x18\x04 \x01(\tR\vgiteaWebUrl\"\x15\n" +
+	"\x13CheckManagerRequest\":\n" +
 	"\x14CheckManagerResponse\x12\"\n" +
-	"\rgitea_web_url\x18\x01 \x01(\tR\vgiteaWebUrlJ\x04\b\x02\x10\x03R\fmanager_name\"\xc6\x03\n" +
+	"\rgitea_web_url\x18\x01 \x01(\tR\vgiteaWebUrl\"\xae\x03\n" +
 	"\x15DeclareManagerRequest\x12\x1f\n" +
 	"\vgateway_url\x18\x02 \x01(\tR\n" +
 	"gatewayUrl\x12(\n" +
@@ -4176,16 +4176,16 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\aversion\x18\x05 \x01(\tR\aversion\x12U\n" +
 	"\x15manager_runtime_state\x18\x06 \x01(\x0e2!.codespace.v1.ManagerRuntimeStateR\x13managerRuntimeState\x12B\n" +
 	"\x1egateway_ssh_host_key_algorithm\x18\a \x01(\tR\x1agatewaySshHostKeyAlgorithm\x12S\n" +
-	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256J\x04\b\x01\x10\x02R\x10protocol_version\"\xe8\x01\n" +
+	"'gateway_ssh_host_key_fingerprint_sha256\x18\b \x01(\tR\"gatewaySshHostKeyFingerprintSha256\"\xe8\x01\n" +
 	"\x16DeclareManagerResponse\x12F\n" +
 	"\x1fheartbeat_interval_milliseconds\x18\x01 \x01(\x03R\x1dheartbeatIntervalMilliseconds\x12b\n" +
 	".runtime_metadata_refresh_interval_milliseconds\x18\x02 \x01(\x03R*runtimeMetadataRefreshIntervalMilliseconds\x12\"\n" +
-	"\rgitea_web_url\x18\x03 \x01(\tR\vgiteaWebUrl\"\xf1\x02\n" +
+	"\rgitea_web_url\x18\x03 \x01(\tR\vgiteaWebUrl\"\x98\x02\n" +
 	"\x16FetchOperationsRequest\x12<\n" +
 	"\x1astartup_capacity_available\x18\x02 \x01(\x05R\x18startupCapacityAvailable\x12P\n" +
 	"\x13observed_operations\x18\x04 \x03(\v2\x1f.codespace.v1.ObservedOperationR\x12observedOperations\x12<\n" +
 	"\x1acleanup_capacity_available\x18\x05 \x01(\x05R\x18cleanupCapacityAvailable\x120\n" +
-	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTagsJ\x04\b\x01\x10\x02J\x04\b\x03\x10\x04J\x04\b\a\x10\bR\x10protocol_versionR\x18accepted_operation_typesR\x19wait_timeout_milliseconds\"e\n" +
+	"\x14accepted_create_tags\x18\x06 \x03(\tR\x12acceptedCreateTags\"e\n" +
 	"\x11ObservedOperation\x12!\n" +
 	"\fcodespace_id\x18\x01 \x01(\x03R\vcodespaceId\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\"\xa5\x01\n" +
@@ -4197,7 +4197,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x15RenewedOperationLease\x12!\n" +
 	"\fcodespace_id\x18\x01 \x01(\x03R\vcodespaceId\x12-\n" +
 	"\x12operation_rversion\x18\x02 \x01(\x03R\x11operationRversion\x12?\n" +
-	"\x1clease_valid_for_milliseconds\x18\x03 \x01(\x03R\x19leaseValidForMilliseconds\"\xdc\x04\n" +
+	"\x1clease_valid_for_milliseconds\x18\x03 \x01(\x03R\x19leaseValidForMilliseconds\"\xca\x04\n" +
 	"\x10OperationPayload\x12-\n" +
 	"\x12operation_rversion\x18\x01 \x01(\x03R\x11operationRversion\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12?\n" +
@@ -4209,8 +4209,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x06delete\x18\r \x01(\v2$.codespace.v1.DeleteOperationPayloadH\x00R\x06delete\x12N\n" +
 	"\fabort_create\x18\x0e \x01(\v2).codespace.v1.AbortCreateOperationPayloadH\x00R\vabortCreate\x12N\n" +
 	"\fabort_resume\x18\x0f \x01(\v2).codespace.v1.AbortResumeOperationPayloadH\x00R\vabortResumeB\t\n" +
-	"\acommandJ\x04\b\x04\x10\x05R\n" +
-	"log_offset\"t\n" +
+	"\acommand\"t\n" +
 	"\x16ResumeOperationPayload\x12Z\n" +
 	"\x10runtime_settings\x18\x01 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\x16\n" +
 	"\x14StopOperationPayload\"\x18\n" +
@@ -4224,7 +4223,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x0fenvironment_tag\x18\x02 \x01(\tR\x0eenvironmentTag\x12<\n" +
 	"\fgit_identity\x18\x03 \x01(\v2\x19.codespace.v1.GitIdentityR\vgitIdentity\x12L\n" +
 	"\rdev_container\x18\x04 \x01(\v2'.codespace.v1.DevContainerConfigurationR\fdevContainer\x12Z\n" +
-	"\x10runtime_settings\x18\x05 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\xf6\x01\n" +
+	"\x10runtime_settings\x18\x05 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\xb1\x01\n" +
 	"\x12RepositoryCheckout\x12\x1b\n" +
 	"\tfull_name\x18\x01 \x01(\tR\bfullName\x12\x1b\n" +
 	"\tstart_ref\x18\x05 \x01(\tR\bstartRef\x12\x1d\n" +
@@ -4232,7 +4231,7 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"commit_sha\x18\x06 \x01(\tR\tcommitSha\x12#\n" +
 	"\rrepository_id\x18\a \x01(\x03R\frepositoryId\x12\x1d\n" +
 	"\n" +
-	"clone_urls\x18\b \x03(\tR\tcloneUrlsJ\x04\b\x02\x10\x03J\x04\b\x03\x10\x04J\x04\b\x04\x10\x05R\x0eclone_http_urlR\rclone_ssh_urlR\x12preferred_protocol\"s\n" +
+	"clone_urls\x18\b \x03(\tR\tcloneUrls\"s\n" +
 	"\vGitIdentity\x12%\n" +
 	"\x0egitea_username\x18\x01 \x01(\tR\rgiteaUsername\x12$\n" +
 	"\x0egit_user_email\x18\x02 \x01(\tR\fgitUserEmail\x12\x17\n" +
@@ -4240,28 +4239,28 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\x19DevContainerConfiguration\x12)\n" +
 	"\x0frepository_path\x18\x01 \x01(\tH\x00R\x0erepositoryPath\x12+\n" +
 	"\x10template_content\x18\x02 \x01(\tH\x00R\x0ftemplateContentB\b\n" +
-	"\x06source\"\xcd\x01\n" +
+	"\x06source\"\x9f\x01\n" +
 	"\x18FinalizeOperationRequest\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x121\n" +
 	"\x06status\x18\x04 \x01(\x0e2\x19.codespace.v1.FinalStatusR\x06status\x12!\n" +
-	"\fcodespace_id\x18\x06 \x01(\x03R\vcodespaceIdJ\x04\b\x01\x10\x02J\x04\b\x05\x10\x06R\x10protocol_versionR\x0eoperation_type\"D\n" +
+	"\fcodespace_id\x18\x06 \x01(\x03R\vcodespaceId\"D\n" +
 	"\x19FinalizeOperationResponse\x12'\n" +
-	"\x0fresource_absent\x18\x01 \x01(\bR\x0eresourceAbsent\"\xc1\x01\n" +
+	"\x0fresource_absent\x18\x01 \x01(\bR\x0eresourceAbsent\"\xa9\x01\n" +
 	"\x10UpdateLogRequest\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x12\x16\n" +
 	"\x06offset\x18\x04 \x01(\x03R\x06offset\x12+\n" +
-	"\x05lines\x18\x05 \x03(\v2\x15.codespace.v1.LogLineR\x05linesJ\x04\b\x01\x10\x02R\x10protocol_version\"S\n" +
+	"\x05lines\x18\x05 \x03(\v2\x15.codespace.v1.LogLineR\x05lines\"S\n" +
 	"\aLogLine\x12.\n" +
 	"\x13timestamp_unix_nano\x18\x01 \x01(\x03R\x11timestampUnixNano\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"4\n" +
 	"\x11UpdateLogResponse\x12\x1f\n" +
 	"\vnext_offset\x18\x01 \x01(\x03R\n" +
-	"nextOffset\"\xc5\x01\n" +
+	"nextOffset\"\xad\x01\n" +
 	"\x1cReportRuntimeMetadataRequest\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12/\n" +
 	"\x13metadata_generation\x18\x03 \x01(\x03R\x12metadataGeneration\x129\n" +
-	"\bmetadata\x18\x04 \x01(\v2\x1d.codespace.v1.RuntimeMetadataR\bmetadataJ\x04\b\x01\x10\x02R\x10protocol_version\"\x1f\n" +
+	"\bmetadata\x18\x04 \x01(\v2\x1d.codespace.v1.RuntimeMetadataR\bmetadata\"\x1f\n" +
 	"\x1dReportRuntimeMetadataResponse\"\x85\x02\n" +
 	"\x0fRuntimeMetadata\x12;\n" +
 	"\tendpoints\x18\x01 \x03(\v2\x1d.codespace.v1.RuntimeEndpointR\tendpoints\x12-\n" +
@@ -4301,36 +4300,36 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"limitBytes\"L\n" +
 	" RuntimeSecretEnvironmentVariable\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value\"\xc7\x01\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value\"\x9c\x01\n" +
 	"\x1bRequestRuntimeAccessRequest\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12-\n" +
 	"\x12operation_rversion\x18\x03 \x01(\x03R\x11operationRversion\x12+\n" +
-	"\x12git_ssh_public_key\x18\x05 \x01(\fR\x0fgitSshPublicKeyJ\x04\b\x01\x10\x02J\x04\b\x04\x10\x05R\x10protocol_versionR\vgit_ssh_key\"Y\n" +
+	"\x12git_ssh_public_key\x18\x05 \x01(\fR\x0fgitSshPublicKey\"Y\n" +
 	"\x1cRequestRuntimeAccessResponse\x129\n" +
-	"\x06access\x18\x01 \x01(\v2!.codespace.v1.RuntimeAccessBundleR\x06access\"\xee\x01\n" +
+	"\x06access\x18\x01 \x01(\v2!.codespace.v1.RuntimeAccessBundleR\x06access\"\xd9\x01\n" +
 	"\x13RuntimeAccessBundle\x12\x1f\n" +
 	"\vgitea_token\x18\x01 \x01(\tR\n" +
 	"giteaToken\x12(\n" +
 	"\x10gitea_server_url\x18\x02 \x01(\tR\x0egiteaServerUrl\x12H\n" +
 	"\asecrets\x18\x03 \x03(\v2..codespace.v1.RuntimeSecretEnvironmentVariableR\asecrets\x12-\n" +
-	"\x13git_ssh_known_hosts\x18\x05 \x03(\tR\x10gitSshKnownHostsJ\x04\b\x04\x10\x05R\rgit_ssh_trust\"\xa5\x01\n" +
+	"\x13git_ssh_known_hosts\x18\x05 \x03(\tR\x10gitSshKnownHosts\"\x8c\x01\n" +
 	"!EffectiveCodespaceRuntimeSettings\x120\n" +
 	"\x14idle_timeout_seconds\x18\x02 \x01(\x03R\x12idleTimeoutSeconds\x125\n" +
-	"\x16interaction_generation\x18\x03 \x01(\x03R\x15interactionGenerationJ\x04\b\x01\x10\x02R\x11auto_stop_enabled\"\xb1\x01\n" +
+	"\x16interaction_generation\x18\x03 \x01(\x03R\x15interactionGeneration\"\x99\x01\n" +
 	"\x16RequestIdleStopRequest\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12\\\n" +
-	"\x11observed_settings\x18\x03 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x10observedSettingsJ\x04\b\x01\x10\x02R\x10protocol_version\"\x8a\x02\n" +
+	"\x11observed_settings\x18\x03 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x10observedSettings\"\x8a\x02\n" +
 	"\x17RequestIdleStopResponse\x129\n" +
 	"\apending\x18\x01 \x01(\v2\x1d.codespace.v1.IdleStopPendingH\x00R\apending\x12[\n" +
 	"\x13observation_changed\x18\x02 \x01(\v2(.codespace.v1.IdleStopObservationChangedH\x00R\x12observationChanged\x12L\n" +
 	"\x0enot_applicable\x18\x03 \x01(\v2#.codespace.v1.IdleStopNotApplicableH\x00R\rnotApplicableB\t\n" +
-	"\aoutcome\"+\n" +
-	"\x0fIdleStopPendingJ\x04\b\x01\x10\x02R\x12operation_rversion\"x\n" +
+	"\aoutcome\"\x11\n" +
+	"\x0fIdleStopPending\"x\n" +
 	"\x1aIdleStopObservationChanged\x12Z\n" +
-	"\x10runtime_settings\x18\x01 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"%\n" +
-	"\x15IdleStopNotApplicableJ\x04\b\x01\x10\x02R\x06reason\"F\n" +
+	"\x10runtime_settings\x18\x01 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\"\x17\n" +
+	"\x15IdleStopNotApplicable\".\n" +
 	"\x18ValidateOpenTokenRequest\x12\x12\n" +
-	"\x04code\x18\x02 \x01(\tR\x04codeJ\x04\b\x01\x10\x02R\x10protocol_version\"\x99\x01\n" +
+	"\x04code\x18\x02 \x01(\tR\x04code\"\x99\x01\n" +
 	"\x19ValidateOpenTokenResponse\x12:\n" +
 	"\aallowed\x18\x01 \x01(\v2\x1e.codespace.v1.OpenTokenBindingH\x00R\aallowed\x125\n" +
 	"\x06denied\x18\x02 \x01(\v2\x1b.codespace.v1.FailureDetailH\x00R\x06deniedB\t\n" +
@@ -4340,30 +4339,30 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12\x1f\n" +
 	"\vendpoint_id\x18\x03 \x01(\tR\n" +
 	"endpointId\x125\n" +
-	"\x16interaction_generation\x18\x04 \x01(\x03R\x15interactionGeneration\"{\n" +
+	"\x16interaction_generation\x18\x04 \x01(\x03R\x15interactionGeneration\"c\n" +
 	"\x1dValidatePublicEndpointRequest\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12\x1f\n" +
 	"\vendpoint_id\x18\x03 \x01(\tR\n" +
-	"endpointIdJ\x04\b\x01\x10\x02R\x10protocol_version\"\xa3\x01\n" +
+	"endpointId\"\xa3\x01\n" +
 	"\x1eValidatePublicEndpointResponse\x12?\n" +
 	"\aallowed\x18\x01 \x01(\v2#.codespace.v1.PublicEndpointAllowedH\x00R\aallowed\x125\n" +
 	"\x06denied\x18\x02 \x01(\v2\x1b.codespace.v1.FailureDetailH\x00R\x06deniedB\t\n" +
 	"\aoutcome\"\x17\n" +
-	"\x15PublicEndpointAllowed\"u\n" +
+	"\x15PublicEndpointAllowed\"]\n" +
 	"\x19VerifySSHPublicKeyRequest\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12\x1d\n" +
 	"\n" +
-	"public_key\x18\x03 \x01(\fR\tpublicKeyJ\x04\b\x01\x10\x02R\x10protocol_version\"\x98\x01\n" +
+	"public_key\x18\x03 \x01(\fR\tpublicKey\"\x98\x01\n" +
 	"\x1aVerifySSHPublicKeyResponse\x128\n" +
 	"\aallowed\x18\x01 \x01(\v2\x1c.codespace.v1.SSHAuthBindingH\x00R\aallowed\x125\n" +
 	"\x06denied\x18\x02 \x01(\v2\x1b.codespace.v1.FailureDetailH\x00R\x06deniedB\t\n" +
 	"\aoutcome\"`\n" +
 	"\x0eSSHAuthBinding\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x125\n" +
-	"\x16interaction_generation\x18\x02 \x01(\x03R\x15interactionGeneration\"\xa3\x01\n" +
+	"\x16interaction_generation\x18\x02 \x01(\x03R\x15interactionGeneration\"\x8b\x01\n" +
 	"\x16ReportInstancesRequest\x121\n" +
 	"\x14inventory_generation\x18\x02 \x01(\x03R\x13inventoryGeneration\x12>\n" +
-	"\tinstances\x18\x03 \x03(\v2 .codespace.v1.RuntimeInstanceRefR\tinstancesJ\x04\b\x01\x10\x02R\x10protocol_version\"\xb8\x01\n" +
+	"\tinstances\x18\x03 \x03(\v2 .codespace.v1.RuntimeInstanceRefR\tinstances\"\xb8\x01\n" +
 	"\x12RuntimeInstanceRef\x12!\n" +
 	"\fcodespace_id\x18\x01 \x01(\x03R\vcodespaceId\x12?\n" +
 	"\rruntime_state\x18\x02 \x01(\x0e2\x1a.codespace.v1.RuntimeStateR\fruntimeState\x12>\n" +
@@ -4374,11 +4373,11 @@ const file_codespace_v1_types_proto_rawDesc = "" +
 	"\fcodespace_id\x18\x01 \x01(\x03R\vcodespaceId\x12Z\n" +
 	"\x10runtime_settings\x18\x02 \x01(\v2/.codespace.v1.EffectiveCodespaceRuntimeSettingsR\x0fruntimeSettings\x12<\n" +
 	"\x06action\x18\x03 \x01(\x0e2$.codespace.v1.RuntimeReconcileActionR\x06action\x12<\n" +
-	"\x1acurrent_operation_rversion\x18\x04 \x01(\x03R\x18currentOperationRversion\"\xbd\x01\n" +
+	"\x1acurrent_operation_rversion\x18\x04 \x01(\x03R\x18currentOperationRversion\"\xa5\x01\n" +
 	"\x1fRevalidateGatewaySessionRequest\x12B\n" +
 	"\bendpoint\x18\x02 \x01(\v2$.codespace.v1.EndpointSessionBindingH\x00R\bendpoint\x123\n" +
 	"\x03ssh\x18\x03 \x01(\v2\x1f.codespace.v1.SSHSessionBindingH\x00R\x03sshB\t\n" +
-	"\asessionJ\x04\b\x01\x10\x02R\x10protocol_version\"u\n" +
+	"\asession\"u\n" +
 	"\x16EndpointSessionBinding\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12!\n" +
 	"\fcodespace_id\x18\x02 \x01(\x03R\vcodespaceId\x12\x1f\n" +

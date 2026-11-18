@@ -54,8 +54,6 @@ message EnvironmentTag {
 
 // RegisterManagerRequest creates one Manager in the registration token's scope.
 message RegisterManagerRequest {
-  reserved 1;
-  reserved "protocol_version";
   string token = 2;
   string name = 3;
 }
@@ -69,23 +67,15 @@ message RegisterManagerResponse {
 }
 
 // CheckManagerRequest verifies Manager authentication.
-message CheckManagerRequest {
-  reserved 1;
-  reserved "protocol_version";
-}
+message CheckManagerRequest {}
 
 // CheckManagerResponse identifies the authenticated Gitea and Manager.
 message CheckManagerResponse {
-  reserved 2;
-  reserved "manager_name";
-
   string gitea_web_url = 1;
 }
 
 // DeclareManagerRequest publishes the manager's current routing and runtime metadata.
 message DeclareManagerRequest {
-  reserved 1;
-  reserved "protocol_version";
   string gateway_url = 2;
   string gateway_ssh_addr = 3;
   repeated EnvironmentTag environments = 4;
@@ -104,9 +94,6 @@ message DeclareManagerResponse {
 
 // FetchOperationsRequest asks Gitea for work and renews observed leases.
 message FetchOperationsRequest {
-  reserved 1, 3, 7;
-  reserved "protocol_version", "accepted_operation_types", "wait_timeout_milliseconds";
-
   // A positive capacity permits resume and creates matching accepted_create_tags.
   int32 startup_capacity_available = 2;
   repeated ObservedOperation observed_operations = 4;
@@ -136,9 +123,6 @@ message RenewedOperationLease {
 
 // OperationPayload is one Gitea-issued lifecycle command.
 message OperationPayload {
-  reserved 4;
-  reserved "log_offset";
-
   int64 operation_rversion = 1;
   int64 codespace_id = 2;
   int64 lease_valid_for_milliseconds = 5;
@@ -184,9 +168,6 @@ message CreateOperationPayload {
 
 // RepositoryCheckout describes the repository content that bootstrap must check out.
 message RepositoryCheckout {
-  reserved 2, 3, 4;
-  reserved "clone_http_url", "clone_ssh_url", "preferred_protocol";
-
   string full_name = 1;
   string start_ref = 5;
   // commit_sha is the immutable commit that the runtime must check out.
@@ -218,9 +199,6 @@ message DevContainerConfiguration {
 
 // FinalizeOperationRequest reports the terminal result of an active operation.
 message FinalizeOperationRequest {
-  reserved 1, 5;
-  reserved "protocol_version", "operation_type";
-
   int64 operation_rversion = 3;
   FinalStatus status = 4;
   int64 codespace_id = 6;
@@ -233,8 +211,6 @@ message FinalizeOperationResponse {
 
 // UpdateLogRequest appends lifecycle log lines at the expected offset.
 message UpdateLogRequest {
-  reserved 1;
-  reserved "protocol_version";
   int64 codespace_id = 2;
   int64 operation_rversion = 3;
   int64 offset = 4;
@@ -254,8 +230,6 @@ message UpdateLogResponse {
 
 // ReportRuntimeMetadataRequest publishes the current runtime metadata snapshot.
 message ReportRuntimeMetadataRequest {
-  reserved 1;
-  reserved "protocol_version";
   int64 codespace_id = 2;
   int64 metadata_generation = 3;
   RuntimeMetadata metadata = 4;
@@ -332,9 +306,6 @@ message RuntimeSecretEnvironmentVariable {
 
 // RequestRuntimeAccessRequest asks Gitea for current runtime access material.
 message RequestRuntimeAccessRequest {
-  reserved 1, 4;
-  reserved "protocol_version", "git_ssh_key";
-
   int64 codespace_id = 2;
   int64 operation_rversion = 3;
   // git_ssh_public_key is the runtime Git SSH public key registered by Gitea.
@@ -348,9 +319,6 @@ message RequestRuntimeAccessResponse {
 
 // RuntimeAccessBundle contains startup credentials and Git SSH trust material.
 message RuntimeAccessBundle {
-  reserved 4;
-  reserved "git_ssh_trust";
-
   string gitea_token = 1;
   string gitea_server_url = 2;
   repeated RuntimeSecretEnvironmentVariable secrets = 3;
@@ -359,9 +327,6 @@ message RuntimeAccessBundle {
 
 // EffectiveCodespaceRuntimeSettings contains the current auto-stop policy.
 message EffectiveCodespaceRuntimeSettings {
-  reserved 1;
-  reserved "auto_stop_enabled";
-
   // Zero disables automatic stopping; a positive value is the idle duration.
   int64 idle_timeout_seconds = 2;
   int64 interaction_generation = 3;
@@ -369,8 +334,6 @@ message EffectiveCodespaceRuntimeSettings {
 
 // RequestIdleStopRequest asks Gitea to create an idle stop if observations match.
 message RequestIdleStopRequest {
-  reserved 1;
-  reserved "protocol_version";
   int64 codespace_id = 2;
   EffectiveCodespaceRuntimeSettings observed_settings = 3;
 }
@@ -385,10 +348,7 @@ message RequestIdleStopResponse {
 }
 
 // IdleStopPending means Gitea created or found a pending idle stop operation.
-message IdleStopPending {
-  reserved 1;
-  reserved "operation_rversion";
-}
+message IdleStopPending {}
 
 // IdleStopObservationChanged returns the current settings when observations are stale.
 message IdleStopObservationChanged {
@@ -396,15 +356,10 @@ message IdleStopObservationChanged {
 }
 
 // IdleStopNotApplicable means idle stop cannot apply now.
-message IdleStopNotApplicable {
-  reserved 1;
-  reserved "reason";
-}
+message IdleStopNotApplicable {}
 
 // ValidateOpenTokenRequest validates a one-time browser open code.
 message ValidateOpenTokenRequest {
-  reserved 1;
-  reserved "protocol_version";
   string code = 2;
 }
 
@@ -426,8 +381,6 @@ message OpenTokenBinding {
 
 // ValidatePublicEndpointRequest validates unauthenticated access to a public endpoint.
 message ValidatePublicEndpointRequest {
-  reserved 1;
-  reserved "protocol_version";
   int64 codespace_id = 2;
   string endpoint_id = 3;
 }
@@ -445,8 +398,6 @@ message PublicEndpointAllowed {}
 
 // VerifySSHPublicKeyRequest validates a gateway SSH public key login.
 message VerifySSHPublicKeyRequest {
-  reserved 1;
-  reserved "protocol_version";
   int64 codespace_id = 2;
   bytes public_key = 3;
 }
@@ -467,8 +418,6 @@ message SSHAuthBinding {
 
 // ReportInstancesRequest publishes the manager's complete runtime inventory.
 message ReportInstancesRequest {
-  reserved 1;
-  reserved "protocol_version";
   int64 inventory_generation = 2;
   repeated RuntimeInstanceRef instances = 3;
 }
@@ -496,8 +445,6 @@ message RuntimeInstanceResult {
 
 // RevalidateGatewaySessionRequest rechecks a live gateway session.
 message RevalidateGatewaySessionRequest {
-  reserved 1;
-  reserved "protocol_version";
   oneof session {
     EndpointSessionBinding endpoint = 2;
     SSHSessionBinding ssh = 3;
