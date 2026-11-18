@@ -11,34 +11,11 @@ enum ManagerRuntimeState {
   MANAGER_RUNTIME_STATE_RECOVERING = 2;
 }
 
-// AcceptedOperationType limits the startup operations a manager can fetch now.
-enum AcceptedOperationType {
-  ACCEPTED_OPERATION_TYPE_UNSPECIFIED = 0;
-  ACCEPTED_OPERATION_TYPE_CREATE = 1;
-  ACCEPTED_OPERATION_TYPE_RESUME = 2;
-}
-
 // FinalStatus is the terminal result reported for an active operation.
 enum FinalStatus {
   FINAL_STATUS_UNSPECIFIED = 0;
   FINAL_STATUS_DONE = 1;
   FINAL_STATUS_FAILED = 2;
-}
-
-// OperationType identifies the lifecycle operation owned by Gitea.
-enum OperationType {
-  OPERATION_TYPE_UNSPECIFIED = 0;
-  OPERATION_TYPE_CREATE = 1;
-  OPERATION_TYPE_RESUME = 2;
-  OPERATION_TYPE_STOP = 3;
-  OPERATION_TYPE_DELETE = 4;
-}
-
-// GitProtocol is the preferred clone protocol for a create payload.
-enum GitProtocol {
-  GIT_PROTOCOL_UNSPECIFIED = 0;
-  GIT_PROTOCOL_HTTP = 1;
-  GIT_PROTOCOL_SSH = 2;
 }
 
 // RuntimeState is the manager-observed state of a local runtime instance.
@@ -60,14 +37,6 @@ enum RuntimeBootStage {
   RUNTIME_BOOT_STAGE_READY = 6;
 }
 
-// IdleStopNotApplicableReason explains why Gitea did not create an idle stop.
-enum IdleStopNotApplicableReason {
-  IDLE_STOP_NOT_APPLICABLE_REASON_UNSPECIFIED = 0;
-  IDLE_STOP_NOT_APPLICABLE_REASON_OPERATION_CONFLICT = 1;
-  IDLE_STOP_NOT_APPLICABLE_REASON_ALREADY_STOPPED = 2;
-  IDLE_STOP_NOT_APPLICABLE_REASON_STATE_UNAVAILABLE = 3;
-}
-
 // RuntimeReconcileAction tells the manager how to converge one local runtime.
 enum RuntimeReconcileAction {
   RUNTIME_RECONCILE_ACTION_UNSPECIFIED = 0;
@@ -85,8 +54,8 @@ message EnvironmentTag {
 
 // RegisterManagerRequest creates one Manager in the registration token's scope.
 message RegisterManagerRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   string token = 2;
   string name = 3;
 }
@@ -99,10 +68,10 @@ message RegisterManagerResponse {
   string gitea_web_url = 4;
 }
 
-// CheckManagerRequest verifies Manager authentication and the exact protocol version.
+// CheckManagerRequest verifies Manager authentication.
 message CheckManagerRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
 }
 
 // CheckManagerResponse identifies the authenticated Gitea and Manager.
@@ -115,8 +84,8 @@ message CheckManagerResponse {
 
 // DeclareManagerRequest publishes the manager's current routing and runtime metadata.
 message DeclareManagerRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   string gateway_url = 2;
   string gateway_ssh_addr = 3;
   repeated EnvironmentTag environments = 4;
@@ -135,13 +104,11 @@ message DeclareManagerResponse {
 
 // FetchOperationsRequest asks Gitea for work and renews observed leases.
 message FetchOperationsRequest {
-  reserved 7;
-  reserved "wait_timeout_milliseconds";
+  reserved 1, 3, 7;
+  reserved "protocol_version", "accepted_operation_types", "wait_timeout_milliseconds";
 
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  // A positive capacity permits resume and creates matching accepted_create_tags.
   int32 startup_capacity_available = 2;
-  repeated AcceptedOperationType accepted_operation_types = 3;
   repeated ObservedOperation observed_operations = 4;
   int32 cleanup_capacity_available = 5;
   // accepted_create_tags limits this fetch to environments that can create a runtime now.
@@ -217,16 +184,17 @@ message CreateOperationPayload {
 
 // RepositoryCheckout describes the repository content that bootstrap must check out.
 message RepositoryCheckout {
+  reserved 2, 3, 4;
+  reserved "clone_http_url", "clone_ssh_url", "preferred_protocol";
+
   string full_name = 1;
-  string clone_http_url = 2;
-  string clone_ssh_url = 3;
-  // preferred_protocol is computed from current Gitea Git transport settings for this create.
-  GitProtocol preferred_protocol = 4;
   string start_ref = 5;
   // commit_sha is the immutable commit that the runtime must check out.
   string commit_sha = 6;
   // repository_id is stable across repository renames within this Gitea site.
   int64 repository_id = 7;
+  // clone_urls contains available transports in attempt order.
+  repeated string clone_urls = 8;
 }
 
 // GitIdentity is the create-time user identity written to the workspace.
@@ -250,11 +218,11 @@ message DevContainerConfiguration {
 
 // FinalizeOperationRequest reports the terminal result of an active operation.
 message FinalizeOperationRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1, 5;
+  reserved "protocol_version", "operation_type";
+
   int64 operation_rversion = 3;
   FinalStatus status = 4;
-  OperationType operation_type = 5;
   int64 codespace_id = 6;
 }
 
@@ -265,8 +233,8 @@ message FinalizeOperationResponse {
 
 // UpdateLogRequest appends lifecycle log lines at the expected offset.
 message UpdateLogRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   int64 codespace_id = 2;
   int64 operation_rversion = 3;
   int64 offset = 4;
@@ -286,8 +254,8 @@ message UpdateLogResponse {
 
 // ReportRuntimeMetadataRequest publishes the current runtime metadata snapshot.
 message ReportRuntimeMetadataRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   int64 codespace_id = 2;
   int64 metadata_generation = 3;
   RuntimeMetadata metadata = 4;
@@ -364,16 +332,13 @@ message RuntimeSecretEnvironmentVariable {
 
 // RequestRuntimeAccessRequest asks Gitea for current runtime access material.
 message RequestRuntimeAccessRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1, 4;
+  reserved "protocol_version", "git_ssh_key";
+
   int64 codespace_id = 2;
   int64 operation_rversion = 3;
-  RuntimeGitSSHKey git_ssh_key = 4;
-}
-
-// RuntimeGitSSHKey carries the runtime Git SSH public key registered by Gitea.
-message RuntimeGitSSHKey {
-  bytes public_key = 1;
+  // git_ssh_public_key is the runtime Git SSH public key registered by Gitea.
+  bytes git_ssh_public_key = 5;
 }
 
 // RequestRuntimeAccessResponse returns the current runtime access bundle.
@@ -383,28 +348,29 @@ message RequestRuntimeAccessResponse {
 
 // RuntimeAccessBundle contains startup credentials and Git SSH trust material.
 message RuntimeAccessBundle {
+  reserved 4;
+  reserved "git_ssh_trust";
+
   string gitea_token = 1;
   string gitea_server_url = 2;
   repeated RuntimeSecretEnvironmentVariable secrets = 3;
-  GitSSHTrust git_ssh_trust = 4;
-}
-
-// GitSSHTrust contains the known_hosts lines used for Git SSH connections.
-message GitSSHTrust {
-  repeated string known_hosts_lines = 1;
+  repeated string git_ssh_known_hosts = 5;
 }
 
 // EffectiveCodespaceRuntimeSettings contains the current auto-stop policy.
 message EffectiveCodespaceRuntimeSettings {
-  bool auto_stop_enabled = 1;
+  reserved 1;
+  reserved "auto_stop_enabled";
+
+  // Zero disables automatic stopping; a positive value is the idle duration.
   int64 idle_timeout_seconds = 2;
   int64 interaction_generation = 3;
 }
 
 // RequestIdleStopRequest asks Gitea to create an idle stop if observations match.
 message RequestIdleStopRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   int64 codespace_id = 2;
   EffectiveCodespaceRuntimeSettings observed_settings = 3;
 }
@@ -420,7 +386,8 @@ message RequestIdleStopResponse {
 
 // IdleStopPending means Gitea created or found a pending idle stop operation.
 message IdleStopPending {
-  int64 operation_rversion = 1;
+  reserved 1;
+  reserved "operation_rversion";
 }
 
 // IdleStopObservationChanged returns the current settings when observations are stale.
@@ -428,15 +395,16 @@ message IdleStopObservationChanged {
   EffectiveCodespaceRuntimeSettings runtime_settings = 1;
 }
 
-// IdleStopNotApplicable explains why idle stop cannot apply now.
+// IdleStopNotApplicable means idle stop cannot apply now.
 message IdleStopNotApplicable {
-  IdleStopNotApplicableReason reason = 1;
+  reserved 1;
+  reserved "reason";
 }
 
 // ValidateOpenTokenRequest validates a one-time browser open code.
 message ValidateOpenTokenRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   string code = 2;
 }
 
@@ -458,8 +426,8 @@ message OpenTokenBinding {
 
 // ValidatePublicEndpointRequest validates unauthenticated access to a public endpoint.
 message ValidatePublicEndpointRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   int64 codespace_id = 2;
   string endpoint_id = 3;
 }
@@ -477,8 +445,8 @@ message PublicEndpointAllowed {}
 
 // VerifySSHPublicKeyRequest validates a gateway SSH public key login.
 message VerifySSHPublicKeyRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   int64 codespace_id = 2;
   bytes public_key = 3;
 }
@@ -499,8 +467,8 @@ message SSHAuthBinding {
 
 // ReportInstancesRequest publishes the manager's complete runtime inventory.
 message ReportInstancesRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   int64 inventory_generation = 2;
   repeated RuntimeInstanceRef instances = 3;
 }
@@ -528,8 +496,8 @@ message RuntimeInstanceResult {
 
 // RevalidateGatewaySessionRequest rechecks a live gateway session.
 message RevalidateGatewaySessionRequest {
-  // protocol_version is the wire protocol version and must be field 1.
-  int32 protocol_version = 1;
+  reserved 1;
+  reserved "protocol_version";
   oneof session {
     EndpointSessionBinding endpoint = 2;
     SSHSessionBinding ssh = 3;
